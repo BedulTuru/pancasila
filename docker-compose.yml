@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pancasila-backend
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      - DATABASE_URL=file:/app/prisma/dev.db
+      - JWT_SECRET=${JWT_SECRET:-kuncirahasiadefault123}
+      - NODE_ENV=production
+      - PORT=4000
+    volumes:
+      - backend-data:/app/prisma
+      - ./backend/uploads:/app/uploads
+    networks:
+      - pancasila-network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: pancasila-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - pancasila-network
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+          cpus: '0.5'
+
+networks:
+  pancasila-network:
+    driver: bridge
+
+volumes:
+  backend-data:

@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+frontend/dist/
+
+# Logs
+logs/
+*.log
+
+# Environment files (JANGAN di-push ke GitHub)
+.env
+.env.local
+.env.production
+backend/.env
+frontend/.env
+
+# Database lokal
+*.db
+*.db-journal
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Upload files
+backend/uploads/
