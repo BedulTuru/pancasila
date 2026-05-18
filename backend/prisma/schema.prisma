@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = env("DATABASE_PROVIDER")
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -12,17 +12,20 @@ model User {
   email         String    @unique
   password      String
   name          String
-  role          String    @default("STUDENT")
+  role          String    @default("STUDENT") // STUDENT, ADMIN, TUTOR
   avatar        String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   isActive      Boolean   @default(true)
+  tokenVersion  Int       @default(0)
   lastLoginAt   DateTime?
   loginStreak   Int       @default(0)
   lastStreakAt  DateTime?
   xp            Int       @default(0)
   level         Int       @default(1)
   points        Int       @default(0)
+  loginAttempts Int       @default(0)
+  lockUntil     DateTime?
 
   progress      UserProgress[]
   quizAttempts  QuizAttempt[]
@@ -42,10 +45,11 @@ model Feedback {
   content   String
   category  String   @default("GENERAL") // SUGGESTION, BUG, MESSAGE
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   @@map("feedbacks")
+  @@index([userId])
 }
 
 model Category {
@@ -76,42 +80,48 @@ model Material {
   type        String   @default("ARTICLE") // ARTICLE, VIDEO, BOOK
   categoryId  String
   authorId    String
-  difficulty  String   @default("EASY")
-  isPublished Boolean   @default(false)
-  viewCount   Int       @default(0)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  difficulty  String   @default("EASY")    // EASY, MEDIUM, HARD
+  targetRange String   @default("4-7")     // 4-7 (Kelas 7), 8, 9
+  isPublished Boolean  @default(false)
+  viewCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  category    Category  @relation(fields: [categoryId], references: [id])
-  author      User      @relation(fields: [authorId], references: [id])
+  category    Category      @relation(fields: [categoryId], references: [id])
+  author      User          @relation(fields: [authorId], references: [id])
   progress    UserProgress[]
   comments    Comment[]
 
   @@map("materials")
+  @@index([categoryId])
+  @@index([authorId])
 }
 
 model Quiz {
-  id           String   @id @default(uuid())
+  id           String      @id @default(uuid())
   title        String
-  slug         String   @unique
+  slug         String      @unique
   description  String?
   categoryId   String
   authorId     String
-  difficulty   String   @default("EASY")
-  quizType     String   @default("MULTIPLE_CHOICE")
-  timeLimit    Int?     @default(3600)
-  shuffle      Boolean  @default(true)
-  isPublished  Boolean  @default(false)
-  passingScore Int      @default(70)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  difficulty   String      @default("EASY")    // EASY, MEDIUM, HARD
+  targetRange  String      @default("4-7")     // 4-7 (Kelas 7), 8, 9
+  quizType     String      @default("MULTIPLE_CHOICE")
+  timeLimit    Int?        @default(3600)
+  shuffle      Boolean     @default(true)
+  isPublished  Boolean     @default(false)
+  passingScore Int         @default(70)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 
-  category     Category       @relation(fields: [categoryId], references: [id])
-  author       User           @relation(fields: [authorId], references: [id])
+  category     Category     @relation(fields: [categoryId], references: [id])
+  author       User         @relation(fields: [authorId], references: [id])
   questions    Question[]
   attempts     QuizAttempt[]
 
   @@map("quizzes")
+  @@index([categoryId])
+  @@index([authorId])
 }
 
 model Question {
@@ -131,6 +141,7 @@ model Question {
   answers       QuizAttemptAnswer[]
 
   @@map("questions")
+  @@index([quizId])
 }
 
 model QuestionOption {
@@ -143,6 +154,7 @@ model QuestionOption {
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
   @@map("question_options")
+  @@index([questionId])
 }
 
 model UserProgress {
@@ -178,6 +190,8 @@ model QuizAttempt {
   answers     QuizAttemptAnswer[]
 
   @@map("quiz_attempts")
+  @@index([userId])
+  @@index([quizId])
 }
 
 model QuizAttemptAnswer {
@@ -250,6 +264,9 @@ model Comment {
   replies    Comment[] @relation("CommentReplies")
 
   @@map("comments")
+  @@index([userId])
+  @@index([materialId])
+  @@index([parentId])
 }
 
 model ActivityLog {
@@ -266,6 +283,7 @@ model ActivityLog {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("activity_logs")
+  @@index([userId])
 }
 
 model QuestionBank {
@@ -282,6 +300,7 @@ model QuestionBank {
   options     QuestionBankOption[]
 
   @@map("question_bank")
+  @@index([categoryId])
 }
 
 model QuestionBankOption {
@@ -294,6 +313,7 @@ model QuestionBankOption {
   questionBank   QuestionBank @relation(fields: [questionBankId], references: [id], onDelete: Cascade)
 
   @@map("question_bank_options")
+  @@index([questionBankId])
 }
 
 model Announcement {
@@ -305,4 +325,34 @@ model Announcement {
   createdAt DateTime @default(now())
 
   @@map("announcements")
+}
+
+model SystemConfig {
+  id              String   @id @default(uuid())
+  maintenanceMode Boolean  @default(false)
+  lockdownMode    Boolean  @default(false)
+  maintenanceMsg  String?  @default("Sistem sedang dalam pemeliharaan rutin. Harap kembali lagi nanti.")
+  
+  // Custom Theme Colors
+  easyColor       String   @default("#10B981")
+  mediumColor     String   @default("#F59E0B")
+  hardColor       String   @default("#EF4444")
+
+  broadcastActive Boolean  @default(false)
+  broadcastTitle  String?
+  broadcastMsg    String?
+  broadcastPriority Int    @default(0) // 0: Normal, 1: Urgent, 2: Critical
+  updatedAt       DateTime @updatedAt
+
+  @@map("system_config")
+}
+
+model IpBlacklist {
+  id        String   @id @default(uuid())
+  ip        String   @unique
+  reason    String?
+  blockedBy String?
+  createdAt DateTime @default(now())
+
+  @@map("ip_blacklist")
 }

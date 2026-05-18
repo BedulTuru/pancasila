@@ -12,12 +12,16 @@ export default function Footer() {
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Brand */}
           <div className="col-span-2">
-            <Link to="/" className="inline-flex items-center gap-3 mb-5 group">
-              <img 
-                src="/garuda.svg" 
-                alt="Logo Garuda Pancasila" 
-                className="h-12 w-auto transition-transform group-hover:scale-105"
-              />
+            <Link to="/" className="inline-flex items-center gap-4 mb-5 group">
+              <div className="flex items-center gap-3">
+                <img src="/itb.png" alt="Logo ITB" className="h-10 w-auto transition-transform group-hover:scale-105" />
+                <div className="w-px h-6 bg-white/20" />
+                <img 
+                  src="/garuda.svg" 
+                  alt="Logo Garuda Pancasila" 
+                  className="h-10 w-auto transition-transform group-hover:scale-105"
+                />
+              </div>
               <div className="flex flex-col leading-tight">
                 <span className="font-bold text-base text-white" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
                   Portal Edukasi
@@ -42,9 +46,8 @@ export default function Footer() {
             <ul className="space-y-3">
               {[
                 { to: '/portal', label: 'Portal Materi' },
-                { to: '/quiz/easy', label: 'Kuis Pemula' },
-                { to: '/quiz/medium', label: 'Kuis Menengah' },
-                { to: '/quiz/hard', label: 'Kuis Lanjutan' },
+                { to: '/quiz/range/4-7', label: 'Kuis Kelas 7' },
+                { to: '/quiz/range/8-10', label: 'Kuis Kelas 8–9' },
                 { to: '/books', label: 'Perpustakaan' },
               ].map(link => (
                 <li key={link.to}>

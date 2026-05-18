@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL || '/api'
+const API_URL = import.meta.env.VITE_API_URL || 'https://pancasila-edu-backend-production.up.railway.app/api'
 
 // Prevent duplicate redirects when multiple concurrent requests fail with 401
 let isRedirectingToLogin = false
@@ -33,7 +33,10 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401 && !isRedirectingToLogin) {
+    const isLoginRequest = error.config?.url?.includes('/auth/login')
+    const isLoginPage = window.location.pathname === '/login'
+
+    if (error.response?.status === 401 && !isRedirectingToLogin && !isLoginRequest && !isLoginPage) {
       isRedirectingToLogin = true
       localStorage.removeItem('token')
       window.location.href = '/login'

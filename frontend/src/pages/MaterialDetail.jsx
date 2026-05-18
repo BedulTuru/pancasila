@@ -1,7 +1,7 @@
-import { useState, useEffect, useMemo } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useState, useMemo } from 'react'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence, useScroll, useSpring, useMotionValueEvent } from 'framer-motion'
-import { ArrowLeft, Clock, Eye, CheckCircle, ChevronRight, BookOpen, Video, BookMarked, MessageSquare } from 'lucide-react'
+import { ArrowLeft, Clock, Eye, CheckCircle, ChevronRight, BookOpen, Video, BookMarked, MessageSquare, ArrowRight, Info, Lightbulb, AlertTriangle, List } from 'lucide-react'
 import Markdown from 'react-markdown'
 import api from '../utils/api'
 import { useAuth } from '../context/AuthContext'
@@ -9,21 +9,47 @@ import toast from 'react-hot-toast'
 import { formatScientific } from '../utils/scientific'
 import CommentSection from '../components/CommentSection'
 import PDFViewer from '../components/PDFViewer'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { Helmet } from 'react-helmet-async'
 
 export default function MaterialDetail() {
   const { slug } = useParams()
-  const [material, setMaterial] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
+  const navigate = useNavigate()
+  const { user } = useAuth()
+  const queryClient = useQueryClient()
   const [showPDF, setShowPDF] = useState(false)
   const [reachedBottom, setReachedBottom] = useState(false)
-  const [markingLoading, setMarkingLoading] = useState(false)
-  const { user } = useAuth()
 
-  // Identify if material is already completed by current user
+  // useQuery for intelligent caching
+  const { data: material, isLoading, isError } = useQuery({
+    queryKey: ['material', slug],
+    queryFn: async () => {
+      const res = await api.get(`/materials/${slug}`)
+      return res.data
+    },
+    staleTime: 1000 * 60 * 10, // 10 minutes
+  })
+
+  // Identify if material is already completed
   const isCompleted = useMemo(() => {
     return material?.progress?.[0]?.isCompleted || false
   }, [material])
+
+  // Mark Complete Mutation
+  const markCompleteMutation = useMutation({
+    mutationFn: async () => {
+      await api.post(`/portal/progress/${material.id}`, { progress: 100, isCompleted: true })
+    },
+    onSuccess: () => {
+      toast.success('Luar biasa! Materi ini telah diselesaikan 🎉')
+      queryClient.invalidateQueries(['material', slug])
+      queryClient.invalidateQueries(['user-progress'])
+    },
+    onError: () => toast.error('Gagal menyimpan progres')
+  })
+
+  // Mark Complete Mutation Status
+  const markingLoading = markCompleteMutation.isPending;
 
   // High-performance scroll tracking
   const { scrollYProgress } = useScroll()
@@ -39,39 +65,14 @@ export default function MaterialDetail() {
     else if (latest <= 0.9 && reachedBottom) setReachedBottom(false)
   })
 
-  const fetchMaterial = async () => {
-    try {
-      const res = await api.get(`/materials/${slug}`)
-      setMaterial(res.data)
-    } catch {
-      setError(true)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchMaterial()
-    window.scrollTo(0, 0)
-  }, [slug])
-
-  const markComplete = async () => {
+  const markComplete = () => {
     if (!user) return toast.error('Silakan masuk untuk menyimpan progres')
-    if (isCompleted || markingLoading) return
-
-    setMarkingLoading(true)
-    try {
-      await api.post(`/progress/${material.id}`, { progress: 100, isCompleted: true })
-      toast.success('Luar biasa! Materi ini telah diselesaikan 🎉')
-      await fetchMaterial() // Refresh to update completion status
-    } catch {
-      toast.error('Gagal menyimpan progres')
-    } finally {
-      setMarkingLoading(false)
-    }
+    if (isCompleted || markCompleteMutation.isPending) return
+    if (!material?.id) return toast.error('Data materi tidak valid')
+    markCompleteMutation.mutate()
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen pt-24 pb-20" style={{ background: 'var(--edu-cream)' }}>
         <div className="max-w-3xl mx-auto px-6">
@@ -97,7 +98,7 @@ export default function MaterialDetail() {
     )
   }
 
-  if (error || !material) {
+  if (isError || !material) {
     return (
       <div className="min-h-screen pt-32 pb-20 text-center" style={{ background: 'var(--edu-cream)' }}>
         <BookOpen size={64} className="mx-auto mb-4" style={{ color: '#C4BFB9' }} />
@@ -110,27 +111,33 @@ export default function MaterialDetail() {
 
   return (
     <>
+      <Helmet>
+        <title>{material.title} | Pancasila Edu</title>
+        <meta name="description" content={material.description || `Pelajari ${material.title} di Pancasila Edu.`} />
+        <meta property="og:title" content={`${material.title} - Pancasila Edu`} />
+        <meta property="og:description" content={material.description} />
+        {material.coverImage && <meta property="og:image" content={material.coverImage} />}
+      </Helmet>
       {/* Scroll Progress Bar - High-End Aesthetic */}
       <motion.div 
-        className="fixed top-0 left-0 right-0 h-1.5 z-[100] origin-[0%]"
+        className="fixed top-0 left-0 right-0 h-1 z-[1000] origin-[0%] pointer-events-none"
         style={{ 
           scaleX,
           background: 'linear-gradient(90deg, #C0392B, #E74C3C, #F39C12)',
-          boxShadow: '0 2px 10px rgba(192,57,43,0.3)'
+          boxShadow: '0 2px 10px rgba(192,57,43,0.2)'
         }}
       />
 
       <div className="min-h-screen pb-24" style={{ background: 'var(--edu-cream)' }}>
         {/* Article Header */}
-        <div className="pt-24 pb-12 bg-white border-b" style={{ borderColor: 'var(--edu-border)' }}>
+        <div className="pt-28 md:pt-36 pb-12 bg-white border-b" style={{ borderColor: 'var(--edu-border)' }}>
           <div className="max-w-3xl mx-auto px-6 lg:px-0">
-            <Link 
-              to="/portal" 
-              className="inline-flex items-center gap-1.5 text-sm font-semibold mb-8 transition-colors hover:text-black"
-              style={{ color: 'var(--edu-muted)' }}
+            <button 
+              onClick={() => navigate(-1)}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold mb-8 bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-black transition-all"
             >
-              <ArrowLeft size={16} /> Kembali ke Portal
-            </Link>
+              <ArrowLeft size={16} /> Kembali
+            </button>
 
             <div className="flex items-center gap-3 mb-4">
               <span className="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-widest"
@@ -190,23 +197,51 @@ export default function MaterialDetail() {
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-12 p-8 rounded-[2.5rem] bg-navy-900 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl"
+                className="mb-16 relative overflow-hidden rounded-[2rem] border border-slate-200 group"
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-red-500">
-                    <BookMarked size={32} />
+                {/* Background: Fine Linen Texture */}
+                <div className="absolute inset-0 bg-[#FBF9F6]" />
+                <div className="absolute inset-0 opacity-[0.05]" style={{
+                  backgroundImage: 'url("https://www.transparenttextures.com/patterns/natural-paper.png")',
+                }} />
+                
+                {/* Minimalist Accents */}
+                <div className="absolute top-0 bottom-0 left-0 w-1.5 bg-slate-900" />
+                
+                <div className="relative z-10 px-8 py-10 md:px-14 md:py-14 flex flex-col md:flex-row items-center justify-between gap-12">
+                  <div className="flex flex-col md:flex-row items-center md:items-start gap-10">
+                    {/* Artistic Book Icon */}
+                    <div className="relative">
+                      <div className="w-24 h-32 bg-white rounded-r-md shadow-[15px_15px_35px_-10px_rgba(0,0,0,0.15)] flex items-center justify-center border border-slate-100 transition-transform group-hover:rotate-[-2deg] duration-700">
+                         <div className="absolute left-2 top-0 bottom-0 w-[2px] bg-slate-100" />
+                         <BookOpen size={44} strokeWidth={1.5} className="text-slate-800" />
+                      </div>
+                      <div className="absolute -bottom-3 -right-3 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md border border-slate-50">
+                        <CheckCircle size={24} className="text-emerald-500" />
+                      </div>
+                    </div>
+
+                    <div className="text-center md:text-left decoration-slate-200">
+                      <div className="text-slate-400 font-black text-[10px] uppercase tracking-[0.4em] mb-4">
+                        Arsip Terverifikasi
+                      </div>
+                      <h4 className="text-4xl font-serif font-black text-slate-900 mb-4 tracking-tight italic">
+                        Pustaka Digital Siswa
+                      </h4>
+                      <p className="text-slate-500 text-sm max-w-sm leading-relaxed font-medium">
+                        Akses modul literasi lengkap melalui sistem pembaca dokumen terintegrasi kami.
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-xl font-bold">Buku Digital Tersedia</h4>
-                    <p className="text-slate-400 text-sm">Baca buku ini secara penuh di viewer premium kami.</p>
-                  </div>
+
+                  <button 
+                    onClick={() => setShowPDF(true)}
+                    className="group/btn relative px-12 py-5 bg-slate-900 text-white rounded-xl font-bold text-xs uppercase tracking-[0.2em] transition-all hover:bg-black hover:shadow-2xl active:scale-95 flex items-center gap-4"
+                  >
+                    <span>Baca Sekarang</span>
+                    <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
+                  </button>
                 </div>
-                <button 
-                  onClick={() => setShowPDF(true)}
-                  className="px-8 py-4 bg-red-600 hover:bg-red-700 rounded-2xl font-bold transition-all hover:-translate-y-1 shadow-lg shadow-red-900/20"
-                >
-                  Buka Viewer PDF
-                </button>
               </motion.div>
             )}
           </AnimatePresence>
@@ -218,7 +253,41 @@ export default function MaterialDetail() {
             viewport={{ once: true }}
             className="prose prose-edu max-w-none"
           >
-            <Markdown>{formatScientific(material.content)}</Markdown>
+            <Markdown
+              components={{
+                blockquote: ({ children }) => {
+                  const text = children?.[1]?.props?.children?.[0] || '';
+                  let type = 'note';
+                  let icon = <Info size={16} />;
+                  let label = 'Catatan';
+                  
+                  if (text.startsWith('[TIP]')) {
+                    type = 'tip'; icon = <Lightbulb size={16} />; label = 'Tips Belajar';
+                  } else if (text.startsWith('[WARNING]')) {
+                    type = 'warning'; icon = <AlertTriangle size={16} />; label = 'Penting';
+                  }
+
+                  return (
+                    <div className={`edu-callout edu-callout-${type}`}>
+                      <div className="edu-callout-title">
+                        {icon} {label}
+                      </div>
+                      <div className="text-slate-700 font-medium leading-relaxed">
+                        {children[1].props.children.map(c => typeof c === 'string' ? c.replace(/^\[(TIP|WARNING|NOTE)\]\s*/, '') : c)}
+                      </div>
+                    </div>
+                  );
+                },
+                img: ({ src, alt }) => (
+                  <div className="my-10">
+                    <img src={src} alt={alt} className="rounded-3xl shadow-xl border-4 border-white w-full" />
+                    {alt && <p className="text-center text-xs font-bold text-slate-400 mt-4 uppercase tracking-widest">{alt}</p>}
+                  </div>
+                )
+              }}
+            >
+              {formatScientific(material.content)}
+            </Markdown>
           </motion.div>
 
           {/* Completion Section */}

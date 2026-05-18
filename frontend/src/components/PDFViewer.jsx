@@ -15,7 +15,7 @@ export default function PDFViewer({ url, title, onClose }) {
   const embedUrl = getEmbedUrl(url);
 
   return (
-    <div className="fixed inset-0 z-[100] bg-slate-900/90 backdrop-blur-sm flex flex-col items-center justify-center p-4 md:p-8">
+    <div className="fixed inset-0 z-[9999] bg-slate-900/95 backdrop-blur-md flex flex-col items-center justify-start pt-24 md:pt-28 pb-10 px-4 overflow-y-auto">
       {/* Header Bar */}
       <div className="w-full max-w-6xl bg-white rounded-t-2xl p-4 flex items-center justify-between border-b shadow-xl">
         <div className="flex items-center gap-3">

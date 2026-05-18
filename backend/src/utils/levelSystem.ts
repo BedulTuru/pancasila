@@ -36,11 +36,11 @@ export const XP_REWARDS = {
 };
 
 export const LEVEL_CATEGORIES = [
-  { minLevel: 1, title: 'Warga Belajar', subtitle: 'Baru memulai perjalanan intelektual.', color: '#64748b' },
-  { minLevel: 10, title: 'Kader Penggerak', subtitle: 'Mulai memahami esensi bernegara.', color: '#0f766e' },
-  { minLevel: 25, title: 'Pilar Muda', subtitle: 'Menjadi teladan bagi sesama pelajar.', color: '#1d4ed8' },
-  { minLevel: 50, title: 'Cendekia Pancasila', subtitle: 'Memiliki visi kebangsaan yang tajam.', color: '#7c3aed' },
-  { minLevel: 100, title: 'Penjaga Nalar', subtitle: 'Penjaga nilai luhur bangsa di era digital.', color: '#be123c' },
+  { minLevel: 1, title: 'Siswa Baru', subtitle: 'Baru memulai perjalanan belajar di tingkat Sekolah Menengah Pertama.', color: '#64748b' },
+  { minLevel: 10, title: 'Pelajar Aktif', subtitle: 'Mulai rajin mengeksplorasi ilmu pengetahuan.', color: '#0f766e' },
+  { minLevel: 25, title: 'Bintang Kelas', subtitle: 'Menonjol dan menjadi teladan bagi teman-teman.', color: '#1d4ed8' },
+  { minLevel: 50, title: 'Juara Sekolah', subtitle: 'Berprestasi tinggi dengan wawasan yang luas.', color: '#7c3aed' },
+  { minLevel: 100, title: 'Siswa Teladan Nasional', subtitle: 'Generasi emas Sekolah Menengah Pertama kebanggaan bangsa.', color: '#be123c' },
 ];
 
 export function getLevelData(level: number) {

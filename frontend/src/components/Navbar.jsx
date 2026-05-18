@@ -1,22 +1,121 @@
-import { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { useState, useEffect, useRef } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, BookOpen, Brain, Trophy, BookMarked, ChevronRight } from 'lucide-react'
+import { 
+  Menu, X, BookOpen, Brain, Trophy, 
+  BookMarked, ChevronRight, ChevronDown, 
+  Search, LogOut, LayoutDashboard, 
+  ShieldCheck, User, Settings, ArrowLeft
+} from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
+function NavLink({ to, label, dropdown, active, transparentMode }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  if (dropdown) {
+    return (
+      <div 
+        onMouseEnter={() => setIsOpen(true)}
+        onMouseLeave={() => setIsOpen(false)}
+        className="relative"
+      >
+        <button
+          className={`relative px-4 py-2 rounded-xl text-sm font-bold transition-colors duration-200 z-10 flex items-center gap-1.5 ${
+            active 
+              ? 'text-red-600'
+              : (transparentMode ? 'text-slate-600 hover:text-red-600' : 'text-slate-500 hover:text-red-600')
+          }`}
+        >
+          {label}
+          <ChevronDown size={14} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+          {active && (
+            <motion.div
+              layoutId="nav-indicator-pill"
+              className="absolute inset-0 rounded-xl shadow-sm -z-10 bg-red-50 border border-red-100/50"
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            />
+          )}
+        </button>
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              className="absolute top-full left-0 mt-1 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 z-50 overflow-hidden"
+            >
+              {dropdown.map((item) => {
+                const isItemActive = location.pathname === item.to;
+                return (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    className={`block px-4 py-2.5 text-sm font-black rounded-xl transition-all mb-1 last:mb-0 border ${
+                      isItemActive 
+                        ? 'text-red-700 bg-red-100/50 shadow-sm border-red-200/50' 
+                        : 'text-slate-600 border-transparent hover:bg-slate-50 hover:text-red-600'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      to={to}
+      className={`relative px-4 py-2 rounded-xl text-sm font-bold transition-colors duration-200 z-10 ${
+        active 
+          ? 'text-red-600'
+          : (transparentMode ? 'text-slate-600 hover:text-red-600' : 'text-slate-500 hover:text-red-600')
+      }`}
+    >
+      {label}
+      {active && (
+        <motion.div
+          layoutId="nav-indicator-pill"
+          className="absolute inset-0 rounded-xl shadow-sm -z-10 bg-red-50 border border-red-100/50"
+          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+        />
+      )}
+    </Link>
+  )
+}
+
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
+  const [scrolled, setScrolled] = useState(typeof window !== 'undefined' ? window.scrollY > 20 : false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const { user, logout } = useAuth()
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const userMenuRef = useRef(null)
   const location = useLocation()
+  const navigate = useNavigate()
+  const { user, logout, snapBack, isImpersonating } = useAuth()
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    const handleScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll() // Sync on mount
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  useEffect(() => { setMenuOpen(false) }, [location])
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setUserMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  useEffect(() => { setMenuOpen(false); setUserMenuOpen(false) }, [location])
 
   if (['/login', '/register'].includes(location.pathname)) return null;
 
@@ -24,7 +123,16 @@ export default function Navbar() {
 
   const links = [
     { to: '/portal', label: 'Portal', icon: BookOpen },
-    { to: '/quiz/easy', label: 'Kuis', icon: Brain },
+    { 
+      to: '/quiz/range/4-7', 
+      label: 'Kuis', 
+      icon: Brain,
+      dropdown: [
+        { to: '/quiz/range/4-7', label: 'Kelas 7' },
+        { to: '/quiz/range/8', label: 'Kelas 8' },
+        { to: '/quiz/range/9', label: 'Kelas 9' },
+      ]
+    },
     { to: '/books', label: 'Buku', icon: BookMarked },
     { to: '/leaderboard', label: 'Peringkat', icon: Trophy },
   ]
@@ -34,212 +142,207 @@ export default function Navbar() {
     return location.pathname.startsWith(to)
   }
 
-  const transparentMode = isHeroPage && !scrolled
-  const navTextClass = transparentMode ? 'text-edu-navy' : 'text-edu-text'
-  const navTextColor = transparentMode ? 'var(--edu-navy)' : 'var(--edu-text)'
+  const transparentMode = (isHeroPage && !scrolled)
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-sm'
-          : isHeroPage
-            ? 'bg-transparent'
-            : 'bg-white/95 backdrop-blur-md shadow-sm'
+      <motion.nav 
+        initial={{ y: -70, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: 'spring', damping: 28, stiffness: 150, mass: 0.8 }}
+        className={`fixed top-0 left-0 right-0 z-[999] transition-all duration-700 ease-in-out ${
+          scrolled
+            ? 'bg-white/90 backdrop-blur-md shadow-sm border-b border-edu-border py-2'
+            : isHeroPage
+              ? 'bg-transparent py-4'
+              : 'bg-white/90 backdrop-blur-md shadow-sm border-b border-edu-border py-3'
         }`}
-        style={scrolled || !isHeroPage ? { borderBottom: '1px solid var(--edu-border)' } : {}}
       >
-        <div className="max-w-6xl mx-auto px-5 sm:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-3.5 group" aria-label="Kembali ke beranda">
-              <img
-                src="/garuda.svg"
-                alt="Logo Garuda Pancasila"
-                className="h-10 w-auto transition-transform duration-300 group-hover:scale-110 drop-shadow-sm"
-              />
-              <div className="hidden sm:flex flex-col justify-center">
-                <span 
-                  className={`font-black text-[17px] leading-none tracking-tight transition-colors duration-300 ${transparentMode ? 'text-slate-800' : 'text-slate-900'}`}
-                  style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
+        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+          <div className="flex items-center justify-between transition-all duration-500">
+            {/* Logo / Back Button (Mobile) */}
+            <div className="flex items-center gap-2">
+              {/* Back button only on mobile for specific routes */}
+              {(location.pathname.includes('/materials/') || 
+                location.pathname.includes('/quiz-play/') || 
+                location.pathname.includes('/quiz/range/') ||
+                location.pathname.includes('/books')) && (
+                <button 
+                  onClick={() => navigate(-1)}
+                  className="lg:hidden p-2 rounded-xl bg-slate-100 text-slate-900 active:scale-90 transition-all mr-1"
                 >
-                  Portal Edukasi
-                </span>
-                <span 
-                  className={`text-[10px] font-extrabold tracking-[0.25em] uppercase mt-1.5 transition-colors duration-300 ${transparentMode ? 'text-slate-500' : 'text-red-600'}`}
-                >
-                  Pancasila
-                </span>
-              </div>
-            </Link>
-
-            {/* Desktop Nav Links */}
-            <div className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2 p-1 bg-white/50 border border-slate-200/50 rounded-2xl backdrop-blur-md">
-              {links.map(({ to, label }) => {
-                const active = isActive(to);
-                return (
-                  <Link
-                    key={to}
-                    to={to}
-                    className={`relative px-4 py-2 rounded-xl text-sm font-bold transition-colors duration-200 z-10 ${
-                      active 
-                        ? 'text-slate-900' 
-                        : transparentMode ? 'text-slate-600 hover:text-slate-900' : 'text-slate-500 hover:text-slate-900'
-                    }`}
-                  >
-                    {label}
-                    {active && (
-                      <motion.div
-                        layoutId="nav-indicator-pill"
-                        className="absolute inset-0 rounded-xl bg-slate-100 shadow-sm border border-slate-200/50 -z-10"
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                      />
-                    )}
-                  </Link>
-                );
-              })}
-            </div>
-
-            {/* Desktop Auth */}
-            <div className="hidden md:flex items-center gap-2">
-
-              {user ? (
-                <>
-                  <Link
-                    to="/dashboard"
-                    className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
-                      transparentMode
-                        ? 'text-slate-600 hover:text-slate-900 hover:bg-black/5'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                    }`}
-                  >
-                    {user.name}
-                  </Link>
-                  <button
-                    onClick={logout}
-                    className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
-                      transparentMode
-                        ? 'text-slate-500 hover:text-slate-800'
-                        : 'text-slate-400 hover:text-slate-600'
-                    }`}
-                  >
-                    Keluar
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className={`px-4 py-2 text-sm font-bold transition-all ${
-                      transparentMode
-                        ? 'text-slate-600 hover:text-slate-900'
-                        : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    Masuk
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all duration-200 hover:-translate-y-px"
-                    style={{ background: 'var(--edu-red)', boxShadow: 'var(--shadow-red)' }}
-                  >
-                    Daftar Gratis
-                  </Link>
-                </>
+                  <ArrowLeft size={18} />
+                </button>
               )}
+
+              <Link to="/" className="flex items-center gap-1 group">
+                <div className="flex items-center gap-1 sm:gap-3">
+                  <img src="/itb.png" alt="ITB" className="h-6 sm:h-10 w-auto" />
+                  <div className="w-px h-4 sm:h-6 bg-slate-200" />
+                  <img src="/garuda.svg" alt="Garuda" className="h-6 sm:h-10 w-auto" />
+                  <span className="hidden sm:block font-black text-lg sm:text-2xl tracking-tighter transition-colors text-red-600">
+                    Pancasila
+                  </span>
+                </div>
+              </Link>
             </div>
 
-            {/* Mobile Actions */}
-            <div className="flex items-center md:hidden">
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="p-2 rounded-lg transition-colors"
-                style={{ color: navTextColor }}
-                aria-label={menuOpen ? 'Tutup menu' : 'Buka menu'}
+            {/* Desktop Nav */}
+            <div className="hidden lg:flex items-center gap-2">
+              {links.map((link) => (
+                <NavLink
+                  key={link.to}
+                  {...link}
+                  active={isActive(link.to)}
+                  transparentMode={transparentMode}
+                />
+              ))}
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center gap-1.5 sm:gap-4">
+              <button 
+                className="hidden md:flex p-2 rounded-xl transition-all bg-slate-100 text-slate-500 hover:bg-slate-200"
               >
-                {menuOpen ? <X size={22} /> : <Menu size={22} />}
+                <Search size={18} />
+              </button>
+              
+              {user ? (
+                <div className="relative hidden lg:block" ref={userMenuRef}>
+                  <button 
+                    onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    className="flex items-center gap-3 pl-2 pr-4 py-1.5 rounded-full font-bold text-sm transition-all shadow-sm bg-red-600 text-white hover:shadow-lg"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-black italic">
+                      {user.name?.charAt(0)}
+                    </div>
+                    <span className="hidden sm:inline max-w-[100px] truncate">{user.name}</span>
+                    <ChevronDown size={14} className={`transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  <AnimatePresence>
+                    {userMenuOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        className="absolute top-full right-0 mt-3 w-64 bg-white rounded-3xl shadow-2xl border border-slate-100 p-3 z-50"
+                      >
+                        <div className="px-4 py-3 border-b border-slate-50 mb-2">
+                           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Signed in as</p>
+                           <p className="text-sm font-bold text-red-600 truncate">{user.email}</p>
+                        </div>
+
+                        {isImpersonating && (
+                          <button 
+                            onClick={() => { snapBack(); setUserMenuOpen(false); }}
+                            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 rounded-2xl transition-colors"
+                          >
+                            <ArrowLeft size={18} /> Exit Impersonation
+                          </button>
+                        )}
+
+                        <Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 rounded-2xl transition-colors">
+                          <LayoutDashboard size={18} /> Dashboard
+                        </Link>
+                        
+                        <div className="h-px bg-slate-50 my-2" />
+                        
+                        <button 
+                          onClick={() => { logout(); navigate('/login'); }}
+                          className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-500 hover:bg-red-50 rounded-2xl transition-colors"
+                        >
+                          <LogOut size={18} /> Keluar
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <Link
+                  to="/login"
+                  className="px-3 py-2 sm:px-8 sm:py-3 bg-red-600 text-white rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-sm uppercase tracking-widest hover:shadow-xl transition-all whitespace-nowrap"
+                >
+                  Masuk
+                </Link>
+              )}
+
+              {/* Mobile menu toggle */}
+              <button
+                className={`lg:hidden p-2 rounded-xl transition-colors ${transparentMode ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'}`}
+                onClick={() => setMenuOpen(!menuOpen)}
+              >
+                {menuOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
             </div>
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 pt-16"
-            style={{ background: 'var(--edu-cream)' }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 z-40 lg:hidden bg-white pt-24 px-6 flex flex-col gap-3 overflow-y-auto pb-10"
           >
-            <div className="max-w-6xl mx-auto px-5 py-6">
-              {/* Mobile nav links */}
-              <div className="space-y-1 mb-6">
-                {links.map(({ to, label, icon: Icon }) => (
-                  <Link
-                    key={to}
-                    to={to}
-                    className={`flex items-center justify-between p-4 rounded-2xl transition-all ${isActive(to) ? 'text-white' : 'hover:bg-white'
-                      }`}
-                    style={isActive(to) ? { background: 'var(--edu-red)' } : { color: 'var(--edu-text)' }}
+            {/* Combined Profile Section in Mobile Menu */}
+            {user ? (
+              <div className="p-5 bg-red-50 rounded-[2rem] border border-red-100 mb-2">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-2xl bg-red-600 text-white flex items-center justify-center font-black text-xl italic shadow-lg shadow-red-200">
+                    {user.name?.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="text-xs font-black text-red-400 uppercase tracking-widest">Signed in as</p>
+                    <p className="font-bold text-slate-900 truncate">{user.name}</p>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-2">
+                  <Link 
+                    to="/dashboard" 
+                    className="flex items-center justify-center gap-2 py-3 bg-white rounded-xl text-xs font-bold text-slate-600 border border-slate-100 shadow-sm"
+                    onClick={() => setMenuOpen(false)}
                   >
-                    <span className="flex items-center gap-4">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isActive(to) ? 'bg-white/20' : ''
-                        }`}
-                        style={!isActive(to) ? { background: 'var(--edu-cream-dark)' } : {}}
-                      >
-                        <Icon size={20} className={isActive(to) ? 'text-white' : ''}
-                          style={!isActive(to) ? { color: 'var(--edu-red)' } : {}}
-                        />
-                      </div>
-                      <span className="text-base font-semibold">{label}</span>
-                    </span>
-                    <ChevronRight size={18} className={isActive(to) ? 'text-white/70' : 'text-gray-300'} />
+                    <LayoutDashboard size={14} /> Dashboard
                   </Link>
-                ))}
+                  <button 
+                    onClick={() => { logout(); navigate('/login'); setMenuOpen(false); }}
+                    className="flex items-center justify-center gap-2 py-3 bg-white rounded-xl text-xs font-bold text-red-500 border border-slate-100 shadow-sm"
+                  >
+                    <LogOut size={14} /> Keluar
+                  </button>
+                </div>
               </div>
+            ) : (
+              <Link
+                to="/login"
+                className="p-5 bg-red-600 text-white rounded-[2rem] font-black text-center uppercase tracking-widest shadow-lg shadow-red-200 mb-2"
+                onClick={() => setMenuOpen(false)}
+              >
+                Masuk ke Akun
+              </Link>
+            )}
 
-              {/* Mobile auth */}
-              <div className="pt-5 border-t" style={{ borderColor: 'var(--edu-border)' }}>
-                {user ? (
-                  <div className="space-y-2">
-                    <Link
-                      to="/dashboard"
-                      className="block p-4 rounded-2xl text-center font-semibold text-white"
-                      style={{ background: 'var(--edu-navy)' }}
-                    >
-                      Dashboard — {user.name}
-                    </Link>
-                    <button
-                      onClick={logout}
-                      className="w-full p-4 text-left rounded-2xl font-medium border-2 transition-colors hover:bg-red-50"
-                      style={{ color: 'var(--edu-red)', borderColor: '#F4C0BB' }}
-                    >
-                      Keluar
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    <Link
-                      to="/login"
-                      className="block p-4 text-center rounded-2xl font-semibold border-2 transition-colors hover:bg-white"
-                      style={{ borderColor: 'var(--edu-border)', color: 'var(--edu-text)' }}
-                    >
-                      Masuk
-                    </Link>
-                    <Link
-                      to="/register"
-                      className="block p-4 text-center rounded-2xl font-semibold text-white"
-                      style={{ background: 'var(--edu-red)' }}
-                    >
-                      Daftar Gratis
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </div>
+            <div className="h-px bg-slate-100 my-2 mx-4" />
+
+            {links.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl font-bold text-slate-900"
+                onClick={() => setMenuOpen(false)}
+              >
+                <div className="flex items-center gap-4">
+                  <link.icon size={20} className="text-red-600" />
+                  {link.label}
+                </div>
+                <ChevronRight size={20} className="text-slate-300" />
+              </Link>
+            ))}
           </motion.div>
         )}
       </AnimatePresence>

@@ -1,17 +1,19 @@
 FROM node:20-alpine AS builder
+RUN apk add --no-cache openssl
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci
-
 COPY prisma ./prisma
+COPY package*.json ./
+RUN npm install
+
 RUN npx prisma generate
 
 COPY . .
 RUN npm run build
 
 FROM node:20-alpine AS runner
+RUN apk add --no-cache openssl
 
 WORKDIR /app
 
@@ -30,4 +32,4 @@ RUN mkdir /app/uploads && chown nestjs:nodejs /app/uploads
 USER nestjs
 EXPOSE 4000
 
-CMD ["node", "dist/index.js"]
+CMD ["npm", "start"]

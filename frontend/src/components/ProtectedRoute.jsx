@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
 
 export default function ProtectedRoute({ children, roles }) {
-  const { user, loading } = useAuth()
+  const { user, loading, isLoggingOut } = useAuth()
   const location = useLocation()
 
   if (loading) {
@@ -15,12 +15,14 @@ export default function ProtectedRoute({ children, roles }) {
   }
 
   if (!user) {
-    toast.error('Silakan login terlebih dahulu')
+    if (!isLoggingOut) {
+      toast.error('Silakan login terlebih dahulu', { id: 'login-required' })
+    }
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
   if (roles && !roles.includes(user.role)) {
-    toast.error('Anda tidak memiliki akses ke halaman ini')
+    toast.error('Anda tidak memiliki akses ke halaman ini', { id: 'unauthorized' })
     return <Navigate to="/dashboard" replace />
   }
 

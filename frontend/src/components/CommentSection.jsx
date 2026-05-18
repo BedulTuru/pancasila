@@ -1,6 +1,6 @@
 import React, { useState, memo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Send, Reply, User, Shield, ShieldCheck } from 'lucide-react';
+import { MessageSquare, Send, Reply, User, Shield, ShieldCheck, Trash2 } from 'lucide-react';
 import api from '../utils/api';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
@@ -8,60 +8,81 @@ import { useAuth } from '../context/AuthContext';
 // ─── CRITICAL FIX: CommentItem must be defined OUTSIDE the parent component ───
 // Defining it inside caused React to see a new component type on every render,
 // which forced it to unmount & remount every comment (causing the flicker bug).
-const CommentItem = memo(({ comment, isReply = false, onReply }) => (
-  <motion.div
-    layout
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    className={`flex gap-4 ${isReply ? 'mt-4 ml-12' : 'mt-8'}`}
-  >
-    <div className="flex-shrink-0">
-      <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 border border-slate-200 overflow-hidden">
-        {comment.user?.avatar ? (
-          <img src={comment.user.avatar} alt="" className="w-full h-full object-cover" />
-        ) : (
-          <User size={20} />
+const CommentItem = memo(({ comment, isReply = false, onReply, onDelete, user }) => {
+  const isAdmin = user?.role === 'ADMIN' || user?.role === 'TUTOR';
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={`flex gap-4 ${isReply ? 'mt-4 ml-12' : 'mt-8'}`}
+    >
+      <div className="flex-shrink-0">
+        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 border border-slate-200 overflow-hidden">
+          {comment.user?.avatar ? (
+            <img src={comment.user.avatar} alt="" className="w-full h-full object-cover" />
+          ) : (
+            <User size={20} />
+          )}
+        </div>
+      </div>
+      <div className="flex-1">
+        <div className="bg-slate-50/50 rounded-2xl p-4 border border-slate-100 group relative">
+          <div className="flex items-center justify-between mb-1">
+            <span className="font-bold text-sm text-slate-900 flex items-center gap-1.5">
+              {comment.user?.name}
+              {comment.user?.role === 'ADMIN' && (
+                <span className="bg-red-100 text-red-600 text-[10px] px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">Admin</span>
+              )}
+            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] text-slate-400 font-medium">
+                {new Date(comment.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+              </span>
+              {isAdmin && (
+                <button 
+                  onClick={() => onDelete(comment.id)}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity text-slate-300 hover:text-red-600 p-1"
+                  title="Hapus Komentar"
+                >
+                  <Trash2 size={14} />
+                </button>
+              )}
+            </div>
+          </div>
+          <p className="text-sm text-slate-700 leading-relaxed">
+            {comment.content}
+          </p>
+  
+          {!isReply && onReply && (
+            <button
+              onClick={() => onReply({ id: comment.id, name: comment.user?.name })}
+              className="mt-3 flex items-center gap-1.5 text-xs font-bold text-navy-600 hover:text-red-600 transition-colors"
+            >
+              <Reply size={14} /> Balas
+            </button>
+          )}
+        </div>
+  
+        {/* Replies */}
+        {comment.replies && comment.replies.length > 0 && (
+          <div className="space-y-4">
+            {comment.replies.map(reply => (
+              <CommentItem 
+                key={reply.id} 
+                comment={reply} 
+                isReply 
+                onDelete={onDelete} 
+                user={user} 
+              />
+            ))}
+          </div>
         )}
       </div>
-    </div>
-    <div className="flex-1">
-      <div className="bg-slate-50/50 rounded-2xl p-4 border border-slate-100 group relative">
-        <div className="flex items-center justify-between mb-1">
-          <span className="font-bold text-sm text-slate-900 flex items-center gap-1.5">
-            {comment.user?.name}
-            {comment.user?.role === 'ADMIN' && (
-              <span className="bg-red-100 text-red-600 text-[10px] px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">Admin</span>
-            )}
-          </span>
-          <span className="text-[10px] text-slate-400 font-medium">
-            {new Date(comment.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
-          </span>
-        </div>
-        <p className="text-sm text-slate-700 leading-relaxed">
-          {comment.content}
-        </p>
-
-        {!isReply && onReply && (
-          <button
-            onClick={() => onReply({ id: comment.id, name: comment.user?.name })}
-            className="mt-3 flex items-center gap-1.5 text-xs font-bold text-navy-600 hover:text-red-600 transition-colors"
-          >
-            <Reply size={14} /> Balas
-          </button>
-        )}
-      </div>
-
-      {/* Replies */}
-      {comment.replies && comment.replies.length > 0 && (
-        <div className="space-y-4">
-          {comment.replies.map(reply => (
-            <CommentItem key={reply.id} comment={reply} isReply />
-          ))}
-        </div>
-      )}
-    </div>
-  </motion.div>
-));
+    </motion.div>
+  );
+});
 
 CommentItem.displayName = 'CommentItem';
 
@@ -77,6 +98,24 @@ const CommentSection = memo(({ initialComments = [], materialId, quizId, onComme
     setReplyTo(target);
   }, []);
 
+  const handleDelete = async (id) => {
+    if (!window.confirm('Yakin ingin menghapus komentar ini?')) return;
+
+    try {
+      await api.delete(`/discussion/comments/${id}`);
+      setComments(prev => {
+        // Deeply remove comment from list (could be a top-level comment or a reply)
+        return prev.filter(c => c.id !== id).map(c => ({
+          ...c,
+          replies: (c.replies || []).filter(r => r.id !== id)
+        }));
+      });
+      toast.success('Komentar dihapus');
+    } catch {
+      toast.error('Gagal menghapus komentar');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user) return toast.error('Silakan login untuk berdiskusi');
@@ -84,7 +123,7 @@ const CommentSection = memo(({ initialComments = [], materialId, quizId, onComme
 
     setIsSubmitting(true);
     try {
-      const res = await api.post('/comments', {
+      const res = await api.post('/discussion/comments', {
         content: newComment,
         materialId,
         quizId,
@@ -186,6 +225,8 @@ const CommentSection = memo(({ initialComments = [], materialId, quizId, onComme
               key={comment.id}
               comment={comment}
               onReply={handleReply}
+              onDelete={handleDelete}
+              user={user}
             />
           ))
         ) : (

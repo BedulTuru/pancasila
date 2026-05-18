@@ -16,7 +16,7 @@ export default function Home() {
   ])
 
   useEffect(() => {
-    api.get('/public/stats')
+    api.get('/portal/public-stats')
       .then(res => {
         const d = res.data
         const fmt = (n) => n >= 1000 ? (n / 1000).toFixed(1).replace('.0', '') + 'K+' : String(n)
@@ -40,96 +40,94 @@ export default function Home() {
         className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
         style={{ background: 'var(--edu-cream)' }}
       >
-        {/* Subtle grid overlay */}
-        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
+        {/* Interactive Mesh Background - Hidden on Mobile for Performance */}
+        <div className="interactive-mesh hidden md:block" />
+        
+        {/* Subtle grid overlay - Hidden on Mobile for Performance */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none hidden md:block" style={{
           backgroundImage: 'linear-gradient(var(--edu-navy) 1px, transparent 1px), linear-gradient(90deg, var(--edu-navy) 1px, transparent 1px)',
-          backgroundSize: '80px 80px',
-        }} />
-        {/* Radial warm glow from center */}
-        <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse at 50% 40%, rgba(212,160,23,0.06) 0%, transparent 65%)'
+          backgroundSize: '100px 100px',
         }} />
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6 pt-28 pb-20 text-center">
+        <div className="relative z-10 max-w-5xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <motion.div
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.1, type: 'spring', stiffness: 80 }}
-            className="flex justify-center mb-8"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="flex justify-center mb-10 md:mb-12"
           >
-            <img src="/garuda.svg" alt="Garuda Pancasila" className="h-24 w-auto drop-shadow-2xl" />
+            <div className="relative group">
+              <img src="/garuda.svg" alt="Garuda Pancasila" className="h-20 md:h-24 w-auto relative z-10 garuda-pulse" loading="eager" />
+            </div>
           </motion.div>
 
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-            className="text-xs font-bold uppercase tracking-[0.3em] mb-4"
-            style={{ color: 'rgba(180,131,9,0.85)' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] mb-6 flex items-center justify-center gap-3"
+            style={{ color: 'var(--edu-gold)' }}
           >
+            <span className="w-8 md:w-12 h-px bg-current opacity-20" />
             Kolaborasi Tapak Liman ITB · 2026
+            <span className="w-8 md:w-12 h-px bg-current opacity-20" />
           </motion.p>
 
           <motion.h1
-            initial={{ opacity: 0, y: 28 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight mb-8"
-            style={{ color: 'var(--edu-navy)', lineHeight: 0.95, fontFamily: '"Plus Jakarta Sans", sans-serif' }}
+            transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
+            className="text-4xl sm:text-6xl md:text-7xl lg:text-[4.5rem] font-black tracking-tight mb-8"
+            style={{ color: 'var(--edu-navy)', lineHeight: 1.0, fontFamily: '"Plus Jakarta Sans", sans-serif' }}
           >
             Belajar Bersama
             <br />
-            <span style={{
-              background: 'linear-gradient(90deg, var(--edu-navy) 10%, var(--edu-red) 55%, var(--edu-navy) 90%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}>
-              untuk Indonesia
+            <span className="gradient-text-red">
+              untuk Indonesia.
             </span>
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.55 }}
-            className="text-xl md:text-2xl max-w-2xl mx-auto mb-12 font-medium leading-relaxed"
-            style={{ color: 'var(--edu-muted)' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7, duration: 0.8 }}
+            className="text-base md:text-lg max-w-2xl mx-auto mb-12 font-medium leading-relaxed text-slate-500 px-4 md:px-0"
           >
-            Portal bimbingan belajar gratis untuk masa depan pendidikan Indonesia yang lebih inklusif dan merata.
+            Portal bimbingan belajar gratis standar mahasiswa ITB untuk <span className="text-slate-900 font-bold underline decoration-red-500/20">Sekolah Menengah Pertama</span> di seluruh pelosok Nusantara.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.68 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            transition={{ delay: 0.5 }}
+            className="flex flex-col sm:flex-row gap-4 md:gap-5 justify-center px-6 sm:px-0"
           >
             <Link
               to="/portal"
-              className="group flex items-center justify-center gap-2 px-9 py-4 rounded-2xl font-bold text-white text-lg transition-all duration-200 hover:-translate-y-0.5"
-              style={{ background: 'var(--edu-red)', boxShadow: '0 4px 28px rgba(161,19,19,0.3)' }}
+              className="group relative flex items-center justify-center gap-3 px-8 md:px-10 py-4 md:py-5 rounded-[1.5rem] md:rounded-[2rem] font-black text-white text-base md:text-lg transition-all duration-300 hover:shadow-2xl hover:shadow-red-500/30 hover:-translate-y-1 overflow-hidden"
+              style={{ background: 'var(--edu-red)' }}
             >
-              Mulai Belajar Sekarang <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+              Mulai Belajar <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               to="/leaderboard"
-              className="group flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-200 border-2 hover:bg-white"
+              className="group flex items-center justify-center gap-3 px-8 md:px-10 py-4 md:py-5 rounded-[1.5rem] md:rounded-[2rem] font-black text-base md:text-lg transition-all duration-300 border-2 bg-white/40 backdrop-blur-md hover:bg-white hover:shadow-xl hover:-translate-y-1"
               style={{ borderColor: 'var(--edu-border)', color: 'var(--edu-navy)' }}
             >
               <Trophy size={18} style={{ color: 'var(--edu-gold)' }} />
-              Lihat Peringkat
+              Peringkat Nasional
             </Link>
           </motion.div>
         </div>
 
-        {/* Soft fade-to-cream at the bottom — visually merges into stats below */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
-          style={{ background: 'linear-gradient(to bottom, transparent, var(--edu-cream))' }} />
+        {/* Soft fade-to-cream at the bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-48 md:h-64 pointer-events-none"
+          style={{ background: 'linear-gradient(to bottom, transparent 0%, var(--edu-cream) 90%)' }} />
 
-        <div className="absolute bottom-7 left-1/2 -translate-x-1/2 opacity-25">
-          <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}>
-            <ChevronDown size={22} style={{ color: 'var(--edu-navy)' }} />
+        <div className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 opacity-30">
+          <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}>
+            <ChevronDown size={24} />
           </motion.div>
         </div>
       </section>
@@ -253,65 +251,62 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {[
               {
-                level: 'easy',
-                title: 'Pemula',
-                age: 'SD & SMP Awal · Kelas 4–7',
-                topics: ['Matematika Dasar', 'Sains', 'Logika'],
+                range: '4-7',
+                title: 'Kelas 7',
+                desc: 'Sekolah Menengah Pertama Awal',
+                topics: ['Matematika Dasar', 'Sains', 'Pancasila Dasar'],
                 color: '#1E8449',
                 bg: '#EAFAF1',
-                border: '#A9DFBF',
-                accent: 'Mulai dari nol, bangun fondasimu.',
+                accent: 'Bangun fondasi karakter dan pengetahuan sejak dini.',
               },
               {
-                level: 'medium',
-                title: 'Menengah',
-                age: 'SMP & SMA Awal · Kelas 8–10',
-                topics: ['Aljabar', 'Fisika Dasar', 'Kimia Dasar'],
+                range: '8',
+                title: 'Kelas 8',
+                desc: 'Sekolah Menengah Pertama Menengah',
+                topics: ['Aljabar', 'IPA Terpadu', 'PPKn'],
                 color: '#9B7210',
                 bg: '#FEF8E7',
-                border: '#EDD58C',
-                accent: 'Tingkatkan pemahaman yang lebih dalam.',
+                accent: 'Perdalam pemahaman konsep dan kembangkan nalar analitis.',
               },
               {
-                level: 'hard',
-                title: 'Lanjutan',
-                age: 'SMA & Siap PTN · Kelas 11–12',
-                topics: ['Kalkulus', 'Fisika Modern', 'Kimia Organik'],
-                color: 'var(--edu-red)',
+                range: '9',
+                title: 'Kelas 9',
+                desc: 'Sekolah Menengah Pertama Lanjutan',
+                topics: ['Geometri', 'Fisika Dasar', 'Persiapan Ujian'],
+                color: '#DC2626',
                 bg: '#FDECEA',
-                border: '#F4C0BB',
-                accent: 'Persiapkan diri untuk perguruan tinggi.',
+                accent: 'Persiapkan diri untuk tantangan akademis yang lebih tinggi.',
               },
             ].map((item, i) => (
               <motion.div
-                key={item.level}
+                key={item.range}
                 initial={{ opacity: 0, y: 15, scale: 0.98 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 whileHover={{ y: -8, transition: { duration: 0.2 } }}
                 viewport={{ once: true, margin: "0px" }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 style={{ willChange: 'opacity, transform' }}
-                onClick={() => navigate(`/quiz/${item.level}`)}
-                className="group relative flex flex-col rounded-[2.5rem] bg-white border-2 p-8 cursor-pointer hover:shadow-xl h-full overflow-hidden"
+                onClick={() => navigate(`/quiz/range/${item.range}`)}
+                className="group relative flex flex-col rounded-[2.5rem] bg-white border-2 p-10 cursor-pointer hover:shadow-xl h-full overflow-hidden"
               >
                 {/* Top accent bar */}
-                <div className="absolute top-0 left-0 right-0 h-1.5" style={{ background: item.color }} />
+                <div className="absolute top-0 left-0 right-0 h-2" style={{ background: item.color }} />
 
-                <div className="mb-6">
-                  <span className="inline-flex px-3 py-1 rounded-full text-xs font-bold mb-3"
+                <div className="mb-8">
+                  <span className="inline-flex px-4 py-1.5 rounded-full text-xs font-bold mb-4"
                     style={{ background: item.bg, color: item.color }}>
-                    {item.age}
+                    {item.desc}
                   </span>
-                  <h3 className="text-2xl font-bold mb-1" style={{ color: 'var(--edu-text)' }}>Tingkat {item.title}</h3>
-                  <p className="text-sm" style={{ color: 'var(--edu-muted)' }}>{item.accent}</p>
+                  <h3 className="text-3xl font-black mb-2" style={{ color: 'var(--edu-text)' }}>{item.title}</h3>
+                  <p className="text-sm font-medium leading-relaxed" style={{ color: 'var(--edu-muted)' }}>{item.accent}</p>
                 </div>
 
-                <div className="flex flex-wrap items-start gap-2 mb-8">
+                <div className="flex flex-wrap items-start gap-2.5 mb-10">
                   {item.topics.map(t => (
-                    <span key={t} className="px-3 py-1.5 rounded-xl text-xs font-semibold"
+                    <span key={t} className="px-4 py-2 rounded-2xl text-xs font-bold"
                       style={{ background: item.bg, color: item.color }}>
                       {t}
                     </span>
@@ -319,10 +314,10 @@ export default function Home() {
                 </div>
 
                 <div className="flex items-center justify-between mt-auto">
-                  <span className="text-sm font-semibold" style={{ color: item.color }}>Mulai Kuis</span>
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center transition-transform duration-200 group-hover:scale-110"
+                  <span className="text-base font-bold" style={{ color: item.color }}>Lihat Tantangan</span>
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center transition-transform duration-200 group-hover:scale-110"
                     style={{ background: item.color }}>
-                    <ArrowRight size={18} className="text-white" />
+                    <ArrowRight size={22} className="text-white" />
                   </div>
                 </div>
               </motion.div>
@@ -398,9 +393,10 @@ export default function Home() {
               src="/garuda.svg"
               alt="Garuda"
               className="h-16 w-auto mx-auto mb-10 opacity-30 grayscale brightness-200"
+              loading="lazy"
             />
             <h2 className="text-4xl md:text-6xl font-black mb-8 text-white" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif', lineHeight: 1.1 }}>
-              Wujudkan Generasi Desa<br />Berprestasi & Berpancasila
+              Wujudkan Generasi Pelajar Sekolah Menengah Pertama<br />Berprestasi & Berpancasila
             </h2>
             <p className="text-xl mb-12" style={{ color: 'rgba(255,255,255,0.7)' }}>
               Mari melangkah bersama untuk masa depan pendidikan Indonesia yang lebih baik.

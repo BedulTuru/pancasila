@@ -13,19 +13,19 @@ async function main() {
       create: { name: 'Matematika', slug: 'matematika', icon: '📐', color: '#0071e3', order: 1 },
     }),
     prisma.category.upsert({
-      where: { slug: 'fisika' },
+      where: { slug: 'ipa' },
       update: {},
-      create: { name: 'Fisika', slug: 'fisika', icon: '⚡', color: '#ff9500', order: 2 },
+      create: { name: 'Ilmu Pengetahuan Alam', slug: 'ipa', icon: '🔬', color: '#34c759', order: 2 },
     }),
     prisma.category.upsert({
-      where: { slug: 'kimia' },
+      where: { slug: 'ips' },
       update: {},
-      create: { name: 'Kimia', slug: 'kimia', icon: '🧪', color: '#34c759', order: 3 },
+      create: { name: 'Ilmu Pengetahuan Sosial', slug: 'ips', icon: '🌍', color: '#ff9500', order: 3 },
     }),
     prisma.category.upsert({
-      where: { slug: 'biologi' },
+      where: { slug: 'ppkn' },
       update: {},
-      create: { name: 'Biologi', slug: 'biologi', icon: '🧬', color: '#af52de', order: 4 },
+      create: { name: 'Pendidikan Pancasila', slug: 'ppkn', icon: '🦅', color: '#af52de', order: 4 },
     }),
   ]);
 
@@ -41,47 +41,47 @@ async function main() {
   const tutor = await prisma.user.upsert({
     where: { email: 'tutor@pancasila.edu' },
     update: {},
-    create: { email: 'tutor@pancasila.edu', password: hashedPassword, name: 'Guru Pancasila', role: 'TUTOR' },
+    create: { email: 'tutor@pancasila.edu', password: hashedPassword, name: 'Guru Pendamping', role: 'TUTOR' },
   });
 
   console.log('✅ Users created');
 
   const materials = [
     {
-      title: 'Aljabar Linear Dasar',
-      slug: 'aljabar-linear-dasar',
-      content: '# Aljabar Linear Dasar\n\n## Pendahuluan\nAljabar linear adalah cabang matematika yang mempelajari vektor, ruang vektor, transformasi linear, dan sistem persamaan linear.\n\n## Topik Utama\n1. Vektor dan Operasi Vektor\n2. Matriks dan Operasinya\n3. Sistem Persamaan Linear\n4. Determinan\n5. Eigenvalue dan Eigenvector\n\n## Contoh Soal\nTentukan hasil penjumlahan vektor **a** = (1, 2, 3) dan **b** = (4, 5, 6).\n\n**Jawaban:**\n**a** + **b** = (1+4, 2+5, 3+6) = (5, 7, 9)',
-      description: 'Pengenalan aljabar linear untuk pemula',
+      title: 'Aljabar Dasar Kelas 7',
+      slug: 'aljabar-dasar-kelas-7',
+      content: '# Aljabar Dasar Kelas 7\n\n## Pendahuluan\nAljabar adalah cabang matematika yang menggunakan huruf atau simbol untuk mewakili angka. Ini membantu kita menyelesaikan masalah yang angkanya belum diketahui.\n\n## Konsep Utama\n1. **Variabel**: Simbol (biasanya huruf seperti x, y, z) yang mewakili suatu nilai.\n2. **Koefisien**: Angka yang mengalikan variabel (misal: angka 3 pada 3x).\n3. **Konstanta**: Angka tetap yang tidak memiliki variabel.\n4. **Suku**: Bagian dari bentuk aljabar yang dipisahkan oleh tanda + atau -.\n\n## Contoh Soal\nSederhanakan bentuk aljabar berikut: 3x + 5y - x + 2y\n\n**Jawaban:**\nKelompokkan suku sejenis:\n= (3x - x) + (5y + 2y)\n= 2x + 7y',
+      description: 'Pengenalan konsep aljabar untuk siswa kelas 7 Sekolah Menengah Pertama.',
       categoryId: categories[0].id,
       authorId: tutor.id,
       difficulty: 'EASY',
       isPublished: true,
     },
     {
-      title: 'Kinematika dan Dinamika',
-      slug: 'kinematika-dinamika',
-      content: '# Kinematika dan Dinamika\n\n## Kinematika\nKinematika adalah cabang fisika yang mempelajari gerak benda tanpa memperhatikan penyebab gerak.\n\n### Rumus Dasar\n- **Kecepatan rata-rata**: v = Δx/Δt\n- **Percepatan**: a = Δv/Δt\n- **Gerak lurus beraturan**: x = x₀ + vt\n- **Gerak lurus berubah beraturan**: x = x₀ + v₀t + ½at²\n\n## Dinamika\n### Hukum Newton\n1. **Hukum I**: Benda diam tetap diam, benda bergerak tetap bergerak lurus beraturan.\n2. **Hukum II**: F = ma\n3. **Hukum III**: Aksi = Reaksi',
-      description: 'Memahami gerak benda dan hukum-hukum yang mengaturnya',
+      title: 'Sistem Pencernaan Manusia',
+      slug: 'sistem-pencernaan-manusia',
+      content: '# Sistem Pencernaan Manusia\n\n## Proses Pencernaan\nPencernaan adalah proses memecah makanan menjadi molekul-molekul kecil yang dapat diserap oleh tubuh.\n\n### Organ Pencernaan Utama\n1. **Mulut**: Proses pencernaan mekanik (gigi) dan kimiawi (enzim ptialin).\n2. **Kerongkongan (Esofagus)**: Mendorong makanan ke lambung (gerak peristaltik).\n3. **Lambung**: Pencernaan kimiawi menggunakan asam lambung (HCl) dan enzim pepsin.\n4. **Usus Halus**: Penyerapan sari-sari makanan utama.\n5. **Usus Besar**: Penyerapan air dan pembusukan sisa makanan.\n\n## Enzim Penting\n- **Amilase**: Mengubah amilum menjadi glukosa.\n- **Lipase**: Mengubah lemak menjadi asam lemak.\n- **Tripsin**: Mengubah protein menjadi asam amino.',
+      description: 'Mengenal organ dan fungsi sistem pencernaan pada manusia.',
       categoryId: categories[1].id,
       authorId: tutor.id,
       difficulty: 'MEDIUM',
       isPublished: true,
     },
     {
-      title: 'Stoikiometri Reaksi',
-      slug: 'stoikiometri-reaksi',
-      content: '# Stoikiometri Reaksi Kimia\n\n## Konsep Dasar\nStoikiometri adalah perhitungan kimia yang berkaitan dengan jumlah zat dalam reaksi kimia.\n\n### Hukum Kekekalan Massa\nMassa total reaktan = Massa total produk\n\n## Contoh\nBerapa gram H₂O yang dihasilkan dari 4 gram H₂?\n\n**2H₂ + O₂ → 2H₂O**\n\nMol H₂ = 4/2 = 2 mol\nMassa H₂O = 2 × 18 = 36 gram',
-      description: 'Perhitungan kimia dalam reaksi',
+      title: 'Sejarah Proklamasi Kemerdekaan',
+      slug: 'sejarah-proklamasi-kemerdekaan',
+      content: '# Sejarah Proklamasi Kemerdekaan Indonesia\n\n## Peristiwa Rengasdengklok\nPada tanggal 16 Agustus 1945, golongan muda mengamankan Soekarno dan Hatta ke Rengasdengklok. Tujuannya adalah menjauhkan mereka dari pengaruh Jepang dan mendesak proklamasi segera dilaksanakan.\n\n## Penyusunan Teks Proklamasi\nDirumuskan di rumah Laksamana Maeda di Jakarta oleh Soekarno, Hatta, dan Ahmad Soebardjo. Teks kemudian diketik oleh Sayuti Melik.\n\n## Detik-Detik Proklamasi\n- **Tanggal**: 17 Agustus 1945\n- **Pukul**: 10.00 WIB\n- **Lokasi**: Jalan Pegangsaan Timur No. 56, Jakarta\n- Pembacaan dilakukan oleh Ir. Soekarno didampingi Drs. Moh. Hatta, diikuti pengibaran bendera Merah Putih oleh Latief Hendraningrat dan Suhud.',
+      description: 'Perjalanan bangsa Indonesia menuju kemerdekaan 17 Agustus 1945.',
       categoryId: categories[2].id,
       authorId: tutor.id,
       difficulty: 'MEDIUM',
       isPublished: true,
     },
     {
-      title: 'Sel dan Fungsinya',
-      slug: 'sel-dan-fungsinya',
-      content: '# Sel dan Fungsinya\n\n## Pengertian Sel\nSel adalah unit terkecil dari makhluk hidup yang dapat melakukan kehidupan sendiri.\n\n## Struktur Sel\n### Sel Prokariotik\n- Tidak memiliki membran inti\n- Contoh: bakteri\n\n### Sel Eukariotik\n- Memiliki membran inti\n- Contoh: sel hewan, sel tumbuhan\n\n## Organel Sel\n1. **Nucleus**: Mengontrol aktivitas sel\n2. **Mitokondria**: Pusat respirasi sel\n3. **Ribosom**: Tempat sintesis protein\n4. **Retikulum Endoplasma**: Transportasi materi\n5. **Golgi Apparatus**: Modifikasi dan pengemasan protein',
-      description: 'Memahami struktur dan fungsi sel',
+      title: 'Makna Sila-Sila Pancasila',
+      slug: 'makna-sila-sila-pancasila',
+      content: '# Makna Sila-Sila Pancasila\n\n## Kedudukan Pancasila\nPancasila adalah dasar negara dan ideologi bangsa Indonesia. Sebagai pelajar, penting mengamalkan nilai-nilainya.\n\n### Nilai yang Terkandung\n1. **Ketuhanan Yang Maha Esa**: Menghormati kebebasan beragama dan toleransi antar umat.\n2. **Kemanusiaan yang Adil dan Beradab**: Mengakui persamaan derajat, hak, dan kewajiban setiap manusia.\n3. **Persatuan Indonesia**: Menjaga kerukunan, cinta tanah air, dan rela berkorban demi bangsa.\n4. **Kerakyatan yang Dipimpin oleh Hikmat Kebijaksanaan...**: Mengutamakan musyawarah untuk mencapai mufakat dalam setiap keputusan.\n5. **Keadilan Sosial bagi Seluruh Rakyat Indonesia**: Bersikap adil, menghormati hak orang lain, dan suka menolong.',
+      description: 'Memahami makna dari setiap sila Pancasila dalam kehidupan sehari-hari.',
       categoryId: categories[3].id,
       authorId: tutor.id,
       difficulty: 'EASY',
@@ -97,29 +97,29 @@ async function main() {
 
   const quizzes = [
     {
-      title: 'Kuis Aljabar Linear',
-      slug: 'kuis-aljabar-linear',
-      description: 'Test pengetahuan aljabar linear dasar',
+      title: 'Kuis Aljabar Dasar',
+      slug: 'kuis-aljabar-dasar',
+      description: 'Uji pemahamanmu tentang variabel, koefisien, dan operasi aljabar.',
       categoryId: categories[0].id,
       authorId: tutor.id,
       difficulty: 'EASY',
       isPublished: true,
       questions: [
-        { content: 'Berapa hasil dari vektor (1, 2) + (3, 4)?', hint: 'Jumlahkan komponen yang sesuai', explanation: '(1+3, 2+4) = (4, 6)', points: 1, options: [{ content: '(4, 6)', isCorrect: true, order: 0 }, { content: '(3, 8)', isCorrect: false, order: 1 }, { content: '(2, 6)', isCorrect: false, order: 2 }, { content: '(4, 5)', isCorrect: false, order: 3 }] },
-        { content: 'Determinan matriks [[2, 1], [3, 4]] adalah?', hint: 'Gunakan rumus ad - bc', explanation: 'Determinan = (2×4) - (1×3) = 8 - 3 = 5', points: 1, options: [{ content: '5', isCorrect: true, order: 0 }, { content: '11', isCorrect: false, order: 1 }, { content: '8', isCorrect: false, order: 2 }, { content: '7', isCorrect: false, order: 3 }] },
+        { content: 'Berapakah koefisien dari x pada bentuk aljabar 5x - 2y + 7?', hint: 'Koefisien adalah angka yang mendampingi variabel.', explanation: 'Angka yang mendampingi variabel x adalah 5.', points: 1, options: [{ content: '5', isCorrect: true, order: 0 }, { content: '2', isCorrect: false, order: 1 }, { content: '7', isCorrect: false, order: 2 }, { content: 'x', isCorrect: false, order: 3 }] },
+        { content: 'Bentuk paling sederhana dari 4a + 2b - 2a + 3b adalah?', hint: 'Kelompokkan suku-suku yang sejenis.', explanation: '(4a - 2a) + (2b + 3b) = 2a + 5b', points: 1, options: [{ content: '2a + 5b', isCorrect: true, order: 0 }, { content: '6a + 5b', isCorrect: false, order: 1 }, { content: '2a - b', isCorrect: false, order: 2 }, { content: '2a + b', isCorrect: false, order: 3 }] },
       ],
     },
     {
-      title: 'Kuis Fisika Dasar',
-      slug: 'kuis-fisika-dasar',
-      description: 'Test pemahaman kinematika dan dinamika',
-      categoryId: categories[1].id,
+      title: 'Kuis Sejarah Kemerdekaan',
+      slug: 'kuis-sejarah-kemerdekaan',
+      description: 'Uji pengetahuanmu tentang peristiwa proklamasi kemerdekaan Indonesia.',
+      categoryId: categories[2].id,
       authorId: tutor.id,
       difficulty: 'MEDIUM',
       isPublished: true,
       questions: [
-        { content: 'Satuan percepatan dalam SI adalah?', hint: 'Percepatan = perubahan kecepatan per waktu', explanation: 'Percepatan = m/s²', points: 1, options: [{ content: 'm/s²', isCorrect: true, order: 0 }, { content: 'm/s', isCorrect: false, order: 1 }, { content: 'kg', isCorrect: false, order: 2 }, { content: 'N', isCorrect: false, order: 3 }] },
-        { content: 'Hukum Newton II menyatakan bahwa F = m × a, di mana F adalah?', hint: 'Satuan gaya adalah Newton', explanation: 'F adalah gaya yang diukur dalam Newton (N)', points: 1, options: [{ content: 'Gaya (Newton)', isCorrect: true, order: 0 }, { content: 'Frekuensi', isCorrect: false, order: 1 }, { content: 'Fluks', isCorrect: false, order: 2 }, { content: 'Fase', isCorrect: false, order: 3 }] },
+        { content: 'Siapakah tokoh yang mengetik naskah proklamasi kemerdekaan?', hint: 'Tokoh ini merupakan golongan muda yang menyempurnakan tulisan tangan Soekarno.', explanation: 'Sayuti Melik adalah tokoh yang mengetik naskah proklamasi.', points: 1, options: [{ content: 'Sayuti Melik', isCorrect: true, order: 0 }, { content: 'Ahmad Soebardjo', isCorrect: false, order: 1 }, { content: 'Sutan Sjahrir', isCorrect: false, order: 2 }, { content: 'Latief Hendraningrat', isCorrect: false, order: 3 }] },
+        { content: 'Di mana naskah proklamasi dirumuskan oleh Soekarno, Hatta, dan Ahmad Soebardjo?', hint: 'Tempat tersebut merupakan rumah seorang perwira Angkatan Laut Jepang.', explanation: 'Perumusan naskah proklamasi dilakukan di rumah Laksamana Maeda di Jakarta.', points: 1, options: [{ content: 'Rumah Laksamana Maeda', isCorrect: true, order: 0 }, { content: 'Rengasdengklok', isCorrect: false, order: 1 }, { content: 'Jalan Pegangsaan Timur No. 56', isCorrect: false, order: 2 }, { content: 'Gedung Chuo Sangi-in', isCorrect: false, order: 3 }] },
       ],
     },
   ];
@@ -160,7 +160,7 @@ async function main() {
     create: {
       id: 'welcome-announcement',
       title: 'Selamat Datang di Portal Edukasi Pancasila',
-      content: 'Portal ini adalah wujud implementasi nilai Pancasila, khususnya Sila ke-5 tentang Keadilan Sosial.',
+      content: 'Portal ini adalah sarana belajar asik dan interaktif untuk seluruh siswa Sekolah Menengah Pertama berprestasi. Selamat bereksplorasi!',
       priority: 1, isActive: true,
     },
   });

@@ -6,8 +6,11 @@ import {
   Code, Globe, Library, Sigma, BarChart, Triangle, Magnet, Zap, Flame, Settings,
   Activity, TestTubes, Beaker, Hexagon, Dna, Microscope, Heart, X, ChevronRight, AlertCircle
 } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import api from '../utils/api'
 import { formatScientific } from '../utils/scientific'
+import { MaterialCardSkeleton } from '../components/SkeletonLoader'
+import { Helmet } from 'react-helmet-async'
 
 const DIFFICULTY_LABEL = { EASY: 'Pemula', MEDIUM: 'Menengah', HARD: 'Lanjutan' }
 const DIFFICULTY_STYLE = {
@@ -137,43 +140,40 @@ function MaterialCard({ m, i, featured = false }) {
   )
 }
 
-function SkeletonCard() {
-  return (
-    <div className="bg-white rounded-2xl overflow-hidden border border-slate-100">
-      <div className="h-36 skeleton" />
-      <div className="p-5 space-y-3">
-        <div className="h-2.5 skeleton rounded-full w-1/3" />
-        <div className="h-4 skeleton rounded-full w-4/5" />
-        <div className="h-3 skeleton rounded-full w-3/5" />
-        <div className="h-2.5 skeleton rounded-full w-1/2 mt-4" />
-      </div>
-    </div>
-  )
-}
+
 
 export default function Portal() {
-  const [materials, setMaterials] = useState([])
-  const [categories, setCategories] = useState([])
-  const [initialLoading, setInitialLoading] = useState(true)
-  const [isFetching, setIsFetching] = useState(false)
-  const [error, setError] = useState(false)
   const [selected, setSelected] = useState('')
+  const [selectedRange, setSelectedRange] = useState('')
   const [search, setSearch] = useState('')
 
-  useEffect(() => {
-    if (!initialLoading) setIsFetching(true)
-    setError(false)
-    Promise.all([
-      api.get('/materials', { params: { limit: 50, categoryId: selected || undefined } }),
-      api.get('/categories'),
-    ]).then(([m, c]) => {
-      setMaterials(m.data.data || [])
-      setCategories(c.data || [])
-    }).catch(() => setError(true)).finally(() => {
-      setInitialLoading(false)
-      setIsFetching(false)
-    })
-  }, [selected])
+  // Categories Query
+  const { data: categories = [] } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const res = await api.get('/categories')
+      return res.data
+    },
+    staleTime: 1000 * 60 * 60, // 1 hour
+  })
+
+  // Materials Query
+  const { data: materialsRes, isLoading: initialLoading, isError: error, isFetching } = useQuery({
+    queryKey: ['materials', selected, selectedRange],
+    queryFn: async () => {
+      const res = await api.get('/materials', { 
+        params: { 
+          limit: 50, 
+          categoryId: selected || undefined,
+          targetRange: selectedRange || undefined
+        } 
+      })
+      return res.data
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  })
+
+  const materials = materialsRes?.data || []
 
   const filtered = materials.filter(m =>
     m.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -197,7 +197,12 @@ export default function Portal() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 pt-36 pb-20">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="max-w-2xl">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} 
+              className="max-w-2xl"
+            >
               <p className="text-xs font-bold uppercase tracking-[0.3em] text-red-600 mb-3">
                 Materi Pilihan &nbsp;·&nbsp; {materials.length} topik tersedia
               </p>
@@ -235,30 +240,59 @@ export default function Portal() {
 
           {/* ── SIDEBAR ───────────────────────────────────── */}
           <div className="lg:col-span-3">
-            <div className="sticky top-24 space-y-1">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 px-1">Kategori</p>
+            <div className="sticky top-24 space-y-8">
+              {/* Categories */}
+              <div className="space-y-1">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 px-1">Kategori</p>
 
-              <button onClick={() => setSelected('')}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all text-left text-sm font-bold ${
-                  !selected ? 'bg-white shadow-sm text-slate-900 border border-slate-100' : 'text-slate-500 hover:text-slate-800 hover:bg-white/60'
-                }`}>
-                <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
-                Semua Materi
-              </button>
+                <button onClick={() => setSelected('')}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all text-left text-sm font-bold ${
+                    !selected ? 'bg-white shadow-sm text-slate-900 border border-slate-100' : 'text-slate-500 hover:text-slate-800 hover:bg-white/60'
+                  }`}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
+                  Semua Materi
+                </button>
 
-              {categories.map(cat => {
-                const isActive = selected === cat.id
-                return (
-                  <button key={cat.id} onClick={() => setSelected(cat.id)}
+                {categories.map(cat => {
+                  const isActive = selected === cat.id
+                  return (
+                    <button key={cat.id} onClick={() => setSelected(cat.id)}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all text-left text-sm font-bold ${
+                        isActive ? 'bg-white shadow-sm text-slate-900 border border-slate-100' : 'text-slate-500 hover:text-slate-800 hover:bg-white/60'
+                      }`}>
+                      <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: cat.color || '#334155' }} />
+                      {cat.name}
+                    </button>
+                  )
+                })}
+              </div>
+
+              {/* Class Selection */}
+              <div className="space-y-1">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 px-1">Jenjang Kelas</p>
+                
+                <button onClick={() => setSelectedRange('')}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all text-left text-sm font-bold ${
+                    !selectedRange ? 'bg-white shadow-sm text-slate-900 border border-slate-100' : 'text-slate-500 hover:text-slate-800 hover:bg-white/60'
+                  }`}>
+                  <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${!selectedRange ? 'bg-red-600' : 'bg-slate-300'}`} />
+                  Semua Kelas
+                </button>
+
+                {[
+                  { k: '4-7', l: 'Kelas 7' },
+                  { k: '8', l: 'Kelas 8' },
+                  { k: '9', l: 'Kelas 9' }
+                ].map(r => (
+                  <button key={r.k} onClick={() => setSelectedRange(r.k)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all text-left text-sm font-bold ${
-                      isActive ? 'bg-white shadow-sm text-slate-900 border border-slate-100' : 'text-slate-500 hover:text-slate-800 hover:bg-white/60'
+                      selectedRange === r.k ? 'bg-white shadow-sm text-slate-900 border border-slate-100' : 'text-slate-500 hover:text-slate-800 hover:bg-white/60'
                     }`}>
-                    <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: cat.color || '#334155' }} />
-                    {cat.name}
+                    <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${selectedRange === r.k ? 'bg-red-600' : 'bg-slate-300'}`} />
+                    {r.l}
                   </button>
-                )
-              })}
-
+                ))}
+              </div>
             </div>
           </div>
 
@@ -275,10 +309,10 @@ export default function Portal() {
             </div>
 
             {initialLoading ? (
-              <div>
-                <div className="h-56 skeleton rounded-3xl mb-6" />
+              <div className="space-y-6">
+                <MaterialCardSkeleton />
                 <div className="grid md:grid-cols-2 gap-5">
-                  {[...Array(4)].map((_, i) => <SkeletonCard key={i} />)}
+                  {[...Array(4)].map((_, i) => <MaterialCardSkeleton key={i} />)}
                 </div>
               </div>
             ) : error ? (

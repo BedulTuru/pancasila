@@ -1,0 +1,63 @@
+import { Request, Response } from 'express';
+import { prisma } from '../index';
+import { AppError } from '../middleware/error.middleware';
+import fs from 'fs';
+import path from 'path';
+import { logActivity } from '../utils/logger';
+
+const uploadsDir = path.join(__dirname, '../../uploads');
+
+export class MiscController {
+  static async getAnnouncements(req: Request, res: Response) {
+    const announcements = await prisma.announcement.findMany({ 
+      where: { isActive: true }, 
+      orderBy: [{ priority: 'desc' }, { createdAt: 'desc' }] 
+    });
+    res.json(announcements);
+  }
+
+  static async createAnnouncement(req: Request, res: Response) {
+    const { title, content, priority } = req.body;
+    const announcement = await prisma.announcement.create({ 
+      data: { title, content, priority: priority || 0 } 
+    });
+    await logActivity(req.user!.userId, 'CREATE_ANNOUNCEMENT', 'announcement', announcement.id, `Membuat pengumuman: ${title}`, req);
+    res.status(201).json(announcement);
+  }
+
+  static async getFiles(req: Request, res: Response) {
+    if (!fs.existsSync(uploadsDir)) {
+      return res.json([]);
+    }
+    const files = fs.readdirSync(uploadsDir).map(file => {
+      const stats = fs.statSync(path.join(uploadsDir, file));
+      return { 
+        name: file, 
+        size: stats.size, 
+        url: `/uploads/${file}`, 
+        createdAt: stats.birthtime 
+      };
+    });
+    res.json(files);
+  }
+
+  static async handleUpload(req: Request, res: Response) {
+    if (!req.file) throw new AppError(400, 'Tidak ada file diupload');
+    const fileUrl = `/uploads/${req.file.filename}`;
+    await logActivity(req.user!.userId, 'UPLOAD_FILE', 'file', undefined, `Mengupload: ${req.file.originalname}`, req);
+    res.json({ 
+      url: fileUrl, 
+      name: req.file.originalname, 
+      size: req.file.size, 
+      mimetype: req.file.mimetype 
+    });
+  }
+
+  static healthCheck(req: Request, res: Response) {
+    res.json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(), 
+      uptime: process.uptime() 
+    });
+  }
+}

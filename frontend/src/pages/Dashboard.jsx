@@ -1,38 +1,51 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { BookOpen, Brain, Trophy, Flame, TrendingUp, ArrowRight, Users, FileText, Award, ShieldCheck, Activity, Star, Zap, Download } from 'lucide-react'
+import { BookOpen, Brain, Trophy, Flame, TrendingUp, ArrowRight, Users, FileText, Award, ShieldCheck, Activity, Star, Zap, Download, Layers, Bell, CheckCircle } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { useQuery } from '@tanstack/react-query'
 import api from '../utils/api'
 import { getLevelData, getXPProgressInLevel, getXPForNextLevel } from '../utils/levelSystem'
 import toast from 'react-hot-toast'
+import { StatCardSkeleton, MaterialCardSkeleton } from '../components/SkeletonLoader'
 
 const ADMIN_PATH = import.meta.env.VITE_ADMIN_PATH || '/admin'
 
 export default function Dashboard() {
   const { user } = useAuth()
-  const [progress, setProgress] = useState(null)
-  const [achievements, setAchievements] = useState([])
-  const [loading, setLoading] = useState(true)
+  const { data: progressRes, isLoading: loadingProgress } = useQuery({
+    queryKey: ['user-progress'],
+    queryFn: async () => {
+      const res = await api.get('/portal/progress')
+      return res.data
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  })
+
+  const { data: achievementsRes, isLoading: loadingAchievements } = useQuery({
+    queryKey: ['user-achievements'],
+    queryFn: async () => {
+      const res = await api.get('/achievements/mine')
+      return res.data
+    },
+    staleTime: 1000 * 60 * 10, // 10 minutes
+  })
+
+  const progress = progressRes || null
+  const achievements = achievementsRes || []
+  const loading = loadingProgress || loadingAchievements
+
   const [feedbackText, setFeedbackText] = useState('')
   const [sendingFeedback, setSendingFeedback] = useState(false)
 
-  useEffect(() => { fetchData() }, [])
-
-  const fetchData = async () => {
-    try {
-      const [progRes, achRes] = await Promise.all([
-        api.get('/progress'),
-        api.get('/achievements/mine'),
-      ])
-      setProgress(progRes.data)
-      setAchievements(achRes.data)
-    } catch {
-      // silently fail, show empty state
-    } finally {
-      setLoading(false)
-    }
-  }
+  const { data: announcements, isLoading: loadingAnnouncementsList } = useQuery({
+    queryKey: ['announcements'],
+    queryFn: async () => {
+      const res = await api.get('/announcements')
+      return res.data
+    },
+    staleTime: 1000 * 60 * 2, // 2 minutes
+  })
 
   const stats = [
     {
@@ -54,20 +67,20 @@ export default function Dashboard() {
       value: progress?.materialsCompleted || 0,
       icon: BookOpen,
       accent: 'var(--edu-navy)',
-      bg: '#E3EEFF',
+      bg: 'rgba(30,64,175,0.08)',
     },
     {
       label: 'Streak Login',
       value: `${user?.loginStreak || 0} hari`,
       icon: Flame,
       accent: 'var(--edu-red)',
-      bg: '#FDECEA',
+      bg: 'rgba(220,38,38,0.08)',
     },
   ]
   const currentLevel = user?.level || 1;
   const levelData = getLevelData(currentLevel);
-  const xpProgress = getXPProgressInLevel(user?.xp || 0);
-  const nextLevelXP = getXPForNextLevel(currentLevel);
+  const xpProgress = getXPProgressInLevel(user?.xp || 0) || 0;
+  const nextLevelXP = getXPForNextLevel(currentLevel) || 100;
 
   return (
     <div className="min-h-screen pt-20 pb-16" style={{ background: 'var(--edu-cream)' }}>
@@ -76,42 +89,109 @@ export default function Dashboard() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="pt-10 pb-8 flex flex-col md:flex-row md:items-center justify-between gap-6"
+          className="pt-4 pb-8 flex flex-col md:flex-row md:items-center justify-between gap-6"
         >
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="text-xs font-bold px-2 py-0.5 rounded bg-red-100 text-red-600 uppercase tracking-wider">
-                Status Kewargaan
+                Status Siswa
               </span>
               <span className={`text-xs font-bold px-2 py-0.5 rounded ${levelData.bg} ${levelData.text} uppercase tracking-wider`}>
-                {levelData.title}
+                {user?.role === 'ADMIN' ? 'ADMIN UTAMA' : levelData.title}
               </span>
             </div>
             <h1 className="text-3xl md:text-5xl font-black mb-2 tracking-tight" style={{ color: 'var(--edu-text)' }}>
               Halo, {user ? <span className="text-red-600">{user.name}</span> : <div className="inline-block w-48 h-10 skeleton align-middle" />}!
             </h1>
             <p style={{ color: 'var(--edu-muted)' }} className="max-w-md font-medium">
-              {levelData.subtitle} Terus asah pemahamanmu agar menjadi <span className="text-slate-900 font-bold">Warga Negara Unggul</span>.
+              {levelData.subtitle} Terus asah pemahamanmu agar menjadi <span className="text-slate-900 font-bold">Siswa Sekolah Menengah Pertama Unggul</span>.
             </p>
           </div>
+        </motion.div>
 
-          <div className="bg-white p-6 rounded-[2rem] border shadow-sm w-full md:w-80 min-w-[300px]">
-             <div className="flex justify-between items-end mb-3">
-                <div>
-                   <span className="text-xs font-bold text-slate-400 uppercase block mb-1">Progress Level {currentLevel}</span>
-                   <span className="text-sm font-black text-slate-900">{user?.xp} <span className="text-slate-400 font-medium">/ {nextLevelXP} XP</span></span>
-                </div>
-                <div className="text-right">
-                   <span className="text-2xl font-black text-red-600">{xpProgress}%</span>
-                </div>
-             </div>
-             <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
-                <motion.div 
-                  initial={{ width: 0 }}
-                  animate={{ width: `${xpProgress}%` }}
-                  className="h-full bg-gradient-to-r from-red-600 to-red-400"
-                />
-             </div>
+        {/* Learning Journey Roadmap - Premium RPG Feel */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-10"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-xl font-black text-slate-900 tracking-tight">Jalur Pembelajaranmu</h2>
+              <p className="text-xs font-medium text-slate-400">Teruslah belajar untuk membuka pencapaian baru</p>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-2xl border border-slate-100 shadow-sm">
+               <Zap size={14} className="text-amber-500 fill-amber-500" />
+               <span className="text-xs font-black text-slate-700">{user?.xp} <span className="text-slate-300">XP</span></span>
+            </div>
+          </div>
+
+          <div className="relative overflow-x-auto pb-16 pt-4 no-scrollbar">
+            <div className="flex items-center gap-4 min-w-[800px] px-2">
+              {[
+                { lvl: currentLevel - 1, label: 'Selesai', active: false, done: true },
+                { lvl: currentLevel, label: levelData.title, active: true, done: false, progress: xpProgress },
+                { lvl: currentLevel + 1, label: getLevelData(currentLevel + 1).title, active: false, done: false },
+                { lvl: currentLevel + 2, label: 'Lanjutan', active: false, done: false },
+                { lvl: currentLevel + 3, label: 'Mastery', active: false, done: false },
+              ].map((step, i) => (
+                <Fragment key={i}>
+                  {/* Node */}
+                  <motion.div 
+                    whileHover={{ scale: 1.05 }}
+                    className={`relative z-10 w-44 h-56 rounded-[2.5rem] p-6 border-2 flex flex-col items-center text-center justify-between transition-all duration-500 ${
+                      step.active 
+                        ? 'bg-white border-red-600 shadow-2xl shadow-red-200 -translate-y-2' 
+                        : step.done 
+                          ? 'bg-slate-50 border-slate-200 opacity-60 grayscale'
+                          : 'bg-white border-slate-100 opacity-40 grayscale-0'
+                    }`}
+                  >
+                    <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-4 ${
+                      step.active ? 'bg-red-600 text-white shadow-lg' : 'bg-slate-100 text-slate-400'
+                    }`}>
+                      {step.done ? <CheckCircle size={24} /> : <span className="font-black text-lg">{step.lvl}</span>}
+                    </div>
+                    
+                    <div>
+                      <div className={`text-[10px] font-black uppercase tracking-widest mb-1 ${step.active ? 'text-red-600' : 'text-slate-400'}`}>
+                        {step.active ? 'Sekarang' : step.done ? 'Selesai' : 'Terkunci'}
+                      </div>
+                      <div className="text-sm font-black text-slate-900 leading-tight">
+                        {step.label}
+                      </div>
+                    </div>
+
+                    {step.active && (
+                      <div className="w-full mt-4">
+                        <div className="flex justify-between text-[9px] font-black mb-1">
+                          <span className="text-slate-400">{xpProgress}%</span>
+                          <span className="text-red-600">NAIK LEVEL</span>
+                        </div>
+                        <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-50">
+                           <motion.div 
+                             initial={{ width: 0 }}
+                             animate={{ width: `${xpProgress}%` }}
+                             className="h-full bg-red-600"
+                           />
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+
+                  {/* Connector */}
+                  {i < 4 && (
+                    <div className="flex-1 h-1 min-w-[20px] bg-slate-100 relative">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: step.done ? '100%' : step.active ? `${xpProgress}%` : '0%' }}
+                        className="absolute inset-0 bg-red-600"
+                      />
+                    </div>
+                  )}
+                </Fragment>
+              ))}
+            </div>
           </div>
         </motion.div>
 
@@ -124,7 +204,7 @@ export default function Dashboard() {
         >
           {loading ? (
             [1, 2, 3, 4].map(i => (
-              <div key={i} className="h-32 rounded-2xl skeleton" />
+              <StatCardSkeleton key={i} />
             ))
           ) : (
             stats.map((stat) => (
@@ -161,9 +241,9 @@ export default function Dashboard() {
               <h2 className="font-bold text-lg mb-5" style={{ color: 'var(--edu-text)' }}>Mulai Belajar</h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {[
-                  { to: '/portal', label: 'Portal Materi', sub: 'Baca & pelajari', icon: BookOpen, accent: 'var(--edu-navy)', bg: '#E3EEFF' },
-                  { to: '/quiz/easy', label: 'Kuis', sub: 'Uji pemahaman', icon: Brain, accent: '#7e22ce', bg: '#F3E8FF' },
-                  { to: '/leaderboard', label: 'Peringkat', sub: 'Lihat ranking', icon: Trophy, accent: '#9B7210', bg: '#FEF8E7' },
+                  { to: '/portal', label: 'Portal Materi', sub: 'Baca & pelajari', icon: BookOpen, accent: 'var(--edu-navy)', bg: 'rgba(30,64,175,0.08)' },
+                  { to: '/quiz/range/4-7', label: 'Kuis', sub: 'Uji pemahaman', icon: Brain, accent: '#7e22ce', bg: 'rgba(126,34,206,0.08)' },
+                  { to: '/leaderboard', label: 'Peringkat', sub: 'Lihat ranking', icon: Trophy, accent: 'var(--edu-gold)', bg: 'rgba(180,131,9,0.08)' },
                 ].map(item => (
                   <Link
                     key={item.to}
@@ -200,8 +280,8 @@ export default function Dashboard() {
               </div>
 
               {loading ? (
-                <div className="space-y-3">
-                  {[1, 2, 3].map(i => <div key={i} className="h-14 skeleton" />)}
+                <div className="space-y-4">
+                  {[1, 2].map(i => <div key={i} className="h-16 bg-slate-50 animate-pulse rounded-xl" />)}
                 </div>
               ) : progress?.progress && Array.isArray(progress.progress) && progress.progress.length > 0 ? (
                 <div className="space-y-3">
@@ -297,74 +377,124 @@ export default function Dashboard() {
               )}
             </motion.div>
 
-            {/* Admin Panel (conditional) */}
+            {/* Admin Control Center — Modern Bento Grid Version */}
             {(user?.role === 'ADMIN' || user?.role === 'TUTOR') && (
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="rounded-[2.5rem] p-8 shadow-2xl overflow-hidden relative border border-slate-200 mb-6"
-                style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 100%)' }}
+                className="relative"
               >
-                {/* Subtle decorative elements */}
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-slate-100 blur-[50px] rounded-full" />
+                <div className="flex items-center justify-between mb-5">
+                   <div className="flex items-center gap-2">
+                      <ShieldCheck size={20} className="text-slate-900" />
+                      <h2 className="font-bold text-lg text-slate-900">Pusat Kendali</h2>
+                   </div>
+                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Admin Access</span>
+                </div>
 
-                <div className="relative">
-                  <div className="flex items-center gap-4 mb-4">
-                    <ShieldCheck size={28} className="text-slate-900" />
-                    <h2 className="text-2xl font-bold text-slate-900">Pusat Kendali <span className="text-slate-500 font-medium">Administrasi</span></h2>
-                  </div>
-                  <p className="text-[10px] font-bold text-slate-400 mb-8 tracking-[0.2em] uppercase">Akses Keamanan Terenkripsi</p>
-                  
-                  <div className="grid gap-3 mt-8">
-                    {[
-                      { to: `/admin/export/users`, label: 'Export Data Siswa', desc: 'Unduh laporan aktivitas & skor CSV', icon: Download, accent: 'emerald', show: user?.role === 'ADMIN', isLink: false },
-                      { to: `${ADMIN_PATH}/analytics`, label: 'Analitik Platform', desc: 'Pantau grafik pertumbuhan pengguna', icon: TrendingUp, accent: 'violet', show: user?.role === 'ADMIN', special: true, isLink: true },
-                      { to: `${ADMIN_PATH}/users`, label: 'Kontrol Pengguna', desc: 'Blokir, beri akses, dan peran admin', icon: Users, accent: 'blue', show: user?.role === 'ADMIN', isLink: true },
-                      { to: `${ADMIN_PATH}/materials`, label: 'Pusat Materi Belajar', desc: 'Edit artikel, kategori, dan modul', icon: FileText, accent: 'amber', show: true, isLink: true },
-                    ].filter(i => i.show).map(item => {
-                      const accentColors = {
-                        emerald: 'text-emerald-600 bg-emerald-50 ring-emerald-100',
-                        violet: 'text-violet-600 bg-violet-50 ring-violet-100',
-                        blue: 'text-blue-600 bg-blue-50 ring-blue-100',
-                        amber: 'text-amber-600 bg-amber-50 ring-amber-100',
-                      };
-                      
-                      const Wrapper = item.isLink ? Link : 'button';
-                      const linkProps = item.isLink ? { to: item.to } : {
-                        onClick: async () => {
-                           try {
-                              const res = await api.get('/admin/export/users', { responseType: 'blob' });
-                              const url = window.URL.createObjectURL(new Blob([res.data]));
-                              const link = document.createElement('a'); link.href = url;
-                              link.setAttribute('download', 'users.csv'); document.body.appendChild(link);
-                              link.click();
-                           } catch { toast.error('Gagal export data') }
-                        }
-                      };
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { 
+                      internallyTo: `${ADMIN_PATH}/materials`, 
+                      label: 'Materi', 
+                      desc: 'Edit & terbitkan modul', 
+                      icon: FileText, 
+                      accent: 'amber', 
+                      colSpan: 'col-span-2',
+                      show: true 
+                    },
+                    { 
+                      internallyTo: `${ADMIN_PATH}/quizzes`, 
+                      label: 'Kuis', 
+                      desc: 'Kelola soal', 
+                      icon: Brain, 
+                      accent: 'purple', 
+                      colSpan: 'col-span-1',
+                      show: true 
+                    },
+                    { 
+                      internallyTo: `${ADMIN_PATH}/categories`, 
+                      label: 'Topik', 
+                      desc: 'Atur kategori', 
+                      icon: Layers, 
+                      accent: 'indigo', 
+                      colSpan: 'col-span-1',
+                      show: true 
+                    },
+                    { 
+                      internallyTo: `${ADMIN_PATH}/analytics`, 
+                      label: 'Analitik', 
+                      desc: 'Cek performa', 
+                      icon: TrendingUp, 
+                      accent: 'violet', 
+                      colSpan: 'col-span-1',
+                      show: user?.role === 'ADMIN' 
+                    },
+                    { 
+                      internallyTo: `${ADMIN_PATH}/users`, 
+                      label: 'User', 
+                      desc: 'Kelola akses', 
+                      icon: Users, 
+                      accent: 'blue', 
+                      colSpan: 'col-span-1',
+                      show: user?.role === 'ADMIN' 
+                    },
+                    { 
+                      type: 'action',
+                      label: 'Export Data Siswa', 
+                      desc: 'Unduh laporan CSV', 
+                      icon: Download, 
+                      accent: 'emerald', 
+                      colSpan: 'col-span-2',
+                      show: user?.role === 'ADMIN' 
+                    },
+                  ].filter(i => i.show).map((item, idx) => {
+                    const colors = {
+                      amber: 'text-amber-600 bg-amber-50 ring-amber-100/50',
+                      purple: 'text-purple-600 bg-purple-50 ring-purple-100/50',
+                      indigo: 'text-indigo-600 bg-indigo-50 ring-indigo-100/50',
+                      violet: 'text-violet-600 bg-violet-50 ring-violet-100/50',
+                      blue: 'text-blue-600 bg-blue-50 ring-blue-100/50',
+                      emerald: 'text-emerald-600 bg-emerald-50 ring-emerald-100/50',
+                    };
 
-                      return (
-                        <Wrapper
-                          key={item.label}
-                          {...linkProps}
-                          className="group flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-white border border-slate-100 rounded-2xl hover:border-slate-300 hover:shadow-lg hover:shadow-slate-200/50 transition-all duration-300 w-full text-left outline-none focus:ring-4 focus:ring-slate-100"
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ring-1 transition-transform duration-300 group-hover:scale-110 ${accentColors[item.accent]}`}>
-                              <item.icon size={20} strokeWidth={2.5} />
-                            </div>
-                            <div>
-                              <div className="font-bold text-slate-800 text-sm mb-0.5">{item.label}</div>
-                              <div className="text-[11px] font-medium text-slate-400">{item.desc}</div>
-                            </div>
-                          </div>
-                          <div className="hidden sm:flex w-8 h-8 rounded-full border border-slate-100 items-center justify-center bg-slate-50 text-slate-300 group-hover:bg-slate-900 group-hover:text-white group-hover:border-slate-900 transition-all duration-300 shrink-0">
-                            <ArrowRight size={14} />
-                          </div>
-                        </Wrapper>
-                      );
-                    })}
-                  </div>
+                    const isAction = item.type === 'action';
+                    const Wrapper = isAction ? 'button' : Link;
+                    const props = isAction ? {
+                      onClick: async () => {
+                         try {
+                            const res = await api.get('/admin/export/users', { responseType: 'blob' });
+                            const url = window.URL.createObjectURL(new Blob([res.data]));
+                            const link = document.createElement('a'); link.href = url;
+                            link.setAttribute('download', 'users.csv'); document.body.appendChild(link);
+                            link.click();
+                         } catch { toast.error('Gagal export data') }
+                      }
+                    } : { to: item.internallyTo };
+
+                    return (
+                      <Wrapper
+                        key={item.label}
+                        {...props}
+                        className={`${item.colSpan} group relative flex flex-col p-4 bg-white border border-slate-100 rounded-3xl transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/40 hover:border-slate-300 overflow-hidden text-left outline-none`}
+                      >
+                         {/* Subtle Glow Effect */}
+                         <div className={`absolute -right-4 -top-4 w-12 h-12 rounded-full blur-2xl opacity-0 group-hover:opacity-20 transition-opacity bg-current ${colors[item.accent].split(' ')[0]}`} />
+                         
+                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ring-1 transition-transform group-hover:scale-110 ${colors[item.accent]}`}>
+                            <item.icon size={18} strokeWidth={2.2} />
+                         </div>
+                         
+                         <div className="font-bold text-slate-800 text-xs sm:text-sm mb-0.5">{item.label}</div>
+                         <div className="text-[10px] sm:text-[11px] font-medium text-slate-400 line-clamp-1">{item.desc}</div>
+                         
+                         <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-0 translate-x-1">
+                            <ArrowRight size={12} className="text-slate-400" />
+                         </div>
+                      </Wrapper>
+                    );
+                  })}
                 </div>
               </motion.div>
             )}
@@ -396,7 +526,7 @@ export default function Dashboard() {
                       if (!feedbackText.trim()) return toast.error('Pesan tidak boleh kosong');
                       setSendingFeedback(true);
                       try {
-                        await api.post('/feedback', { content: feedbackText, category: 'SUGGESTION' });
+                        await api.post('/discussion/feedback', { content: feedbackText, category: 'SUGGESTION' });
                         toast.success('Terima kasih atas saran Anda! 🎉');
                         setFeedbackText('');
                       } catch {

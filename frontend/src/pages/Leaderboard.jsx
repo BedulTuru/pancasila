@@ -88,7 +88,7 @@ export default function Leaderboard() {
 
   const fetchLeaderboard = async () => {
     try {
-      const res = await api.get('/leaderboard', { params: { limit: 50 } })
+      const res = await api.get('/portal/leaderboard', { params: { limit: 50 } })
       setLeaderboard(res.data)
       // Give a small delay before showing podium for dramatic effect
       setTimeout(() => setPodiumReady(true), 200)
@@ -117,7 +117,11 @@ export default function Leaderboard() {
           style={{ color: '#F59E0B', opacity: 0.06 }} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 pt-36 pb-20">
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-amber-600 mb-3">
               Papan Skor &nbsp;·&nbsp; {leaderboard.length} Peserta
             </p>
@@ -228,43 +232,41 @@ export default function Leaderboard() {
                     {/* Gold sparkle particles — always running */}
                     {SPARKLES.map((s, i) => <Sparkle key={i} style={s} />)}
 
-                    <div className="relative z-10 px-8 pt-16 pb-0">
-                      <div className="flex items-end justify-center gap-4 sm:gap-10">
+                    <div className="relative z-10 px-4 sm:px-8 pt-10 sm:pt-16 pb-0">
+                      <div className="flex items-end justify-center gap-1 sm:gap-10 max-w-full overflow-hidden">
 
                         {/* ── RANK #2 ── slide in from left */}
                         {top3[1] && (
-                          <motion.div
+                            <motion.div
                             initial={{ opacity: 0, x: -40, y: 20 }}
                             animate={{ opacity: 1, x: 0, y: 0 }}
                             transition={{ delay: 0.35, type: 'spring', stiffness: 90, damping: 14 }}
-                            className="flex flex-col items-center gap-3 flex-1 max-w-[160px]">
+                            className="flex flex-col items-center gap-2 sm:gap-3 flex-1 min-w-0">
                             <motion.div
                               whileHover={{ scale: 1.06, rotate: -3 }}
                               transition={{ type: 'spring', stiffness: 300 }}
                               className="relative cursor-pointer">
-                              <div className={`${RANK_META[1].size} rounded-3xl flex items-center justify-center font-black shadow-lg border-2 transition-shadow hover:shadow-xl`}
-                                style={{ background: RANK_META[1].bg, color: RANK_META[1].text, borderColor: RANK_META[1].ring, boxShadow: `0 12px 32px -8px ${RANK_META[1].glow}` }}>
-                                <span className={RANK_META[1].fontSize}>{top3[1].name?.charAt(0).toUpperCase()}</span>
-                              </div>
-                              <div className={`absolute -bottom-2 -right-2 w-8 h-8 rounded-xl bg-gradient-to-br ${RANK_META[1].badge} flex items-center justify-center text-white font-black text-sm shadow-md border-2 border-white`}>
+                                <div className="w-14 h-14 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl flex items-center justify-center font-black shadow-lg border-2 transition-shadow hover:shadow-xl"
+                                  style={{ background: RANK_META[1].bg, color: RANK_META[1].text, borderColor: RANK_META[1].ring, boxShadow: `0 12px 32px -8px ${RANK_META[1].glow}` }}>
+                                  <span className="text-xl sm:text-4xl">{top3[1].name?.charAt(0).toUpperCase()}</span>
+                                </div>
+                              <div className={`absolute -bottom-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-gradient-to-br ${RANK_META[1].badge} flex items-center justify-center text-white font-black text-[10px] sm:text-sm shadow-md border-2 border-white`}>
                                 2
                               </div>
                             </motion.div>
-                            <div className="text-center">
-                              <p className="font-black text-slate-900 text-sm truncate max-w-[140px]">{top3[1].name}</p>
-                              <AnimatedScore value={top3[1].bestScore ?? 0} color="#64748B" className="text-xs font-bold" />
+                            <div className="text-center w-full px-1">
+                              <p className="font-black text-slate-900 text-[10px] sm:text-sm truncate">{top3[1].name}</p>
+                              <AnimatedScore value={top3[1].bestScore ?? 0} color="#64748B" className="text-[9px] sm:text-xs font-bold" />
                             </div>
                             {/* Podium base */}
                             <motion.div
                               initial={{ scaleY: 0 }}
                               animate={{ scaleY: 1 }}
                               transition={{ delay: 0.7, duration: 0.4, ease: 'easeOut' }}
-                              style={{ transformOrigin: 'bottom' }}
-                              className="w-full h-16 rounded-t-2xl flex items-center justify-center"
-                              style2={{ background: 'linear-gradient(180deg, rgba(148,163,184,0.2) 0%, rgba(148,163,184,0.4) 100%)' }}>
-                              <div className="w-full h-16 rounded-t-2xl flex items-center justify-center"
+                              style={{ transformOrigin: 'bottom', width: '100%' }}>
+                              <div className="w-full h-12 sm:h-16 rounded-t-xl sm:rounded-t-2xl flex items-center justify-center"
                                 style={{ background: 'linear-gradient(180deg, rgba(148,163,184,0.2) 0%, rgba(148,163,184,0.4) 100%)' }}>
-                                <span className="text-slate-400 font-black text-lg">2</span>
+                                <span className="text-slate-400 font-black text-xs sm:text-lg">2</span>
                               </div>
                             </motion.div>
                           </motion.div>
@@ -276,35 +278,35 @@ export default function Leaderboard() {
                             initial={{ opacity: 0, y: -60, scale: 0.8 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             transition={{ delay: 0.55, type: 'spring', stiffness: 80, damping: 12 }}
-                            className="flex flex-col items-center gap-3 flex-1 max-w-[200px] -translate-y-6">
+                            className="flex flex-col items-center gap-2 sm:gap-3 flex-1 min-w-0 -translate-y-4 sm:-translate-y-6">
 
                             <div className="relative flex flex-col items-center" style={{ zIndex: 20 }}>
                               {/* Crown with glow + bounce */}
                               <motion.div
                                 animate={{
-                                  y: [0, -12, 0],
-                                  scale: [1, 1.12, 1],
+                                  y: [0, -8, 0],
+                                  scale: [1, 1.1, 1],
                                   filter: [
-                                    'drop-shadow(0 8px 20px rgba(245,158,11,0.5))',
-                                    'drop-shadow(0 20px 40px rgba(245,158,11,0.9))',
-                                    'drop-shadow(0 8px 20px rgba(245,158,11,0.5))',
+                                    'drop-shadow(0 4px 10px rgba(245,158,11,0.4))',
+                                    'drop-shadow(0 12px 25px rgba(245,158,11,0.7))',
+                                    'drop-shadow(0 4px 10px rgba(245,158,11,0.4))',
                                   ],
                                 }}
                                 transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                                style={{ marginBottom: '-14px', position: 'relative', zIndex: 30 }}>
-                                <Crown size={80} style={{ color: '#F59E0B', fill: '#FCD34D' }} />
+                                style={{ marginBottom: '-10px', position: 'relative', zIndex: 30 }}>
+                                <Crown size={32} className="sm:w-20 sm:h-20" style={{ color: '#F59E0B', fill: '#FCD34D' }} />
                               </motion.div>
 
                               {/* Pulsing glow ring behind avatar */}
-                              <motion.div
-                                animate={{ scale: [1, 1.15, 1], opacity: [0.35, 0.6, 0.35] }}
-                                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                                className="absolute rounded-[2.5rem] pointer-events-none"
+                                <motion.div
+                                  animate={{ scale: [1, 1.15, 1], opacity: [0.35, 0.6, 0.35] }}
+                                  transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                                  className="absolute rounded-full pointer-events-none"
                                 style={{
-                                  inset: '-8px',
+                                  inset: '-6px',
                                   background: 'radial-gradient(circle, rgba(251,191,36,0.4) 0%, transparent 70%)',
                                   zIndex: 5,
-                                  top: '56px', // align with avatar start
+                                  top: '40px', // align with avatar start
                                 }} />
 
                               {/* Avatar */}
@@ -312,23 +314,23 @@ export default function Leaderboard() {
                                 whileHover={{ scale: 1.08 }}
                                 transition={{ type: 'spring', stiffness: 260 }}
                                 className="relative cursor-pointer" style={{ zIndex: 10 }}>
-                                <div className={`${RANK_META[0].size} rounded-[2rem] flex items-center justify-center font-black shadow-2xl border-2`}
+                                <div className="w-16 h-16 sm:w-32 sm:h-32 rounded-2xl sm:rounded-[2rem] flex items-center justify-center font-black shadow-2xl border-2"
                                   style={{
                                     background: RANK_META[0].bg,
                                     color: RANK_META[0].text,
                                     borderColor: RANK_META[0].ring,
-                                    boxShadow: `0 24px 48px -12px ${RANK_META[0].glow}, 0 0 0 4px rgba(251,191,36,0.2)`,
+                                    boxShadow: `0 16px 32px -8px ${RANK_META[0].glow}, 0 0 0 4px rgba(251,191,36,0.1)`,
                                   }}>
-                                  <span className={RANK_META[0].fontSize}>{top3[0].name?.charAt(0).toUpperCase()}</span>
+                                  <span className="text-2xl sm:text-5xl">{top3[0].name?.charAt(0).toUpperCase()}</span>
                                 </div>
                               </motion.div>
                             </div>
 
-                            <div className="text-center">
-                              <p className="font-black text-slate-900 text-base truncate max-w-[180px]">{top3[0].name}</p>
-                              <p className="flex items-center justify-center gap-1.5 mt-0.5">
-                                <AnimatedScore value={top3[0].bestScore ?? 0} color="#D97706" className="text-base font-black" />
-                                <Star size={13} fill="#D97706" color="#D97706" />
+                            <div className="text-center w-full px-1">
+                              <p className="font-black text-slate-900 text-xs sm:text-base truncate">{top3[0].name}</p>
+                              <p className="flex items-center justify-center gap-1 mt-0.5">
+                                <AnimatedScore value={top3[0].bestScore ?? 0} color="#D97706" className="text-sm sm:text-base font-black" />
+                                <Star size={10} fill="#D97706" color="#D97706" className="sm:w-[13px]" />
                               </p>
                             </div>
 
@@ -338,9 +340,9 @@ export default function Leaderboard() {
                               animate={{ scaleY: 1 }}
                               transition={{ delay: 0.85, duration: 0.45, ease: 'easeOut' }}
                               style={{ transformOrigin: 'bottom', width: '100%' }}>
-                              <div className="w-full h-28 rounded-t-2xl flex items-center justify-center"
+                              <div className="w-full h-20 sm:h-28 rounded-t-xl sm:rounded-t-2xl flex items-center justify-center"
                                 style={{ background: 'linear-gradient(180deg, rgba(251,191,36,0.3) 0%, rgba(251,191,36,0.55) 100%)' }}>
-                                <Crown size={30} style={{ color: '#D97706', opacity: 0.35 }} />
+                                <Crown size={24} style={{ color: '#D97706', opacity: 0.35 }} className="sm:w-[30px]" />
                               </div>
                             </motion.div>
                           </motion.div>
@@ -352,36 +354,37 @@ export default function Leaderboard() {
                             initial={{ opacity: 0, x: 40, y: 20 }}
                             animate={{ opacity: 1, x: 0, y: 0 }}
                             transition={{ delay: 0.4, type: 'spring', stiffness: 90, damping: 14 }}
-                            className="flex flex-col items-center gap-3 flex-1 max-w-[160px]">
+                            className="flex flex-col items-center gap-2 sm:gap-3 flex-1 min-w-0">
                             <motion.div
                               whileHover={{ scale: 1.06, rotate: 3 }}
                               transition={{ type: 'spring', stiffness: 300 }}
                               className="relative cursor-pointer">
-                              <div className={`${RANK_META[2].size} rounded-3xl flex items-center justify-center font-black shadow-lg border-2 transition-shadow hover:shadow-xl`}
-                                style={{ background: RANK_META[2].bg, color: RANK_META[2].text, borderColor: RANK_META[2].ring, boxShadow: `0 12px 32px -8px ${RANK_META[2].glow}` }}>
-                                <span className={RANK_META[2].fontSize}>{top3[2].name?.charAt(0).toUpperCase()}</span>
-                              </div>
-                              <div className={`absolute -bottom-2 -right-2 w-8 h-8 rounded-xl bg-gradient-to-br ${RANK_META[2].badge} flex items-center justify-center text-white font-black text-sm shadow-md border-2 border-white`}>
+                                <div className="w-14 h-14 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl flex items-center justify-center font-black shadow-lg border-2 transition-shadow hover:shadow-xl"
+                                  style={{ background: RANK_META[2].bg, color: RANK_META[2].text, borderColor: RANK_META[2].ring, boxShadow: `0 12px 32px -8px ${RANK_META[2].glow}` }}>
+                                  <span className="text-xl sm:text-4xl">{top3[2].name?.charAt(0).toUpperCase()}</span>
+                                </div>
+                              <div className={`absolute -bottom-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-gradient-to-br ${RANK_META[2].badge} flex items-center justify-center text-white font-black text-[10px] sm:text-sm shadow-md border-2 border-white`}>
                                 3
                               </div>
                             </motion.div>
-                            <div className="text-center">
-                              <p className="font-black text-slate-900 text-sm truncate max-w-[140px]">{top3[2].name}</p>
-                              <AnimatedScore value={top3[2].bestScore ?? 0} color="#EA580C" className="text-xs font-bold" />
+                            <div className="text-center w-full px-1">
+                              <p className="font-black text-slate-900 text-[10px] sm:text-sm truncate">{top3[2].name}</p>
+                              <AnimatedScore value={top3[2].bestScore ?? 0} color="#EA580C" className="text-[9px] sm:text-xs font-bold" />
                             </div>
                             <motion.div
                               initial={{ scaleY: 0 }}
                               animate={{ scaleY: 1 }}
                               transition={{ delay: 0.75, duration: 0.35, ease: 'easeOut' }}
                               style={{ transformOrigin: 'bottom', width: '100%' }}>
-                              <div className="w-full h-10 rounded-t-2xl flex items-center justify-center"
+                              <div className="w-full h-8 sm:h-10 rounded-t-xl sm:rounded-t-2xl flex items-center justify-center"
                                 style={{ background: 'linear-gradient(180deg, rgba(249,115,22,0.18) 0%, rgba(249,115,22,0.35) 100%)' }}>
-                                <span className="text-orange-400 font-black text-lg">3</span>
+                                <span className="text-orange-400 font-black text-[10px] sm:text-lg">3</span>
                               </div>
                             </motion.div>
                           </motion.div>
                         )}
                       </div>
+
                     </div>
                   </motion.div>
                 )}

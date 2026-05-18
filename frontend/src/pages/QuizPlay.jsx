@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Clock, CheckCircle2, XCircle, ArrowRight, Home, RefreshCw, AlertTriangle, BookOpen } from 'lucide-react'
@@ -6,33 +6,63 @@ import api from '../utils/api'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
 import { formatScientific } from '../utils/scientific'
+import { useQuery } from '@tanstack/react-query'
 
 export default function QuizPlay() {
   const { slug } = useParams()
   const navigate = useNavigate()
   const { user } = useAuth()
-  const [quiz, setQuiz] = useState(null)
-  const [questions, setQuestions] = useState([])
-  const [answers, setAnswers] = useState({})
+  
+  const [answers, setAnswers] = useState(() => {
+    const saved = localStorage.getItem(`quiz_answers_${slug}`)
+    return saved ? JSON.parse(saved) : {}
+  })
   const [timeLeft, setTimeLeft] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
   const [result, setResult] = useState(null)
-
-  console.log('[QuizPlay] Render state:', { loading, questionsCount: questions.length, hasQuiz: !!quiz })
-
+  const [submitting, setSubmitting] = useState(false)
   const [errorInfo, setErrorInfo] = useState(null)
 
+  // useQuery for quiz data
+  const { data: quiz, isLoading, isError } = useQuery({
+    queryKey: ['quiz', slug],
+    queryFn: async () => {
+      const res = await api.get(`/quizzes/${slug}`)
+      return res.data
+    },
+    staleTime: 1000 * 60 * 30, // 30 minutes
+  })
+
+  const questions = quiz?.questions || []
+  const timerRef = useRef(null)
+
+  // Initialize timer and localStorage restoration
   useEffect(() => {
-    const handleError = (e) => {
-      setErrorInfo(e.message + (e.error?.stack ? '\n' + e.error.stack : ''))
+    if (quiz && timeLeft === null) {
+      const savedTime = localStorage.getItem(`quiz_timer_${slug}`)
+      if (savedTime && !result) {
+        setTimeLeft(parseInt(savedTime))
+      } else {
+        setTimeLeft(quiz.timeLimit || 3600)
+      }
     }
-    window.addEventListener('error', handleError)
-    return () => window.removeEventListener('error', handleError)
-  }, [])
+  }, [quiz, slug, result])
+
+  // Sync answers to localStorage
+  useEffect(() => {
+    if (Object.keys(answers).length > 0 && !result) {
+      localStorage.setItem(`quiz_answers_${slug}`, JSON.stringify(answers))
+    }
+  }, [answers, slug, result])
+
+  // Sync timer to localStorage
+  useEffect(() => {
+    if (timeLeft !== null && !result && !submitting) {
+      localStorage.setItem(`quiz_timer_${slug}`, timeLeft.toString())
+    }
+  }, [timeLeft, slug, result, submitting])
 
   const handleSubmit = async (autoSubmit = false) => {
-    if (!autoSubmit) {
+    if (!autoSubmit && !result) {
       const answeredCount = Object.keys(answers).length
       if (answeredCount < questions.length) {
         if (!confirm(`Kamu baru menjawab ${answeredCount} dari ${questions.length} soal. Yakin ingin mengumpulkan?`)) return
@@ -40,7 +70,6 @@ export default function QuizPlay() {
     }
 
     setSubmitting(true)
-
     try {
       if (!quiz?.id) throw new Error('Quiz ID is missing')
       const formattedAnswers = questions.map(q => ({
@@ -50,11 +79,10 @@ export default function QuizPlay() {
 
       const response = await api.post(`/quizzes/${quiz.id}/attempt`, { 
         answers: formattedAnswers,
-        timeSpent: quiz.timeLimit - timeLeft
+        timeSpent: (quiz.timeLimit || 3600) - (timeLeft || 0)
       })
 
       const data = response.data
-
       setResult({
         score: data.percentage,
         correct: data.score,
@@ -67,10 +95,13 @@ export default function QuizPlay() {
         }))
       })
 
+      // Clear persistence on success
+      localStorage.removeItem(`quiz_answers_${slug}`)
+      localStorage.removeItem(`quiz_timer_${slug}`)
+
       if (data.xpEarned > 0) {
         toast.success(`Selamat! Kamu mendapatkan +${data.xpEarned} XP!`)
       }
-
     } catch (err) {
       console.error('Quiz submission error:', err)
       toast.error('Gagal mengumpulkan kuis. Silakan coba lagi.')
@@ -79,37 +110,27 @@ export default function QuizPlay() {
     }
   }
 
-  const timerRef = React.useRef(null)
-  const handleSubmitRef = React.useRef(handleSubmit)
+  const handleSubmitRef = useRef(handleSubmit)
   handleSubmitRef.current = handleSubmit
-
-  useEffect(() => {
-    // Only load quiz rules first
-    api.get(`/quizzes/${slug}`)
-      .then(res => {
-        setQuiz(res.data)
-        setQuestions(res.data.questions || [])
-        setTimeLeft(res.data.timeLimit || 3600)
-      })
-      .catch((err) => {
-        console.error(err)
-        setErrorInfo('API Error: ' + err.message)
-        toast.error('Kuis tidak ditemukan')
-      })
-      .finally(() => setLoading(false))
-  }, [slug])
 
   useEffect(() => {
     if (timeLeft === null || timeLeft <= 0 || result || submitting) return
     clearInterval(timerRef.current)
     timerRef.current = setInterval(() => {
-      setTimeLeft(prev => Math.max(0, prev - 1))
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timerRef.current)
+          handleSubmitRef.current(true)
+          return 0
+        }
+        return prev - 1
+      })
     }, 1000)
     return () => clearInterval(timerRef.current)
-  }, [result, submitting, timeLeft === null]) // Added timeLeft === null to monitor initialization
+  }, [result, submitting, timeLeft === null])
 
   const formatTime = (seconds) => {
-    if (seconds === null || seconds === undefined) return '--:--'
+    if (seconds === null) return '--:--'
     const m = Math.floor(seconds / 60)
     const s = seconds % 60
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
@@ -120,23 +141,17 @@ export default function QuizPlay() {
     setAnswers(prev => ({ ...prev, [qId]: optionIdx }))
   }
 
-  useEffect(() => {
-    if (timeLeft === 0 && !result && !submitting) {
-      handleSubmitRef.current(true)
-    }
-  }, [timeLeft])
-
-  if (errorInfo) {
+  if (isError) {
     return (
-      <div className="min-h-screen pt-32 bg-red-50 p-10 font-mono text-red-800">
-        <h1 className="text-2xl font-bold mb-4">CRITICAL ERROR CAUGHT:</h1>
-        <pre className="whitespace-pre-wrap bg-white p-5 rounded border border-red-200">{errorInfo}</pre>
-        <button onClick={() => window.location.reload()} className="mt-5 btn-primary">Try Reload</button>
+      <div className="min-h-screen pt-32 text-center">
+        <AlertTriangle size={64} className="mx-auto mb-4 text-red-400" />
+        <h1 className="text-2xl font-bold mb-2">Kuis Tidak Ditemukan</h1>
+        <button onClick={() => navigate('/portal')} className="btn-primary">Kembali</button>
       </div>
     )
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen pt-24 flex justify-center items-center" style={{ background: 'var(--edu-cream)' }}>
         <div className="w-10 h-10 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--edu-navy)', borderTopColor: 'transparent' }} />
