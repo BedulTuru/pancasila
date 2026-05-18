@@ -98,7 +98,7 @@ export default function Navbar() {
   const userMenuRef = useRef(null)
   const location = useLocation()
   const navigate = useNavigate()
-  const { user, logout, snapBack, isImpersonating } = useAuth()
+  const { user, loading, logout, snapBack, isImpersonating } = useAuth()
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -214,26 +214,31 @@ export default function Navbar() {
 
             {/* Actions */}
             <div className="flex items-center gap-2 sm:gap-4">
-              {/* Search button (Visible on Mobile & Desktop) */}
+              {/* Search button (Hidden on Mobile because of Bottom Nav, Visible on Desktop) */}
               <button 
                 onClick={() => setSearchOpen(true)}
-                className="flex p-2.5 rounded-xl transition-all bg-slate-50 border border-slate-200/50 text-slate-500 hover:bg-slate-100 hover:text-slate-900 active:scale-95 shadow-sm"
+                className="hidden md:flex p-2.5 rounded-xl transition-all bg-slate-50 border border-slate-200/50 text-slate-500 hover:bg-slate-100 hover:text-slate-900 active:scale-95 shadow-sm"
               >
                 <Search size={18} />
               </button>
               
-              {user ? (
-                <div className="relative hidden lg:block" ref={userMenuRef}>
-                  <button 
-                    onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="flex items-center gap-3 pl-2 pr-4 py-1.5 rounded-full font-bold text-sm transition-all shadow-sm bg-red-600 text-white hover:shadow-lg"
-                  >
-                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-black italic">
-                      {user.name?.charAt(0)}
-                    </div>
-                    <span className="hidden sm:inline max-w-[100px] truncate">{user.name}</span>
-                    <ChevronDown size={14} className={`transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
-                  </button>
+              {loading ? (
+                /* Skeletal Loading Placeholder to prevent flashing MASUK button on quick refreshes */
+                <div className="w-16 h-9 bg-slate-100 border border-slate-200/50 rounded-xl animate-pulse" />
+              ) : user ? (
+                <>
+                  {/* Desktop User Menu */}
+                  <div className="relative hidden lg:block" ref={userMenuRef}>
+                    <button 
+                      onClick={() => setUserMenuOpen(!userMenuOpen)}
+                      className="flex items-center gap-3 pl-2 pr-4 py-1.5 rounded-full font-bold text-sm transition-all shadow-sm bg-red-600 text-white hover:shadow-lg"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-black italic">
+                        {user.name?.charAt(0)}
+                      </div>
+                      <span className="hidden sm:inline max-w-[100px] truncate">{user.name}</span>
+                      <ChevronDown size={14} className={`transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
+                    </button>
 
                   <AnimatePresence>
                     {userMenuOpen && (
@@ -272,7 +277,16 @@ export default function Navbar() {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </div>
+                  </div>
+
+                  {/* Mobile User Avatar Shortcut (Sleek red badge linking directly to Dashboard) */}
+                  <Link 
+                    to="/dashboard"
+                    className="lg:hidden w-10 h-10 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center font-black text-red-600 active:scale-95 transition-all shadow-sm"
+                  >
+                    {user.name?.charAt(0)}
+                  </Link>
+                </>
               ) : (
                 <Link
                   to="/login"
