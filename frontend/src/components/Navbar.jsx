@@ -8,6 +8,7 @@ import {
   ShieldCheck, User, Settings, ArrowLeft
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import CommandPalette from './CommandPalette'
 
 function NavLink({ to, label, dropdown, active, transparentMode }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -93,10 +94,22 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(typeof window !== 'undefined' ? window.scrollY > 20 : false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const userMenuRef = useRef(null)
   const location = useLocation()
   const navigate = useNavigate()
   const { user, logout, snapBack, isImpersonating } = useAuth()
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        setSearchOpen(true)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -202,6 +215,7 @@ export default function Navbar() {
             {/* Actions */}
             <div className="flex items-center gap-1.5 sm:gap-4">
               <button 
+                onClick={() => setSearchOpen(true)}
                 className="hidden md:flex p-2 rounded-xl transition-all bg-slate-100 text-slate-500 hover:bg-slate-200"
               >
                 <Search size={18} />
@@ -346,6 +360,8 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <CommandPalette isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   )
 }

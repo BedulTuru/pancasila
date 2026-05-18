@@ -128,10 +128,18 @@ export class PortalController {
   }
 
   static async search(req: Request, res: Response) {
-    const query = req.query.q as string;
+    let query = (req.query.q as string || '').trim();
     if (!query || query.length < 2) {
       return res.json([]);
     }
+
+    // 🔐 Search Query Security Hardening
+    // 1. Cap query length to prevent Denial of Service (DoS) from massive inputs
+    if (query.length > 100) {
+      query = query.substring(0, 100);
+    }
+    // 2. Strip dangerous characters (XSS/injection mitigation)
+    query = query.replace(/[\u0000]/g, '').replace(/[<>'"\\]/g, '');
 
     const [materials, quizzes] = await Promise.all([
       prisma.material.findMany({
