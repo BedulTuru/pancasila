@@ -171,7 +171,7 @@ export default function Navbar() {
               : 'bg-white/90 backdrop-blur-md shadow-sm border-b border-edu-border py-3'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="flex items-center justify-between transition-all duration-500">
             {/* Logo / Back Button (Mobile) */}
             <div className="flex items-center gap-2">
@@ -189,10 +189,10 @@ export default function Navbar() {
               )}
 
               <Link to="/" className="flex items-center gap-1 group">
-                <div className="flex items-center gap-1 sm:gap-3">
-                  <img src="/itb.png" alt="ITB" className="h-6 sm:h-10 w-auto" />
-                  <div className="w-px h-4 sm:h-6 bg-slate-200" />
-                  <img src="/garuda.svg" alt="Garuda" className="h-6 sm:h-10 w-auto" />
+                <div className="flex items-center gap-1.5 sm:gap-3">
+                  <img src="/itb.png" alt="ITB" className="h-8 sm:h-10 w-auto object-contain" />
+                  <div className="w-px h-5 sm:h-6 bg-slate-200" />
+                  <img src="/garuda.svg" alt="Garuda" className="h-8 sm:h-10 w-auto object-contain" />
                   <span className="hidden sm:block font-black text-lg sm:text-2xl tracking-tighter transition-colors text-red-600">
                     Pancasila
                   </span>
@@ -213,10 +213,11 @@ export default function Navbar() {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-1.5 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
+              {/* Search button (Visible on Mobile & Desktop) */}
               <button 
                 onClick={() => setSearchOpen(true)}
-                className="hidden md:flex p-2 rounded-xl transition-all bg-slate-100 text-slate-500 hover:bg-slate-200"
+                className="flex p-2.5 rounded-xl transition-all bg-slate-50 border border-slate-200/50 text-slate-500 hover:bg-slate-100 hover:text-slate-900 active:scale-95 shadow-sm"
               >
                 <Search size={18} />
               </button>
@@ -275,7 +276,7 @@ export default function Navbar() {
               ) : (
                 <Link
                   to="/login"
-                  className="px-3 py-2 sm:px-8 sm:py-3 bg-red-600 text-white rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-sm uppercase tracking-widest hover:shadow-xl transition-all whitespace-nowrap"
+                  className="px-4 py-2.5 sm:px-8 sm:py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl sm:rounded-2xl font-black text-xs sm:text-sm uppercase tracking-widest hover:shadow-xl transition-all whitespace-nowrap active:scale-95 shadow-sm"
                 >
                   Masuk
                 </Link>
@@ -283,10 +284,14 @@ export default function Navbar() {
 
               {/* Mobile menu toggle */}
               <button
-                className={`lg:hidden p-2 rounded-xl transition-colors ${transparentMode ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'}`}
+                className={`lg:hidden p-2.5 rounded-xl transition-all border active:scale-90 ${
+                  transparentMode 
+                    ? 'bg-white/20 border-white/10 text-white' 
+                    : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                }`}
                 onClick={() => setMenuOpen(!menuOpen)}
               >
-                {menuOpen ? <X size={20} /> : <Menu size={20} />}
+                {menuOpen ? <X size={18} /> : <Menu size={18} />}
               </button>
             </div>
           </div>
