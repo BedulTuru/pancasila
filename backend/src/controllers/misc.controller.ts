@@ -53,11 +53,23 @@ export class MiscController {
     });
   }
 
-  static healthCheck(req: Request, res: Response) {
-    res.json({ 
-      status: 'ok', 
-      timestamp: new Date().toISOString(), 
-      uptime: process.uptime() 
-    });
+  static async healthCheck(req: Request, res: Response) {
+    try {
+      // Quick database query to wake up/keep Neon database warm
+      await prisma.$queryRaw`SELECT 1`;
+      res.json({ 
+        status: 'ok', 
+        db: 'connected',
+        timestamp: new Date().toISOString(), 
+        uptime: process.uptime() 
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        status: 'error',
+        db: 'disconnected',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
   }
 }
