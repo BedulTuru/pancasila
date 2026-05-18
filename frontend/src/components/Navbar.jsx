@@ -284,11 +284,7 @@ export default function Navbar() {
 
               {/* Mobile menu toggle */}
               <button
-                className={`lg:hidden p-2.5 rounded-xl transition-all border active:scale-90 ${
-                  transparentMode 
-                    ? 'bg-white/20 border-white/10 text-white' 
-                    : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
-                }`}
+                className="lg:hidden p-2.5 rounded-xl transition-all border border-slate-200 bg-slate-50 text-slate-800 hover:bg-slate-100 active:scale-90 shadow-sm"
                 onClick={() => setMenuOpen(!menuOpen)}
               >
                 {menuOpen ? <X size={18} /> : <Menu size={18} />}
