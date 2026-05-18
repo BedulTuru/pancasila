@@ -29,10 +29,10 @@ export function getXPProgressInLevel(xp: number): number {
 }
 
 export const XP_REWARDS = {
-  QUIZ_PASS: 200,
-  QUIZ_PERFECT: 500,
-  MATERIAL_READ: 50,
-  DAILY_LOGIN: 20,
+  QUIZ_PASS: 30,
+  QUIZ_PERFECT: 50,
+  MATERIAL_READ: 10,
+  DAILY_LOGIN: 5,
 };
 
 export const LEVEL_CATEGORIES = [
