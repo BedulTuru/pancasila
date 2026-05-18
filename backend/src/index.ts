@@ -76,6 +76,8 @@ app.use('/uploads', express.static(uploadsDir));
 
 // API Routes
 app.use('/api', routes);
+app.use('/', routes);
+
 
 // Global Error Handler
 app.use(errorHandler);
