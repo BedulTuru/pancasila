@@ -8,6 +8,7 @@ const router = Router();
 router.get('/', optionalAuthenticate, QuizController.getAll);
 router.get('/:slug', optionalAuthenticate, QuizController.getBySlug);
 router.post('/', authenticate, requireRole('ADMIN', 'TUTOR'), validate(quizSchema), QuizController.create);
+router.post('/:id/start', authenticate, QuizController.start);
 router.post('/:id/attempt', authenticate, QuizController.attempt);
 router.delete('/:id', authenticate, requireRole('ADMIN', 'TUTOR'), QuizController.delete);
 

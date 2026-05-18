@@ -11,6 +11,7 @@ router.use(authenticate, requireRole('ADMIN'), adminSecretCheck);
 router.get('/analytics', AdminController.getAnalytics);
 router.get('/metrics', AdminController.getSystemMetrics);
 router.get('/users', AdminController.getUsers);
+router.get('/export/users', AdminController.exportUsers);
 router.patch('/users/:id', AdminController.updateUser);
 router.patch('/users/:id/reset-password', validate(changePasswordSchema), AdminController.resetPassword);
 router.post('/users/:id/evict', AdminController.evictSession);

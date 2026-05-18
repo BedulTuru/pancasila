@@ -108,6 +108,40 @@ export class AdminController {
     });
   }
 
+  static async exportUsers(req: Request, res: Response) {
+    const users = await prisma.user.findMany({
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        level: true,
+        points: true,
+        loginStreak: true,
+        isActive: true,
+        createdAt: true,
+      }
+    });
+
+    let csv = '\uFEFF'; // UTF-8 BOM
+    csv += 'ID,Nama,Email,Role,Level,Poin (XP),Login Streak,Status Aktif,Tanggal Terdaftar\n';
+
+    users.forEach(u => {
+      const escape = (val: any) => {
+        const str = String(val ?? '').replace(/"/g, '""');
+        return `"${str}"`;
+      };
+      csv += `${escape(u.id)},${escape(u.name)},${escape(u.email)},${escape(u.role)},${u.level},${u.points},${u.loginStreak},${u.isActive ? 'Aktif' : 'Nonaktif'},${escape(new Date(u.createdAt).toLocaleString('id-ID'))}\n`;
+    });
+
+    await logActivity(req.user!.userId, 'EXPORT_USERS', 'security', 'all', `Ekspor data seluruh pengguna ke CSV`, req);
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename=pancasila_users.csv');
+    res.status(200).send(csv);
+  }
+
   static async updateUser(req: Request, res: Response) {
     const { id } = req.params;
     const { role, isActive } = req.body;

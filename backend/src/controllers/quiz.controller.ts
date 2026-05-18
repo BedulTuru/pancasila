@@ -4,6 +4,8 @@ import { AppError } from '../middleware/error.middleware';
 import { v4 as uuidv4 } from 'uuid';
 import { logActivity } from '../utils/logger';
 import { XP_REWARDS, calculateLevel } from '../utils/levelSystem';
+import jwt from 'jsonwebtoken';
+import { config } from '../config';
 
 export class QuizController {
   static async getAll(req: Request, res: Response) {
@@ -131,8 +133,22 @@ export class QuizController {
     res.status(201).json(quiz);
   }
 
+  static async start(req: Request, res: Response) {
+    const quizId = req.params.id;
+    const quiz = await prisma.quiz.findUnique({ where: { id: quizId } });
+    if (!quiz) throw new AppError(404, 'Kuis tidak ditemukan');
+
+    const startToken = jwt.sign(
+      { userId: req.user!.userId, quizId, startTime: Date.now() },
+      config.JWT_SECRET,
+      { expiresIn: '2h' }
+    );
+
+    res.json({ startToken });
+  }
+
   static async attempt(req: Request, res: Response) {
-    const { answers, timeSpent } = req.body;
+    const { answers, timeSpent, startToken, focusLostCount = 0 } = req.body;
     const quizId = req.params.id;
     
     const quiz = await prisma.quiz.findUnique({ 
@@ -141,6 +157,41 @@ export class QuizController {
     });
     
     if (!quiz) throw new AppError(404, 'Kuis tidak ditemukan');
+
+    // 🔐 JWT-Based Time-Drift & Anti-Cheat Validation
+    if (!startToken) {
+      throw new AppError(400, 'Sesi mulai kuis tidak sah. Harap mulai kuis dari tombol resmi.');
+    }
+
+    let decoded: any;
+    try {
+      decoded = jwt.verify(startToken, config.JWT_SECRET);
+    } catch (err) {
+      throw new AppError(400, 'Sesi kuis kedaluwarsa atau tidak sah.');
+    }
+
+    if (decoded.userId !== req.user!.userId || decoded.quizId !== quizId) {
+      throw new AppError(400, 'Sesi kuis tidak cocok dengan akun Anda.');
+    }
+
+    const realElapsedSec = Math.round((Date.now() - decoded.startTime) / 1000);
+    const timeDrift = Math.abs(realElapsedSec - timeSpent);
+
+    if (realElapsedSec < 3 && quiz.questions.length >= 2) {
+      throw new AppError(400, 'Kecurangan terdeteksi: Kuis diselesaikan terlalu cepat secara tidak wajar.');
+    }
+
+    if (timeDrift > 30) {
+      throw new AppError(400, 'Kecurangan terdeteksi: Perbedaan waktu server dan perangkat terlalu besar. Jangan memanipulasi jam perangkat Anda.');
+    }
+
+    if (quiz.timeLimit && realElapsedSec > quiz.timeLimit + 60) {
+      throw new AppError(400, 'Waktu pengerjaan kuis Anda telah melampaui batas waktu yang ditentukan.');
+    }
+
+    if (focusLostCount > 3) {
+      throw new AppError(400, 'Kuis dibatalkan karena Anda terdeteksi keluar dari tab ujian sebanyak lebih dari 3 kali.');
+    }
 
     let score = 0, totalScore = 0;
     const attemptAnswers = quiz.questions.map(question => {

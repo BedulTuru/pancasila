@@ -21,6 +21,8 @@ export default function QuizPlay() {
   const [result, setResult] = useState(null)
   const [submitting, setSubmitting] = useState(false)
   const [errorInfo, setErrorInfo] = useState(null)
+  const [startToken, setStartToken] = useState(null)
+  const [focusLostCount, setFocusLostCount] = useState(0)
 
   // useQuery for quiz data
   const { data: quiz, isLoading, isError } = useQuery({
@@ -31,6 +33,41 @@ export default function QuizPlay() {
     },
     staleTime: 1000 * 60 * 30, // 30 minutes
   })
+
+  // Fetch signed start session token
+  useEffect(() => {
+    if (quiz && !startToken && !result) {
+      api.post(`/quizzes/${quiz.id}/start`)
+        .then(res => {
+          setStartToken(res.data.startToken)
+        })
+        .catch(err => {
+          console.error('Gagal memulai sesi kuis aman:', err)
+          toast.error('Gagal memverifikasi sesi ujian yang aman. Silakan muat ulang halaman.')
+        })
+    }
+  }, [quiz, startToken, result])
+
+  // Track Tab Switching (Out of Focus)
+  useEffect(() => {
+    if (result || submitting) return
+
+    const handleBlur = () => {
+      setFocusLostCount(prev => {
+        const newCount = prev + 1
+        if (newCount <= 3) {
+          toast.error(`Peringatan Keras: Jangan keluar dari tab ujian! (${newCount}/3 pelanggaran)`, {
+            icon: '⚠️',
+            duration: 4000
+          })
+        }
+        return newCount
+      })
+    }
+
+    window.addEventListener('blur', handleBlur)
+    return () => window.removeEventListener('blur', handleBlur)
+  }, [result, submitting])
 
   const questions = quiz?.questions || []
   const timerRef = useRef(null)
@@ -79,7 +116,9 @@ export default function QuizPlay() {
 
       const response = await api.post(`/quizzes/${quiz.id}/attempt`, { 
         answers: formattedAnswers,
-        timeSpent: (quiz.timeLimit || 3600) - (timeLeft || 0)
+        timeSpent: (quiz.timeLimit || 3600) - (timeLeft || 0),
+        startToken,
+        focusLostCount
       })
 
       const data = response.data
@@ -104,7 +143,8 @@ export default function QuizPlay() {
       }
     } catch (err) {
       console.error('Quiz submission error:', err)
-      toast.error('Gagal mengumpulkan kuis. Silakan coba lagi.')
+      const errorMsg = err.response?.data?.error || 'Gagal mengumpulkan kuis. Silakan coba lagi.'
+      toast.error(errorMsg)
     } finally {
       setSubmitting(false)
     }

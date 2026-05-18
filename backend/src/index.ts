@@ -1,12 +1,13 @@
 import 'express-async-errors';
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import morgan from 'morgan';
-import { PrismaClient } from '@prisma/client';
-import path from 'path';
-import fs from 'fs';
-import { config, IS_PROD } from './config';
+   import express from 'express';
+   import cors from 'cors';
+   import helmet from 'helmet';
+   import morgan from 'morgan';
+   import rateLimit from 'express-rate-limit';
+   import { PrismaClient } from '@prisma/client';
+   import path from 'path';
+   import fs from 'fs';
+   import { config, IS_PROD } from './config';
 import routes from './routes';
 import { errorHandler } from './middleware/error.middleware';
 import { startCleanupWorker } from './workers/cleanup.worker';
@@ -18,6 +19,16 @@ const app = express();
 
 // Trust proxy for rate limiting behind Nginx/Vercel
 app.set('trust proxy', 1);
+
+// Global DDoS Protection (Rate Limiting)
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 1000, // Limit each IP to 1000 requests per window
+  message: { error: 'Terlalu banyak permintaan dari IP Anda. Silakan coba lagi nanti.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(globalLimiter);
 
 // Security Middlewares
 app.use(helmet({
