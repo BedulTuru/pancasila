@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://pancasila-edu-backend-production.up.railway.app/api'
+const API_URL = import.meta.env.VITE_API_URL || 'https://pancasila-backend.vercel.app/api'
 
 // Prevent duplicate redirects when multiple concurrent requests fail with 401
 let isRedirectingToLogin = false
