@@ -9,6 +9,7 @@
   /* Core SMP Theme - Official & Premium */
   --edu-navy: #0F172A;
   --edu-navy-light: #1E293B;
+  --edu-navy-dark: #090D16;
   --edu-red: #DC2626;
   --edu-red-dark: #991B1B;
   --edu-gold: #D4AF37;
@@ -25,6 +26,7 @@
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-premium: 0 20px 50px -12px rgba(0, 0, 0, 0.08);
   --shadow-red: 0 10px 25px -5px rgba(220, 38, 38, 0.3);
+  --shadow-navy: 0 10px 25px -5px rgba(15, 23, 42, 0.25);
 }
 
 /* Base Styles */
