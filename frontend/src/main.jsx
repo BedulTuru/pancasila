@@ -342,3 +342,6 @@ function App() {
 }
 
 createRoot(document.getElementById('root')).render(<App />)
+
+// Trigger Vercel GitHub rebuild: 2026-05-18
+
