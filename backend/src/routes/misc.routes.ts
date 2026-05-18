@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { AppError } from '../middleware/error.middleware';
 
 const router = Router();
-const uploadsDir = path.join(__dirname, '../../uploads');
+const uploadsDir = process.env.VERCEL ? '/tmp/uploads' : path.join(__dirname, '../../uploads');
 
 // Multer Configuration
 const storage = multer.diskStorage({

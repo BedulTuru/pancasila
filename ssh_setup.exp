@@ -1,0 +1,63 @@
+set timeout -1
+spawn ssh -o StrictHostKeyChecking=no ubuntu@43.153.224.121
+expect "password:"
+send "Abdul1211.\r"
+expect "$ "
+
+send "echo '--- MEMULAI SETUP BACKEND ---'\r"
+expect "$ "
+
+send "curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -\r"
+expect "$ "
+
+send "sudo apt-get install -y nodejs git\r"
+expect "$ "
+
+send "sudo npm install -g pm2\r"
+expect "$ "
+
+send "cd ~\r"
+expect "$ "
+
+send "rm -rf pancasila\r"
+expect "$ "
+
+send "git clone https://github.com/BedulTuru/pancasila.git\r"
+expect "$ "
+
+send "cd pancasila/backend\r"
+expect "$ "
+
+send "cat << 'EOF' > .env\n"
+send "DATABASE_URL=\"postgresql://neondb_owner:npg_2BQaDTUIdeY1@ep-lingering-unit-aow030t6.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require\"\n"
+send "JWT_SECRET=\"pancasila-edu-secret-key-2024-minimum-32-chars\"\n"
+send "JWT_EXPIRES_IN=\"7d\"\n"
+send "PORT=4000\n"
+send "NODE_ENV=\"development\"\n"
+send "ALLOWED_ORIGINS=\"http://localhost:5173,http://localhost:3000,http://localhost:4173,https://pancasila.vercel.app\"\n"
+send "RATE_LIMIT_WINDOW_MS=900000\n"
+send "RATE_LIMIT_MAX_REQUESTS=100\n"
+send "BCRYPT_ROUNDS=12\n"
+send "ADMIN_SECRET_KEY=\"god-tier-pancasila-secret-2024-xyz\"\n"
+send "ADMIN_SECRET_PATH=\"/markas-besar-pancasila\"\n"
+send "SUPER_ADMIN_PIN=\"121120\"\n"
+send "EOF\r"
+expect "$ "
+
+send "npm install\r"
+expect "$ "
+
+send "npm run build\r"
+expect "$ "
+
+send "pm2 delete pancasila-api 2>/dev/null || true\r"
+expect "$ "
+
+send "pm2 start dist/src/index.js --name \"pancasila-api\"\r"
+expect "$ "
+
+send "pm2 save\r"
+expect "$ "
+
+send "exit\r"
+expect eof
