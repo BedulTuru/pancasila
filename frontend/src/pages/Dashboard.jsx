@@ -510,132 +510,130 @@ export default function Dashboard() {
               </motion.div>
             )}
 
-            {/* User Feedback Card — Premium Futuristic Version */}
+            {/* User Feedback Card — Elegant Light-Mode Bento Version */}
             {user?.role !== 'ADMIN' && user?.role !== 'TUTOR' && (
               <div 
-                className="relative rounded-[2.5rem] p-8 overflow-hidden border transition-all duration-500"
-                style={{
-                  background: 'linear-gradient(135deg, #0b0f19 0%, #111827 100%)',
-                  borderColor: 
-                    feedbackCategory === 'SUGGESTION' ? 'rgba(245, 158, 11, 0.2)' :
-                    feedbackCategory === 'BUG' ? 'rgba(239, 68, 68, 0.2)' :
-                    'rgba(59, 130, 246, 0.2)',
-                  boxShadow: 
-                    feedbackCategory === 'SUGGESTION' ? '0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05), 0 0 40px rgba(245, 158, 11, 0.05)' :
-                    feedbackCategory === 'BUG' ? '0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05), 0 0 40px rgba(239, 68, 68, 0.05)' :
-                    '0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05), 0 0 40px rgba(59, 130, 246, 0.05)'
+                className="bg-white rounded-2xl p-6 border transition-all duration-300"
+                style={{ 
+                  borderColor: 'var(--edu-border)', 
+                  boxShadow: 'var(--shadow-sm)'
                 }}
               >
-                {/* Ambient Glow Background Effect */}
-                <div 
-                  className={`absolute -right-24 -top-24 w-60 h-60 rounded-full blur-[100px] opacity-20 pointer-events-none transition-colors duration-500 ${
-                    feedbackCategory === 'SUGGESTION' ? 'bg-amber-500' :
-                    feedbackCategory === 'BUG' ? 'bg-red-500' :
-                    'bg-blue-500'
-                  }`}
-                />
-
-                <div className="relative z-10">
-                  <h3 className="text-xl font-black text-white italic tracking-tight mb-2 uppercase leading-none">
-                    Punya <span className={
-                      feedbackCategory === 'SUGGESTION' ? 'text-amber-400' :
-                      feedbackCategory === 'BUG' ? 'text-red-400' :
-                      'text-blue-400'
-                    }>saran atau keluhan</span>?
-                  </h3>
-                  <p className="text-slate-400 text-[10px] font-black uppercase tracking-wider mb-6">
-                    Bantu kami meningkatkan kualitas portal pembelajaran Pancasila Edu.
-                  </p>
-
-                  {/* Dynamic Interactive Tabs */}
-                  <div className="flex gap-2 mb-6">
-                    <button
-                      type="button"
-                      onClick={() => setFeedbackCategory('SUGGESTION')}
-                      className={`flex-1 py-3.5 px-2 rounded-2xl border font-black text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
-                        feedbackCategory === 'SUGGESTION'
-                          ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.15)]'
-                          : 'bg-white/[0.02] border-white/5 text-slate-500 hover:bg-white/[0.05] hover:text-slate-300'
-                      }`}
-                    >
-                      <Lightbulb size={12} className={feedbackCategory === 'SUGGESTION' ? 'animate-pulse' : ''} />
-                      Saran
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setFeedbackCategory('BUG')}
-                      className={`flex-1 py-3.5 px-2 rounded-2xl border font-black text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
-                        feedbackCategory === 'BUG'
-                          ? 'bg-red-500/10 border-red-500/30 text-red-400 shadow-[0_0_20px_rgba(239,68,68,0.15)]'
-                          : 'bg-white/[0.02] border-white/5 text-slate-500 hover:bg-white/[0.05] hover:text-slate-300'
-                      }`}
-                    >
-                      <Bug size={12} className={feedbackCategory === 'BUG' ? 'animate-bounce' : ''} />
-                      Bug / Error
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setFeedbackCategory('MESSAGE')}
-                      className={`flex-1 py-3.5 px-2 rounded-2xl border font-black text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
-                        feedbackCategory === 'MESSAGE'
-                          ? 'bg-blue-500/10 border-blue-500/30 text-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.15)]'
-                          : 'bg-white/[0.02] border-white/5 text-slate-500 hover:bg-white/[0.05] hover:text-slate-300'
-                      }`}
-                    >
-                      <MessageSquare size={12} />
-                      Lainnya
-                    </button>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ 
+                      background: 
+                        feedbackCategory === 'SUGGESTION' ? 'rgba(245, 158, 11, 0.08)' :
+                        feedbackCategory === 'BUG' ? 'rgba(239, 68, 68, 0.08)' :
+                        'rgba(30, 64, 175, 0.08)'
+                    }}
+                  >
+                    {feedbackCategory === 'SUGGESTION' ? (
+                      <Lightbulb size={20} className="text-amber-600" />
+                    ) : feedbackCategory === 'BUG' ? (
+                      <Bug size={20} className="text-red-600 animate-pulse" />
+                    ) : (
+                      <MessageSquare size={20} className="text-blue-600" />
+                    )}
                   </div>
+                  <div>
+                    <h2 className="font-bold text-base" style={{ color: 'var(--edu-text)' }}>
+                      Punya {feedbackCategory === 'SUGGESTION' ? 'Saran' : feedbackCategory === 'BUG' ? 'Masalah' : 'Pesan'} untuk Kami?
+                    </h2>
+                    <p className="text-[11px] font-medium" style={{ color: 'var(--edu-muted)' }}>
+                      Bantu kami meningkatkan kualitas portal Pancasila Edu
+                    </p>
+                  </div>
+                </div>
 
-                  {/* Form fields */}
-                  <div className="space-y-4">
-                    <textarea
-                      value={feedbackText}
-                      onChange={(e) => setFeedbackText(e.target.value)}
-                      placeholder={
-                        feedbackCategory === 'SUGGESTION' ? 'Tulis saran, ide kreatif, atau fitur baru yang ingin kamu kembangkan...' :
-                        feedbackCategory === 'BUG' ? 'Jelaskan bug atau kendala teknis yang kamu temukan, misal kuis lemot atau gambar tidak muncul...' :
-                        'Tulis pesan atau pertanyaan umum yang ingin kamu tanyakan ke Admin...'
+                {/* Dynamic Interactive Tabs */}
+                <div className="flex gap-2 mb-4">
+                  <button
+                    type="button"
+                    onClick={() => setFeedbackCategory('SUGGESTION')}
+                    className={`flex-1 py-3 px-2 rounded-xl border font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
+                      feedbackCategory === 'SUGGESTION'
+                        ? 'bg-amber-50 border-amber-300 text-amber-700'
+                        : 'bg-slate-50 border-slate-100 text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+                    }`}
+                  >
+                    <Lightbulb size={13} />
+                    Saran
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFeedbackCategory('BUG')}
+                    className={`flex-1 py-3 px-2 rounded-xl border font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
+                      feedbackCategory === 'BUG'
+                        ? 'bg-red-50 border-red-300 text-red-700'
+                        : 'bg-slate-50 border-slate-100 text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+                    }`}
+                  >
+                    <Bug size={13} />
+                    Bug
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFeedbackCategory('MESSAGE')}
+                    className={`flex-1 py-3 px-2 rounded-xl border font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
+                      feedbackCategory === 'MESSAGE'
+                        ? 'bg-blue-50 border-blue-300 text-blue-700'
+                        : 'bg-slate-50 border-slate-100 text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+                    }`}
+                  >
+                    <MessageSquare size={13} />
+                    Pesan
+                  </button>
+                </div>
+
+                {/* Form fields */}
+                <div className="space-y-3">
+                  <textarea
+                    value={feedbackText}
+                    onChange={(e) => setFeedbackText(e.target.value)}
+                    placeholder={
+                      feedbackCategory === 'SUGGESTION' ? 'Tulis saran, ide kreatif, atau fitur baru yang ingin kamu kembangkan...' :
+                      feedbackCategory === 'BUG' ? 'Jelaskan bug atau kendala teknis yang kamu temukan, misal kuis lemot atau gambar tidak muncul...' :
+                      'Tulis pesan atau pertanyaan umum yang ingin kamu tanyakan ke Admin...'
+                    }
+                    className={`w-full p-4 rounded-xl border outline-none text-xs font-bold leading-relaxed text-slate-800 placeholder:text-slate-400 bg-slate-50/50 transition-all ${
+                      feedbackCategory === 'SUGGESTION' ? 'border-slate-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-400/10' :
+                      feedbackCategory === 'BUG' ? 'border-slate-200 focus:border-red-400 focus:ring-4 focus:ring-red-400/10' :
+                      'border-slate-200 focus:border-blue-400 focus:ring-4 focus:ring-blue-400/10'
+                    }`}
+                    rows={3}
+                  />
+                  
+                  <button
+                    disabled={sendingFeedback}
+                    onClick={async () => {
+                      if (!feedbackText.trim()) return toast.error('Pesan tidak boleh kosong');
+                      setSendingFeedback(true);
+                      try {
+                        await api.post('/discussion/feedback', { content: feedbackText, category: feedbackCategory });
+                        toast.success('Terima kasih atas saran Anda! 🎉');
+                        setFeedbackText('');
+                      } catch {
+                        toast.error('Gagal mengirim pesan, coba lagi.');
+                      } finally {
+                        setSendingFeedback(false);
                       }
-                      className={`w-full p-4 rounded-2xl border bg-black/40 focus:bg-black/60 outline-none text-xs font-bold leading-relaxed text-white placeholder:text-slate-600 transition-all ${
-                        feedbackCategory === 'SUGGESTION' ? 'border-white/5 focus:border-amber-400 focus:shadow-[0_0_20px_rgba(245,158,11,0.05)]' :
-                        feedbackCategory === 'BUG' ? 'border-white/5 focus:border-red-400 focus:shadow-[0_0_20px_rgba(239,68,68,0.05)]' :
-                        'border-white/5 focus:border-blue-400 focus:shadow-[0_0_20px_rgba(59,130,246,0.05)]'
-                      }`}
-                      rows={4}
-                    />
-                    
-                    <button
-                      disabled={sendingFeedback}
-                      onClick={async () => {
-                        if (!feedbackText.trim()) return toast.error('Pesan tidak boleh kosong');
-                        setSendingFeedback(true);
-                        try {
-                          await api.post('/discussion/feedback', { content: feedbackText, category: feedbackCategory });
-                          toast.success('Terima kasih atas saran Anda! 🎉');
-                          setFeedbackText('');
-                        } catch {
-                          toast.error('Gagal mengirim pesan, coba lagi.');
-                        } finally {
-                          setSendingFeedback(false);
-                        }
-                      }}
-                      className={`w-full py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 relative overflow-hidden group/btn text-white ${
-                        feedbackCategory === 'SUGGESTION' ? 'bg-amber-600 hover:bg-amber-500 shadow-lg shadow-amber-500/20 active:scale-[0.98]' :
-                        feedbackCategory === 'BUG' ? 'bg-red-600 hover:bg-red-500 shadow-lg shadow-red-500/20 active:scale-[0.98]' :
-                        'bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-500/20 active:scale-[0.98]'
-                      }`}
-                    >
-                      {sendingFeedback ? (
-                        <Loader2 size={14} className="animate-spin" />
-                      ) : (
-                        <Send size={14} className="transition-transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1" />
-                      )}
-                      <span>
-                        {sendingFeedback ? 'Sedang Mengirim...' : 'Kirim Pesan Ke Admin'}
-                      </span>
-                    </button>
-                  </div>
+                    }}
+                    className={`w-full py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-white active:scale-[0.98] ${
+                      feedbackCategory === 'SUGGESTION' ? 'bg-amber-600 hover:bg-amber-700 shadow-md shadow-amber-600/10' :
+                      feedbackCategory === 'BUG' ? 'bg-red-600 hover:bg-red-700 shadow-md shadow-red-600/10' :
+                      'bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-600/10'
+                    }`}
+                  >
+                    {sendingFeedback ? (
+                      <Loader2 size={14} className="animate-spin" />
+                    ) : (
+                      <Send size={12} />
+                    )}
+                    <span>
+                      {sendingFeedback ? 'Sedang Mengirim...' : 'Kirim Pesan Ke Admin'}
+                    </span>
+                  </button>
                 </div>
               </div>
             )}
