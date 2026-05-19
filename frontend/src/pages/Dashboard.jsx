@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { BookOpen, Brain, Trophy, Flame, TrendingUp, ArrowRight, Users, FileText, Award, ShieldCheck, Activity, Star, Zap, Download, Layers, Bell, CheckCircle } from 'lucide-react'
+import { BookOpen, Brain, Trophy, Flame, TrendingUp, ArrowRight, Users, FileText, Award, ShieldCheck, Activity, Star, Zap, Download, Layers, Bell, CheckCircle, Wrench } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useQuery } from '@tanstack/react-query'
 import api from '../utils/api'
@@ -441,6 +441,15 @@ export default function Dashboard() {
                       show: user?.role === 'ADMIN' 
                     },
                     { 
+                      internallyTo: `${ADMIN_PATH}/maintenance`, 
+                      label: 'Sistem & Pengaduan', 
+                      desc: 'Kelola pemeliharaan & saran', 
+                      icon: Wrench, 
+                      accent: 'orange', 
+                      colSpan: 'col-span-2',
+                      show: user?.role === 'ADMIN' 
+                    },
+                    { 
                       type: 'action',
                       label: 'Export Data Siswa', 
                       desc: 'Unduh laporan CSV', 
@@ -457,6 +466,7 @@ export default function Dashboard() {
                       violet: 'text-violet-600 bg-violet-50 ring-violet-100/50',
                       blue: 'text-blue-600 bg-blue-50 ring-blue-100/50',
                       emerald: 'text-emerald-600 bg-emerald-50 ring-emerald-100/50',
+                      orange: 'text-orange-600 bg-orange-50 ring-orange-100/50',
                     };
 
                     const isAction = item.type === 'action';

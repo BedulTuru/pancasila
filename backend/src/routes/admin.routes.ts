@@ -34,4 +34,8 @@ router.get('/blacklist', AdminController.getBlacklist);
 router.post('/blacklist', AdminController.blacklistIp);
 router.delete('/blacklist/:id', AdminController.removeBlacklistIp);
 
+// Student Feedbacks & Messages
+router.get('/feedbacks', AdminController.getFeedbacks);
+router.delete('/feedbacks/:id', AdminController.deleteFeedback);
+
 export default router;

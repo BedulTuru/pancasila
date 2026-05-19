@@ -348,4 +348,23 @@ export class AdminController {
     await logActivity(req.user!.userId, 'UNBLACKLIST_IP', 'security', entry.ip, `IP Dihapus dari Blacklist`, req);
     res.status(204).send();
   }
+
+  static async getFeedbacks(req: Request, res: Response) {
+    const feedbacks = await prisma.feedback.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: {
+        user: {
+          select: { name: true, email: true, role: true, avatar: true }
+        }
+      }
+    });
+    res.json(feedbacks);
+  }
+
+  static async deleteFeedback(req: Request, res: Response) {
+    const { id } = req.params;
+    await prisma.feedback.delete({ where: { id } });
+    await logActivity(req.user!.userId, 'DELETE_FEEDBACK', 'feedback', id, `Menghapus saran/pesan pengaduan`, req);
+    res.status(204).send();
+  }
 }

@@ -25,7 +25,7 @@ router.use('/materials', maintenanceGuard, materialRoutes);
 router.use('/categories', maintenanceGuard, categoryRoutes);
 router.use('/quizzes', maintenanceGuard, quizRoutes);
 router.use('/admin', adminRoutes); // Admin routes handle their own auth/roles
-router.use('/portal', maintenanceGuard, portalRoutes);
+router.use('/portal', portalRoutes);
 router.use('/discussion', maintenanceGuard, discussionRoutes);
 router.use('/achievements', maintenanceGuard, achievementRoutes);
 router.use('/', maintenanceGuard, miscRoutes);

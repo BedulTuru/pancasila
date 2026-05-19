@@ -18,6 +18,7 @@ import AdminQuizzes from './pages/AdminQuizzes'
 import AdminAnalytics from './pages/AdminAnalytics'
 import AdminSecurityLogs from './pages/AdminSecurityLogs'
 import AdminCategories from './pages/AdminCategories'
+import AdminFeedbackMaintenance from './pages/AdminFeedbackMaintenance'
 import { AuthProvider } from './context/AuthContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -167,6 +168,11 @@ function AppContent() {
               <Route path={`${ADMIN_PATH}/users`} element={
                 <ProtectedRoute roles={['ADMIN']}>
                   <AdminUsers />
+                </ProtectedRoute>
+              } />
+              <Route path={`${ADMIN_PATH}/maintenance`} element={
+                <ProtectedRoute roles={['ADMIN']}>
+                  <AdminFeedbackMaintenance />
                 </ProtectedRoute>
               } />
               <Route path={`${ADMIN_PATH}/materials`} element={
