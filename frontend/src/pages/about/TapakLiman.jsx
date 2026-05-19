@@ -9,7 +9,7 @@ export default function TapakLiman() {
   const [expandedBab, setExpandedBab] = useState('bab1')
 
   const stats = [
-    { label: 'PILIHAN SDGs', value: '10 TOPIK', desc: 'Pedoman Aksi Resmi', color: 'border-l-4 border-[#002855] text-slate-800' },
+    { label: 'PILIHAN SDGs', value: '10 TOPIK', desc: 'Pedoman Aksi Resmi', color: 'border-l-4 border-red-600 text-slate-800' },
     { label: 'LINI MASA AKSI', value: '8 MINGGU', desc: 'Minggu 9 s.d. 16', color: 'border-l-4 border-amber-500 text-slate-800' },
     { label: 'LUARAN KELOMPOK', value: '3 KARYA', desc: 'Laporan, Poster, Video', color: 'border-l-4 border-emerald-500 text-slate-800' },
   ]
@@ -191,7 +191,7 @@ export default function TapakLiman() {
       <div className="min-h-screen pt-28 pb-20 relative overflow-hidden bg-[#fcfdfe] text-slate-800">
         
         {/* Soft elegant radial atmospheric glow - no grid overlays at all */}
-        <div className="absolute top-0 right-0 w-[55rem] h-[55rem] bg-[#002855]/[0.015] rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[55rem] h-[55rem] bg-red-500/[0.015] rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute bottom-1/4 -left-60 w-[45rem] h-[45rem] bg-amber-500/[0.015] rounded-full blur-[140px] pointer-events-none" />
 
         <div className="max-w-6xl mx-auto px-6 relative z-10">
@@ -205,7 +205,7 @@ export default function TapakLiman() {
             >
               <img src="/itb.png" alt="ITB Logo" className="h-5 w-auto" />
               <div className="w-px h-3.5 bg-slate-300" />
-              <span className="text-slate-700 font-extrabold flex items-center gap-1.5">
+              <span className="text-red-600 font-extrabold flex items-center gap-1.5">
                 <Sparkles size={13} className="text-amber-500" /> PROGRAM PENGABDIAN WI1101
               </span>
             </motion.div>
@@ -216,7 +216,7 @@ export default function TapakLiman() {
               className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.1] mb-6 text-slate-900"
             >
               Buku Panduan Proyek <br />
-              <span className="bg-gradient-to-r from-[#002855] to-blue-700 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-red-600 to-rose-700 bg-clip-text text-transparent">
                 "TAPAK LIMAN"
               </span>
             </motion.h1>
@@ -262,7 +262,7 @@ export default function TapakLiman() {
               className="lg:col-span-2 bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/80 shadow-sm text-left flex flex-col justify-between"
             >
               <div>
-                <span className="text-[10px] font-black text-[#002855] uppercase tracking-widest block mb-2">MAKNA & FILOSOFI HISTORIS</span>
+                <span className="text-[10px] font-black text-red-600 uppercase tracking-widest block mb-2">MAKNA & FILOSOFI HISTORIS</span>
                 <h3 className="text-2xl sm:text-3xl font-black text-slate-900 mb-5 leading-tight">
                   Sinergi Tanaman Tapak Liman & Ganesha ITB
                 </h3>
@@ -323,7 +323,7 @@ export default function TapakLiman() {
                     onClick={() => setActiveLetter(idx)}
                     className={`p-3 rounded-xl border text-center transition-all ${
                       activeLetter === idx 
-                        ? 'border-slate-950 bg-slate-950 text-white scale-105 shadow-sm' 
+                        ? 'border-red-600 bg-red-600 text-white scale-105 shadow-sm' 
                         : 'border-slate-200 bg-slate-50/50 text-slate-400 hover:text-slate-800 hover:bg-slate-50'
                     }`}
                   >
@@ -372,7 +372,7 @@ export default function TapakLiman() {
                     onClick={() => setActiveTopic(idx)}
                     className={`p-4 text-left rounded-xl font-black text-xs uppercase tracking-wider transition-all border flex items-center gap-4 ${
                       activeTopic === idx 
-                        ? 'bg-slate-950 border-slate-950 text-white shadow-md scale-[1.01]' 
+                        ? 'bg-red-600 border-red-600 text-white shadow-md scale-[1.01]' 
                         : 'bg-white border-slate-200/80 text-slate-500 hover:bg-slate-50 hover:text-slate-850'
                     }`}
                   >
@@ -397,7 +397,7 @@ export default function TapakLiman() {
                     <span className="px-3 py-1 rounded bg-slate-50 border border-slate-200 text-slate-800 text-[9px] font-black uppercase tracking-wider">
                       TOPIK AKSI {topics[activeTopic].no}
                     </span>
-                    <span className="px-3 py-1 rounded bg-[#002855] text-white text-[9px] font-black uppercase tracking-wider shadow-sm">
+                    <span className="px-3 py-1 rounded bg-red-600 text-white text-[9px] font-black uppercase tracking-wider shadow-sm">
                       {topics[activeTopic].sdg}
                     </span>
                   </div>
@@ -428,7 +428,7 @@ export default function TapakLiman() {
                 </div>
 
                 <div className="p-4 bg-slate-50 border border-slate-200/80 rounded-xl flex items-start gap-3">
-                  <AlertCircle size={16} className="text-[#002855] shrink-0 mt-0.5" />
+                  <AlertCircle size={16} className="text-red-600 shrink-0 mt-0.5" />
                   <p className="text-[10px] sm:text-[11px] font-bold text-slate-700 leading-snug">
                     📌 <strong>Informasi Proposal:</strong> Rincian Anggaran Biaya (RAB) dan perizinan lurah sasaran akan dibahas bersama Dosen Pancasila pada asistensi proposal Minggu ke-10.
                   </p>
@@ -464,7 +464,7 @@ export default function TapakLiman() {
                         {step.week}
                       </span>
                     </div>
-                    <h4 className="text-base font-black text-slate-900 mb-1 group-hover:text-[#002855] transition-colors">
+                    <h4 className="text-base font-black text-slate-900 mb-1 group-hover:text-red-600 transition-colors">
                       {step.task}
                     </h4>
                     <p className="text-[11px] font-medium text-slate-500 leading-relaxed">
@@ -506,7 +506,7 @@ export default function TapakLiman() {
                             <span className="block font-black text-slate-900 text-[11px]">{bab.title}</span>
                             <span className="block text-[9px] font-bold text-slate-400 normal-case mt-0.5">{bab.sub}</span>
                           </div>
-                          <ChevronRight size={14} className={`transition-transform duration-300 ${isOpen ? 'rotate-90 text-slate-900' : 'text-slate-500'}`} />
+                          <ChevronRight size={14} className={`transition-transform duration-300 ${isOpen ? 'rotate-90 text-red-600' : 'text-slate-500'}`} />
                         </button>
                         
                         <AnimatePresence initial={false}>
@@ -538,7 +538,7 @@ export default function TapakLiman() {
                     STANDAR EVALUASI NILAI
                   </div>
                   <h3 className="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
-                    <BarChart2 className="text-[#002855]" size={24} /> Kriteria Evaluasi Nilai
+                    <BarChart2 className="text-red-600" size={24} /> Kriteria Evaluasi Nilai
                   </h3>
                 </div>
 
@@ -553,7 +553,7 @@ export default function TapakLiman() {
                       {/* Modern Flat Solid Fill Progress Indicator */}
                       <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                         <div 
-                          className="h-full rounded-full bg-slate-950" 
+                          className="h-full rounded-full bg-red-600" 
                           style={{ width: `${g.weight}%` }} 
                         />
                       </div>
@@ -567,7 +567,7 @@ export default function TapakLiman() {
 
               <div className="mt-8 pt-6 border-t border-slate-200 flex items-center justify-between">
                 <span className="text-[9px] font-black uppercase tracking-wider text-slate-400">Akumulasi Nilai Akhir</span>
-                <span className="px-3.5 py-1.5 rounded-xl bg-slate-950 text-white font-black text-xs">
+                <span className="px-3.5 py-1.5 rounded-xl bg-red-600 text-white font-black text-xs">
                   100% MAKSIMAL
                 </span>
               </div>
@@ -589,7 +589,7 @@ export default function TapakLiman() {
             <div className="flex flex-wrap justify-center gap-4">
               <a 
                 href="/portal"
-                className="px-8 py-4 bg-slate-950 text-white hover:bg-slate-900 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-[0.98] shadow-sm"
+                className="px-8 py-4 bg-[#002855] text-white hover:bg-slate-900 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-[0.98] shadow-sm"
               >
                 Mulai Belajar Pancasila
               </a>
