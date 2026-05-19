@@ -15,13 +15,58 @@ export default function Dashboard() {
   const { user } = useAuth()
   const isAdmin = user?.role === 'ADMIN';
 
+  // Pin Verification State
+  const [pinVerified, setPinVerified] = useState(() => {
+    return sessionStorage.getItem('admin_pin_verified') === 'true';
+  })
+  const [pinInput, setPinInput] = useState('')
+  const [pinError, setPinError] = useState(false)
+
+  // Quick Broadcast States
+  const [broadcastTitleInput, setBroadcastTitleInput] = useState('')
+  const [broadcastMsgInput, setBroadcastMsgInput] = useState('')
+  const [broadcastPriorityInput, setBroadcastPriorityInput] = useState('0')
+  const [isBroadcasting, setIsBroadcasting] = useState(false)
+
+  const { data: systemConfigData, refetch: refetchConfig } = useQuery({
+    queryKey: ['admin-system-config-dash'],
+    queryFn: async () => {
+      const res = await api.get('/admin/system-config')
+      return res.data
+    },
+    enabled: isAdmin && pinVerified
+  })
+
+  const handleToggleBroadcast = async (active) => {
+    setIsBroadcasting(true)
+    try {
+      const currentConfigRes = await api.get('/admin/system-config')
+      const currentConfig = currentConfigRes.data
+
+      await api.patch('/admin/system-config', {
+        ...currentConfig,
+        broadcastActive: active,
+        broadcastTitle: active ? broadcastTitleInput || 'PENGUMUMAN PENTING' : '',
+        broadcastMsg: active ? broadcastMsgInput || '' : '',
+        broadcastPriority: active ? parseInt(broadcastPriorityInput) : 0
+      })
+      
+      toast.success(active ? 'Pengumuman Global Berhasil Disiarkan! 📣' : 'Pengumuman Global Telah Dihentikan! 🛑')
+      refetchConfig()
+    } catch {
+      toast.error('Gagal memperbarui pengumuman global')
+    } finally {
+      setIsBroadcasting(false)
+    }
+  }
+
   const { data: adminAnalytics } = useQuery({
     queryKey: ['admin-analytics'],
     queryFn: async () => {
       const res = await api.get('/admin/analytics')
       return res.data
     },
-    enabled: isAdmin,
+    enabled: isAdmin && pinVerified,
     refetchInterval: 30000
   })
 
@@ -31,7 +76,7 @@ export default function Dashboard() {
       const res = await api.get('/admin/metrics')
       return res.data
     },
-    enabled: isAdmin,
+    enabled: isAdmin && pinVerified,
     refetchInterval: 10000
   })
   const { data: progressRes, isLoading: loadingProgress } = useQuery({
@@ -105,6 +150,97 @@ export default function Dashboard() {
   const nextLevelXP = getXPForNextLevel(currentLevel) || 100;
 
   if (isAdmin) {
+    if (!pinVerified) {
+      const handlePinSubmit = (e) => {
+        e.preventDefault();
+        if (pinInput === '170317') {
+          sessionStorage.setItem('admin_pin_verified', 'true');
+          setPinVerified(true);
+          toast.success('Otorisasi Berhasil! Pusat Kendali Terbuka 🔑');
+        } else {
+          setPinError(true);
+          toast.error('PIN Administrator Salah! Akses Ditolak 🚫');
+          setPinInput('');
+          setTimeout(() => setPinError(false), 500);
+        }
+      };
+
+      return (
+        <div className="min-h-screen pt-24 pb-16 flex items-center justify-center relative overflow-hidden" style={{ background: 'var(--edu-cream)' }}>
+          <div className="absolute inset-0 opacity-[0.04] pointer-events-none bg-[linear-gradient(var(--edu-navy)_1px,transparent_1px),linear-gradient(90deg,var(--edu-navy)_1px,transparent_1px)] bg-[size:60px_60px]" />
+          
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative z-10 w-full max-w-md mx-4 p-8 sm:p-10 bg-white/80 backdrop-blur-md rounded-[2.5rem] border text-center"
+            style={{ borderColor: 'var(--edu-border)', boxShadow: 'var(--shadow-lg)' }}
+          >
+            <div className="flex justify-center gap-3 mb-6">
+              <img src="/itb.png" alt="ITB Logo" className="h-10 w-auto" />
+              <div className="w-px h-8 bg-slate-200 self-center" />
+              <img src="/garuda.svg" alt="Garuda Logo" className="h-10 w-auto" />
+            </div>
+
+            <div className="mb-8">
+              <span className="text-[10px] font-black px-2.5 py-0.5 rounded bg-red-600 text-white uppercase tracking-widest">
+                GERBANG KEAMANAN LAPIS DUA
+              </span>
+              <h1 className="text-2xl font-black mt-3 tracking-tight" style={{ color: 'var(--edu-navy)' }}>
+                Verifikasi Otoritas Admin
+              </h1>
+              <p className="text-slate-400 font-bold text-[11px] mt-1 uppercase tracking-wider">
+                Masukkan PIN Keamanan 6-Digit
+              </p>
+            </div>
+
+            <form onSubmit={handlePinSubmit}>
+              <motion.div 
+                animate={pinError ? { x: [-12, 12, -12, 12, 0] } : {}}
+                className="flex justify-center gap-2.5 mb-8"
+              >
+                {[0, 1, 2, 3, 4, 5].map((idx) => {
+                  const char = pinInput[idx] || '';
+                  return (
+                    <div
+                      key={idx}
+                      className={`w-12 h-14 rounded-2xl border-2 flex items-center justify-center text-xl font-black transition-all ${
+                        char ? 'border-red-600 bg-red-50/20 text-red-600 scale-[1.03]' : 'border-slate-200 bg-white text-slate-300'
+                      }`}
+                    >
+                      {char ? '●' : ''}
+                    </div>
+                  );
+                })}
+              </motion.div>
+
+              <input
+                type="password"
+                maxLength={6}
+                value={pinInput}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, '');
+                  setPinInput(val);
+                }}
+                autoFocus
+                className="absolute inset-0 opacity-0 cursor-default"
+                style={{ caretColor: 'transparent' }}
+              />
+
+              <button
+                type="submit"
+                className="w-full py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all duration-200 active:scale-[0.98] shadow-lg shadow-slate-900/10 mb-3"
+              >
+                Verifikasi PIN Keamanan
+              </button>
+              <p className="text-[10px] font-bold text-slate-400">
+                Gunakan keyboard komputer atau keypad handphone untuk mengetik
+              </p>
+            </form>
+          </motion.div>
+        </div>
+      );
+    }
+
     const totals = adminAnalytics?.totals || { users: 0, materials: 0, quizzes: 0, attempts: 0 };
     const metrics = adminMetrics || {
       dbStatus: 'CONNECTED',
@@ -209,9 +345,6 @@ export default function Dashboard() {
                     <h2 className="text-xl font-black text-slate-900 tracking-tight">Menu Pengendalian Sistem</h2>
                     <p className="text-xs font-bold text-slate-400">Pilih modul administrasi yang ingin Anda kelola</p>
                   </div>
-                  <span className="text-[10px] font-black text-slate-400 bg-slate-50 border border-slate-100 px-3 py-1 rounded-full uppercase tracking-wider">
-                    Console V2
-                  </span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -367,6 +500,114 @@ export default function Dashboard() {
                 </div>
               </motion.div>
 
+              {/* Global Broadcast Console — Quick Action Center */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="bg-white rounded-[2.5rem] p-8 border text-left"
+                style={{ borderColor: 'var(--edu-border)', boxShadow: 'var(--shadow-sm)' }}
+              >
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center text-red-600">
+                    <Bell size={20} />
+                  </div>
+                  <div>
+                    <h2 className="text-base font-black text-slate-900 leading-none">Siarkan Pengumuman Global</h2>
+                    <p className="text-[11px] font-bold text-slate-400 mt-1">Kirim pesan penting ke seluruh portal secara real-time</p>
+                  </div>
+                </div>
+
+                {/* Current Broadcast Status Badge */}
+                {systemConfigData?.broadcastActive ? (
+                  <div className="p-4 rounded-2xl bg-red-50 border border-red-100 mb-6 text-left">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[9px] font-black text-red-600 bg-red-100/50 px-2 py-0.5 rounded uppercase tracking-wider">
+                        Siaran Aktif 📣
+                      </span>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase">
+                        Prioritas: {systemConfigData.broadcastPriority === 2 ? 'Strategis' : systemConfigData.broadcastPriority === 1 ? 'Penting' : 'Info'}
+                      </span>
+                    </div>
+                    <div className="font-bold text-xs text-slate-700">{systemConfigData.broadcastTitle}</div>
+                    <div className="text-[11px] font-medium text-slate-500 mt-1">{systemConfigData.broadcastMsg}</div>
+                  </div>
+                ) : (
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center mb-6">
+                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                      Tidak ada siaran aktif saat ini
+                    </span>
+                  </div>
+                )}
+
+                <div className="space-y-4">
+                  {/* Title Input */}
+                  <div className="space-y-1.5 text-left">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider ml-1">Judul Pengumuman</label>
+                    <input
+                      type="text"
+                      placeholder="Contoh: PENGUMUMAN PENTING"
+                      value={broadcastTitleInput}
+                      onChange={(e) => setBroadcastTitleInput(e.target.value)}
+                      disabled={isBroadcasting}
+                      className="w-full bg-slate-50 px-4 py-3 rounded-2xl border border-slate-100 outline-none text-xs font-bold text-slate-800 placeholder:text-slate-400 focus:border-slate-300 transition-all"
+                    />
+                  </div>
+
+                  {/* Message Input */}
+                  <div className="space-y-1.5 text-left">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider ml-1">Pesan / Konten</label>
+                    <textarea
+                      placeholder="Tulis pesan pengumuman..."
+                      value={broadcastMsgInput}
+                      onChange={(e) => setBroadcastMsgInput(e.target.value)}
+                      disabled={isBroadcasting}
+                      rows={2}
+                      className="w-full bg-slate-50 px-4 py-3 rounded-2xl border border-slate-100 outline-none text-xs font-bold text-slate-800 placeholder:text-slate-400 focus:border-slate-300 transition-all resize-none"
+                    />
+                  </div>
+
+                  {/* Priority Select */}
+                  <div className="space-y-1.5 text-left">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider ml-1">Tingkat Prioritas</label>
+                    <select
+                      value={broadcastPriorityInput}
+                      onChange={(e) => setBroadcastPriorityInput(e.target.value)}
+                      disabled={isBroadcasting}
+                      className="w-full bg-slate-50 px-4 py-3 rounded-2xl border border-slate-100 outline-none text-xs font-bold text-slate-800 focus:border-slate-300 transition-all"
+                    >
+                      <option value="0">Info (Banner Biru Standar)</option>
+                      <option value="1">Penting (Banner Kuning Menengah)</option>
+                      <option value="2">Strategis (Layar Penuh / Override Sistem)</option>
+                    </select>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-2 pt-2">
+                    <button
+                      onClick={() => handleToggleBroadcast(true)}
+                      disabled={isBroadcasting || !broadcastMsgInput}
+                      className="flex-1 py-3.5 px-4 rounded-2xl bg-red-600 hover:bg-red-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-black text-xs uppercase tracking-wider transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-1.5 shadow-lg shadow-red-600/10"
+                    >
+                      {isBroadcasting ? (
+                        <Loader2 size={14} className="animate-spin" />
+                      ) : (
+                        <>Siarkan Sekarang 📣</>
+                      )}
+                    </button>
+
+                    {systemConfigData?.broadcastActive && (
+                      <button
+                        onClick={() => handleToggleBroadcast(false)}
+                        disabled={isBroadcasting}
+                        className="py-3.5 px-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all duration-200 active:scale-[0.98] flex items-center justify-center"
+                      >
+                        Hentikan 🛑
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
 
             </div>
             
