@@ -148,6 +148,17 @@ export default function Navbar() {
     },
     { to: '/books', label: 'Buku', icon: BookMarked },
     { to: '/leaderboard', label: 'Peringkat', icon: Trophy },
+    {
+      to: '/about/tapak-liman',
+      label: 'Tentang',
+      icon: BookOpen,
+      dropdown: [
+        { to: '/about/tapak-liman', label: 'Tapak Liman ITB' },
+        { to: '/about/nilai-pancasila', label: 'Nilai Pancasila' },
+        { to: '/about/sdg', label: 'SDG 4 & 10' },
+        { to: '/about/persyaratan', label: 'Persyaratan' },
+      ]
+    }
   ]
 
   const isActive = (to) => {
@@ -358,20 +369,45 @@ export default function Navbar() {
 
             <div className="h-px bg-slate-100 my-2 mx-4" />
 
-            {links.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl font-bold text-slate-900"
-                onClick={() => setMenuOpen(false)}
-              >
-                <div className="flex items-center gap-4">
-                  <link.icon size={20} className="text-red-600" />
-                  {link.label}
-                </div>
-                <ChevronRight size={20} className="text-slate-300" />
-              </Link>
-            ))}
+            {links.map((link) => {
+              if (link.dropdown) {
+                return (
+                  <div key={link.label} className="bg-slate-50/50 rounded-[2rem] p-2 flex flex-col gap-1 border border-slate-100">
+                    <div className="flex items-center gap-4 px-4 py-3 font-black text-slate-400 text-[10px] tracking-widest uppercase border-b border-slate-200/50">
+                      <link.icon size={14} className="text-red-600" />
+                      {link.label}
+                    </div>
+                    <div className="grid grid-cols-1 gap-1 p-1">
+                      {link.dropdown.map(sub => (
+                        <Link
+                          key={sub.to}
+                          to={sub.to}
+                          className="flex items-center justify-between px-4 py-3 bg-white/80 border border-slate-100 hover:bg-slate-50 rounded-2xl font-bold text-slate-700 text-sm transition-all"
+                          onClick={() => setMenuOpen(false)}
+                        >
+                          <span>{sub.label}</span>
+                          <ChevronRight size={16} className="text-slate-400" />
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )
+              }
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className="flex items-center justify-between p-4 bg-slate-50/50 border border-slate-100 rounded-[2rem] font-bold text-slate-800"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <div className="flex items-center gap-4">
+                    <link.icon size={20} className="text-red-600" />
+                    {link.label}
+                  </div>
+                  <ChevronRight size={20} className="text-slate-300" />
+                </Link>
+              )
+            })}
           </motion.div>
         )}
       </AnimatePresence>

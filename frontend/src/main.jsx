@@ -19,6 +19,10 @@ import AdminAnalytics from './pages/AdminAnalytics'
 import AdminSecurityLogs from './pages/AdminSecurityLogs'
 import AdminCategories from './pages/AdminCategories'
 import AdminFeedbackMaintenance from './pages/AdminFeedbackMaintenance'
+import TapakLiman from './pages/about/TapakLiman'
+import NilaiPancasila from './pages/about/NilaiPancasila'
+import SDG from './pages/about/SDG'
+import Persyaratan from './pages/about/Persyaratan'
 import { AuthProvider } from './context/AuthContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -148,6 +152,10 @@ function AppContent() {
               <Route path="/quiz/range/:range" element={<QuizAge />} />
               <Route path="/books" element={<Books />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/about/tapak-liman" element={<TapakLiman />} />
+              <Route path="/about/nilai-pancasila" element={<NilaiPancasila />} />
+              <Route path="/about/sdg" element={<SDG />} />
+              <Route path="/about/persyaratan" element={<Persyaratan />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/materials/:slug" element={<MaterialDetail />} />
