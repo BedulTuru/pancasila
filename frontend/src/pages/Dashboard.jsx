@@ -156,10 +156,10 @@ export default function Dashboard() {
         if (pinInput === '170317') {
           sessionStorage.setItem('admin_pin_verified', 'true');
           setPinVerified(true);
-          toast.success('Otorisasi Berhasil! Pusat Kendali Terbuka 🔑');
+          toast.success('AUTHORIZATION GRANTED. WELCOME BACK OPERATOR 🔑');
         } else {
           setPinError(true);
-          toast.error('PIN Administrator Salah! Akses Ditolak 🚫');
+          toast.error('ACCESS DENIED. INVALID SECURITY CODE 🚫');
           setPinInput('');
           setTimeout(() => setPinError(false), 500);
         }
@@ -183,13 +183,13 @@ export default function Dashboard() {
 
             <div className="mb-8">
               <span className="text-[10px] font-black px-2.5 py-0.5 rounded bg-red-600 text-white uppercase tracking-widest">
-                GERBANG KEAMANAN LAPIS DUA
+                ACCESS RESTRICTED
               </span>
               <h1 className="text-2xl font-black mt-3 tracking-tight" style={{ color: 'var(--edu-navy)' }}>
-                Verifikasi Otoritas Admin
+                Verify Operator Identity
               </h1>
               <p className="text-slate-400 font-bold text-[11px] mt-1 uppercase tracking-wider">
-                Masukkan PIN Keamanan 6-Digit
+                Two-Factor Authorization Required
               </p>
             </div>
 
@@ -230,10 +230,10 @@ export default function Dashboard() {
                 type="submit"
                 className="w-full py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all duration-200 active:scale-[0.98] shadow-lg shadow-slate-900/10 mb-3"
               >
-                Verifikasi PIN Keamanan
+                Unlock Control Console
               </button>
               <p className="text-[10px] font-bold text-slate-400">
-                Gunakan keyboard komputer atau keypad handphone untuk mengetik
+                Use physical keyboard or keypad device to authenticate
               </p>
             </form>
           </motion.div>
