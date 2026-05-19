@@ -56,8 +56,8 @@ export default function SDG() {
               className="bg-white rounded-[2.5rem] p-8 sm:p-10 border border-red-100 shadow-xl flex flex-col text-left justify-between"
             >
               <div>
-                <div className="w-16 h-16 bg-red-50 text-red-600 rounded-3xl flex items-center justify-center font-black text-2xl border border-red-100 mb-6 shadow-sm">
-                  4
+                <div className="mb-6 overflow-hidden rounded-3xl w-24 h-24 border border-red-100 shadow-md bg-white p-2">
+                  <img src="/sdg4.png" alt="SDG 4 Logo" className="w-full h-full object-contain rounded-2xl" />
                 </div>
                 <h3 className="text-2xl font-black text-slate-800 tracking-tight mb-4">
                   SDG 4: Pendidikan Berkualitas
@@ -93,8 +93,8 @@ export default function SDG() {
               className="bg-white rounded-[2.5rem] p-8 sm:p-10 border border-emerald-100 shadow-xl flex flex-col text-left justify-between"
             >
               <div>
-                <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center font-black text-2xl border border-emerald-100 mb-6 shadow-sm">
-                  10
+                <div className="mb-6 overflow-hidden rounded-3xl w-24 h-24 border border-emerald-100 shadow-md bg-white p-2">
+                  <img src="/sdg10.png" alt="SDG 10 Logo" className="w-full h-full object-contain rounded-2xl" />
                 </div>
                 <h3 className="text-2xl font-black text-slate-800 tracking-tight mb-4">
                   SDG 10: Berkurangnya Kesenjangan
