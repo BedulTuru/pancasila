@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { Award, Calendar, BookOpen, Layers, ShieldCheck, CheckCircle2, ChevronRight, FileText, BarChart2, Lightbulb, Compass, Users, Coins, Heart, Star, Sparkles, BookOpenCheck } from 'lucide-react'
+import { Award, Calendar, BookOpen, Layers, ShieldCheck, CheckCircle2, ChevronRight, FileText, BarChart2, Lightbulb, Compass, Users, Coins, Heart, Star, Sparkles } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
 import { useState } from 'react'
 
@@ -9,9 +9,9 @@ export default function TapakLiman() {
   const [expandedBab, setExpandedBab] = useState(null)
 
   const stats = [
-    { label: 'PILIHAN SDGs', value: '10 TOPIK', desc: 'Pedoman Aksi Resmi', theme: 'border-blue-100 bg-blue-50/30 text-blue-700' },
-    { label: 'LINI MASA AKSI', value: '8 MINGGU', desc: 'Minggu 9 s.d. 16', theme: 'border-amber-100 bg-amber-50/30 text-amber-700' },
-    { label: 'LUARAN KELOMPOK', value: '3 KARYA', desc: 'Laporan, Poster, Video', theme: 'border-emerald-100 bg-emerald-50/30 text-emerald-700' },
+    { label: 'PILIHAN SDGs', value: '10 TOPIK', desc: 'Pedoman Aksi Resmi', theme: 'border-slate-100 bg-slate-50/50 text-slate-800' },
+    { label: 'LINI MASA AKSI', value: '8 MINGGU', desc: 'Minggu 9 s.d. 16', theme: 'border-slate-100 bg-slate-50/50 text-slate-800' },
+    { label: 'LUARAN KELOMPOK', value: '3 KARYA', desc: 'Laporan, Poster, Video', theme: 'border-slate-100 bg-slate-50/50 text-slate-800' },
   ]
 
   const acronym = [
@@ -34,7 +34,6 @@ export default function TapakLiman() {
       acts: 'Pelatihan e-commerce, digital branding, dan pembuatan katalog produk warga.',
       cost: 'Bahan baku demonstrasi produk, cetak panduan bisnis, & spanduk sosialisasi.',
       sdg: 'SDG 1: Tanpa Kemiskinan',
-      color: 'border-amber-200/60 bg-amber-50/10 text-amber-800'
     },
     {
       no: 2,
@@ -44,7 +43,6 @@ export default function TapakLiman() {
       acts: 'Pelatihan dasar komputer, edukasi deteksi hoax, dan pembentukan website desa.',
       cost: 'Modul materi digital cetak, konsumsi warga peserta, & transportasi tim.',
       sdg: 'SDG 4: Pendidikan Berkualitas',
-      color: 'border-cyan-200/60 bg-cyan-50/10 text-cyan-800'
     },
     {
       no: 3,
@@ -54,7 +52,6 @@ export default function TapakLiman() {
       acts: 'Eksperimen sains sederhana, kelas mendongeng karakter Pancasila, & donasi buku.',
       cost: 'Pembelian buku bacaan berkualitas, alat peraga sains, & rak buku portabel.',
       sdg: 'SDG 4: Pendidikan Berkualitas',
-      color: 'border-emerald-200/60 bg-emerald-50/10 text-emerald-800'
     },
     {
       no: 4,
@@ -64,7 +61,6 @@ export default function TapakLiman() {
       acts: 'Penyuluhan stunting keluarga, gotong royong perbaikan sanitasi umum, & penyediaan tong sampah.',
       cost: 'Alat sanitasi peraga, bahan penyuluhan cetak, & sabun/alat kebersihan warga.',
       sdg: 'SDG 3: Kehidupan Sehat',
-      color: 'border-rose-200/60 bg-rose-50/10 text-rose-800'
     },
     {
       no: 5,
@@ -74,7 +70,6 @@ export default function TapakLiman() {
       acts: 'Penanaman pohon produktif, workshop pengomposan mandiri, & plang edukasi lingkungan.',
       cost: 'Pembelian bibit pohon unggulan, pupuk organik, sekop mini, & biaya transportasi.',
       sdg: 'SDG 15: Ekosistem Daratan',
-      color: 'border-green-200/60 bg-green-50/10 text-green-800'
     },
     {
       no: 6,
@@ -84,7 +79,6 @@ export default function TapakLiman() {
       acts: 'Workshop kerajinan tangan daur ulang sampah, pelatihan manajemen usaha mikro, & branding.',
       cost: 'Bahan baku praktek menjahit/kerajinan, konsumsi warga, & transportasi tim.',
       sdg: 'SDG 5: Kesetaraan Gender',
-      color: 'border-violet-200/60 bg-violet-50/10 text-violet-800'
     },
     {
       no: 7,
@@ -94,7 +88,6 @@ export default function TapakLiman() {
       acts: 'Pelatihan instrumen musik tradisional bagi anak, pembuatan film dokumentasi seni desa.',
       cost: 'Sewa perlengkapan pementasan mini, dokumentasi profesional, & konsumsi kegiatan.',
       sdg: 'SDG 11: Komunitas Berkelanjutan',
-      color: 'border-orange-200/60 bg-orange-50/10 text-orange-800'
     },
     {
       no: 8,
@@ -104,7 +97,6 @@ export default function TapakLiman() {
       acts: 'Penyuluhan sadar hukum sengketa tanah/keluarga, pembuatan infografis hukum sipil.',
       cost: 'Cetak pamflet panduan hukum warga, konsumsi peserta, & transportasi pembicara.',
       sdg: 'SDG 16: Perdamaian & Keadilan',
-      color: 'border-blue-200/60 bg-blue-50/10 text-blue-800'
     },
     {
       no: 9,
@@ -114,7 +106,6 @@ export default function TapakLiman() {
       acts: 'Pembuatan rambu keselamatan jalan, perbaikan sarana pos ronda, & pengecatan fasilitas PAUD.',
       cost: 'Semen, pasir, cat kayu/besi tahan air, papan kayu petunjuk, & konsumsi kerja bakti.',
       sdg: 'SDG 9: Industri & Infrastruktur',
-      color: 'border-slate-200/60 bg-slate-50/10 text-slate-800'
     },
     {
       no: 10,
@@ -124,18 +115,17 @@ export default function TapakLiman() {
       acts: 'Penyuluhan klasifikasi sampah, peragaan pembuatan ecobrick, & penyediaan tong sampah pilah.',
       cost: 'Tong sampah besar pilah 3 warna, masker sarung tangan pelindung, & stiker panduan.',
       sdg: 'SDG 12: Konsumsi & Produksi Bertanggung Jawab',
-      color: 'border-teal-200/60 bg-teal-50/10 text-teal-800'
     }
   ]
 
   const timeline = [
-    { week: 'Minggu 9', task: 'Rembuk Gagasan Awal', desc: 'Pembentukan tim kolaborasi kelas (maks 10 orang) dan perumusan rancangan ide proyek berbasis SDGs.', color: 'border-red-100 bg-red-50 text-red-700' },
-    { week: 'Minggu 10', task: 'Penyusunan Proposal & RAB', desc: 'Merumuskan draf proposal komprehensif, rincian anggaran biaya logistik, serta linimasa eksekusi.', color: 'border-amber-100 bg-amber-50 text-amber-700' },
-    { week: 'Minggu 11', task: 'Sidang Asistensi Kelompok', desc: 'Presentasi dan pertanggungjawaban rancangan proposal program di hadapan Dosen Pembimbing Pancasila.', color: 'border-yellow-100 bg-yellow-50 text-yellow-700' },
-    { week: 'Minggu 12-13', task: 'Implementasi Aksi Lapangan', desc: 'Turun langsung ke masyarakat desa sasaran guna merealisasikan pilar program pengabdian secara intensif.', color: 'border-emerald-100 bg-emerald-50 text-emerald-700' },
-    { week: 'Minggu 14', task: 'Penyusunan Karya Luaran', desc: 'Finalisasi pembuatan laporan akademis, rancangan poster ilmiah infografis, dan editing video dokumentasi.', color: 'border-cyan-100 bg-cyan-50 text-cyan-700' },
-    { week: 'Minggu 15', task: 'Sidang Hasil & Unggah Edunex', desc: 'Mengunggah seluruh luaran wajib kelompok ke portal akademik Edunex ITB dan melaksanakan presentasi akhir.', color: 'border-violet-100 bg-violet-50 text-violet-700' },
-    { week: 'Minggu 16', task: 'Peer Review & Rekap Nilai', desc: 'Pengisian peer assessment keaktifan anggota tim serta rekapitulasi penilaian total dosen.', color: 'border-fuchsia-100 bg-fuchsia-50 text-fuchsia-700' }
+    { week: 'Minggu 9', task: 'Rembuk Gagasan Awal', desc: 'Pembentukan tim kolaborasi kelas (maks 10 orang) dan perumusan rancangan ide proyek berbasis SDGs.', color: 'border-slate-100 bg-slate-50/50 text-slate-800' },
+    { week: 'Minggu 10', task: 'Penyusunan Proposal & RAB', desc: 'Merumuskan draf proposal komprehensif, rincian anggaran biaya logistik, serta linimasa eksekusi.', color: 'border-slate-100 bg-slate-50/50 text-slate-800' },
+    { week: 'Minggu 11', task: 'Sidang Asistensi Kelompok', desc: 'Presentasi dan pertanggungjawaban rancangan proposal program di hadapan Dosen Pembimbing Pancasila.', color: 'border-slate-100 bg-slate-50/50 text-slate-800' },
+    { week: 'Minggu 12-13', task: 'Implementasi Aksi Lapangan', desc: 'Turun langsung ke masyarakat desa sasaran guna merealisasikan pilar program pengabdian secara intensif.', color: 'border-slate-100 bg-slate-50/50 text-slate-800' },
+    { week: 'Minggu 14', task: 'Penyusunan Karya Luaran', desc: 'Finalisasi pembuatan laporan akademis, rancangan poster ilmiah infografis, dan editing video dokumentasi.', color: 'border-slate-100 bg-slate-50/50 text-slate-800' },
+    { week: 'Minggu 15', task: 'Sidang Hasil & Unggah Edunex', desc: 'Mengunggah seluruh luaran wajib kelompok ke portal akademik Edunex ITB dan melaksanakan presentasi akhir.', color: 'border-slate-100 bg-slate-50/50 text-slate-800' },
+    { week: 'Minggu 16', task: 'Peer Review & Rekap Nilai', desc: 'Pengisian peer assessment keaktifan anggota tim serta rekapitulasi penilaian total dosen.', color: 'border-slate-100 bg-slate-50/50 text-slate-800' }
   ]
 
   const babs = [
@@ -184,16 +174,15 @@ export default function TapakLiman() {
     <>
       <Helmet>
         <title>Pedoman Resmi Proyek Tapak Liman WI1101 ITB</title>
-        <meta name="description" content="Pedoman resmi pelaksanaan proyek pengabdian masyarakat Tapak Liman mata kuliah Pancasila WI1101 Institut Teknologi Bandung." />
+        <meta name="description" content="Pedoman resmi pelaksanaan proyek pengabdian masyarakat Tapak Liman mata kuliah Pancasila WI1101 ITB." />
       </Helmet>
 
-      {/* Pristine Light Theme Canvas with subtle gridlines */}
-      <div className="min-h-screen pt-28 pb-20 relative overflow-hidden bg-[#fafbfe] text-slate-800">
+      {/* Modern Bright Stark White Layout (No grid pattern at all) */}
+      <div className="min-h-screen pt-28 pb-20 relative overflow-hidden bg-white text-slate-800">
         
-        {/* Soft elegant grid pattern */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[linear-gradient(#002855_1.5px,transparent_1.5px),linear-gradient(90deg,#002855_1.5px,transparent_1.5px)] bg-[size:40px_40px]" />
-        <div className="absolute top-0 right-0 w-[50rem] h-[50rem] bg-gradient-to-tr from-blue-100/30 to-rose-100/20 rounded-full blur-[130px] pointer-events-none" />
-        <div className="absolute bottom-1/4 -left-60 w-[45rem] h-[45rem] bg-gradient-to-br from-emerald-100/20 to-amber-100/30 rounded-full blur-[140px] pointer-events-none" />
+        {/* Soft elegant atmospheric blurs only, no grid backgrounds */}
+        <div className="absolute top-0 right-0 w-[45rem] h-[45rem] bg-[#002855]/[0.02] rounded-full blur-[130px] pointer-events-none" />
+        <div className="absolute bottom-1/4 -left-60 w-[40rem] h-[40rem] bg-amber-500/[0.02] rounded-full blur-[140px] pointer-events-none" />
 
         <div className="max-w-6xl mx-auto px-6 relative z-10">
           
@@ -202,49 +191,48 @@ export default function TapakLiman() {
             <motion.div 
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white border border-slate-200 text-slate-800 text-[10px] font-black uppercase tracking-widest mb-8 shadow-sm"
+              className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-slate-50 border border-slate-100 text-slate-800 text-[10px] font-black uppercase tracking-widest mb-8 shadow-sm"
             >
               <img src="/itb.png" alt="ITB Logo" className="h-5 w-auto" />
               <div className="w-px h-3.5 bg-slate-200" />
-              <span className="text-[#002855] font-black flex items-center gap-1.5">
+              <span className="text-slate-700 font-black flex items-center gap-1.5">
                 <Sparkles size={12} className="text-amber-500" /> PROGRAM PENGABDIAN WI1101
               </span>
             </motion.div>
             
             <motion.h1 
-              initial={{ y: 25, opacity: 0 }}
+              initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.1] mb-6 text-slate-900"
             >
               Buku Panduan Proyek <br />
-              <span className="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 bg-clip-text text-transparent">
+              <span className="text-[#002855]">
                 "TAPAK LIMAN"
               </span>
             </motion.h1>
             
             <motion.p 
-              initial={{ y: 25, opacity: 0 }}
+              initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.05 }}
               className="text-slate-500 font-bold text-xs sm:text-base max-w-3xl mx-auto leading-relaxed mb-12"
             >
-              Pedoman komprehensif tim dosen Pancasila ITB dalam menyalurkan inovasi sains, teknologi, dan seni ke tengah-tengah pemukiman warga desa mitra.
+              Pedoman resmi pelaksanaan program aksi pengabdian masyarakat berbasis SDGs terapan bagi mahasiswa Institut Teknologi Bandung.
             </motion.p>
 
-            {/* Pristine Modern White Stat Cards */}
+            {/* Pristine Modern Stat Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
               {stats.map((s, idx) => (
                 <motion.div
                   key={s.label}
-                  initial={{ y: 20, opacity: 0 }}
+                  initial={{ y: 15, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: idx * 0.05 + 0.1 }}
-                  className="bg-white rounded-2xl border border-slate-100 p-6 flex flex-col justify-between text-center relative overflow-hidden shadow-md shadow-slate-100/50 hover:border-[#002855]/20 transition-all duration-300"
+                  className="bg-white rounded-2xl border border-slate-200/70 p-6 flex flex-col justify-between text-center shadow-sm hover:border-slate-300 transition-all duration-300"
                 >
-                  <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${s.theme.includes('blue') ? 'from-blue-500 to-indigo-500' : s.theme.includes('amber') ? 'from-amber-500 to-orange-500' : 'from-emerald-500 to-teal-500'}`} />
                   <span className="text-2xl sm:text-3xl font-black text-slate-900 mb-1 tracking-tight">{s.value}</span>
                   <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">{s.label}</span>
-                  <span className="text-[10px] font-bold text-[#002855]">{s.desc}</span>
+                  <span className="text-[10px] font-bold text-slate-500">{s.desc}</span>
                 </motion.div>
               ))}
             </div>
@@ -258,11 +246,11 @@ export default function TapakLiman() {
               initial={{ y: 30, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
-              className="lg:col-span-2 bg-white rounded-3xl p-8 sm:p-12 border border-slate-100 shadow-xl shadow-slate-100/50 text-left flex flex-col justify-between"
+              className="lg:col-span-2 bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/70 shadow-sm text-left flex flex-col justify-between"
             >
               <div>
-                <span className="text-[10px] font-black text-[#002855] uppercase tracking-widest block mb-2">MAKNA & FILOSOFI HISTORIS</span>
-                <h3 className="text-2xl sm:text-3xl font-black text-slate-900 mb-5 leading-tight">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">MAKNA & FILOSOFI HISTORIS</span>
+                <h3 className="text-2xl sm:text-3xl font-black text-[#002855] mb-5 leading-tight">
                   Sinergi Tanaman Tapak Liman & Ganesha ITB
                 </h3>
                 <p className="text-slate-500 font-medium text-xs sm:text-sm leading-relaxed mb-8">
@@ -271,8 +259,8 @@ export default function TapakLiman() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-amber-200 transition-colors">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center font-extrabold text-lg mb-4">
+                <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-extrabold text-lg mb-4">
                     👣
                   </div>
                   <h4 className="font-black text-slate-900 text-sm mb-1.5">TAPAK (Jejak Aksi Kelompok)</h4>
@@ -281,27 +269,27 @@ export default function TapakLiman() {
                   </p>
                 </div>
                 
-                <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-blue-200 transition-colors">
-                  <div className="w-10 h-10 rounded-xl bg-[#002855]/10 text-[#002855] flex items-center justify-center font-extrabold text-lg mb-4">
+                <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-extrabold text-lg mb-4">
                     🐘
                   </div>
                   <h4 className="font-black text-slate-900 text-sm mb-1.5">LIMAN (Gajah Ganesha)</h4>
                   <p className="text-[11px] font-bold text-slate-500 leading-relaxed">
-                    Berarti Gajah, lambang figur Ganesha selaku ikon Institut Teknologi Bandung wadah pengembangan ilmu pengetahuan sains, teknologi, dan seni yang bermanfaat bagi bangsa.
+                    Berarti Gajah, lambang figur Ganesha selaku ikon ITB wadah pengembangan ilmu pengetahuan sains, teknologi, dan seni yang bermanfaat bagi bangsa.
                   </p>
                 </div>
               </div>
             </motion.div>
 
-            {/* Right Box: Elegant Interactive Switcher */}
+            {/* Right Box: Elegant Switcher */}
             <motion.div 
               initial={{ y: 30, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
-              className="bg-white rounded-3xl p-8 border border-slate-100 shadow-xl shadow-slate-100/50 text-left flex flex-col justify-between"
+              className="bg-white rounded-3xl p-8 border border-slate-200/70 shadow-sm text-left flex flex-col justify-between"
             >
               <div>
-                <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest block mb-2">PANDUAN NILAI KELOMPOK</span>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">PANDUAN NILAI KELOMPOK</span>
                 <h3 className="text-xl font-black text-slate-900 mb-2">8 Karakter Utama</h3>
                 <p className="text-slate-500 font-bold text-[10px] leading-relaxed mb-6">
                   Ketuk salah satu kotak huruf menyala di bawah untuk memunculkan penjelasan pilar nilai kelompok Anda:
@@ -316,7 +304,7 @@ export default function TapakLiman() {
                     onClick={() => setActiveLetter(idx)}
                     className={`p-3 rounded-xl border text-center transition-all ${
                       activeLetter === idx 
-                        ? `${item.bg} scale-105 shadow-sm` 
+                        ? 'border-slate-300 bg-slate-100 text-slate-900 scale-105 shadow-sm' 
                         : 'border-slate-100 bg-slate-50/50 text-slate-400 hover:text-slate-800 hover:bg-slate-50'
                     }`}
                   >
@@ -346,7 +334,7 @@ export default function TapakLiman() {
           {/* ================= 10 TOPIK SDGs ================= */}
           <div className="mb-24">
             <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#002855]/10 border border-[#002855]/20 text-[#002855] text-[9px] font-extrabold uppercase tracking-widest mb-3">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-100 border border-slate-200 text-slate-800 text-[9px] font-extrabold uppercase tracking-widest mb-3">
                 10 TOPIK SDGs PILIHAN RESMI
               </div>
               <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Katalog Pilihan Program Aksi</h3>
@@ -362,8 +350,8 @@ export default function TapakLiman() {
                     onClick={() => setActiveTopic(idx)}
                     className={`p-4 text-left rounded-xl font-black text-xs uppercase tracking-wider transition-all border flex items-center gap-4 ${
                       activeTopic === idx 
-                        ? 'bg-[#002855] border-[#002855] text-white shadow-md scale-[1.01]' 
-                        : 'bg-white border-slate-100 text-slate-500 hover:bg-slate-50 hover:text-slate-800'
+                        ? 'bg-slate-900 border-slate-900 text-white shadow-md scale-[1.01]' 
+                        : 'bg-white border-slate-200/70 text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                     }`}
                   >
                     <span className={`w-6 h-6 rounded flex items-center justify-center font-extrabold text-[10px] ${
@@ -377,17 +365,17 @@ export default function TapakLiman() {
               </div>
 
               {/* Right Visual Details Display */}
-              <div className="lg:col-span-2 bg-white rounded-3xl p-8 sm:p-10 border border-slate-100 shadow-xl shadow-slate-100/50 text-left flex flex-col justify-between relative overflow-hidden">
+              <div className="lg:col-span-2 bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/70 shadow-sm text-left flex flex-col justify-between relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-28 h-28 bg-slate-50 rounded-bl-3xl flex items-center justify-center pointer-events-none">
                   {topics[activeTopic].icon}
                 </div>
 
                 <div>
                   <div className="flex flex-wrap items-center gap-2 mb-6">
-                    <span className="px-3 py-1 rounded bg-[#002855]/5 border border-[#002855]/10 text-[#002855] text-[9px] font-black uppercase tracking-wider">
+                    <span className="px-3 py-1 rounded bg-slate-100 border border-slate-200 text-slate-800 text-[9px] font-black uppercase tracking-wider">
                       TOPIK AKSI {topics[activeTopic].no}
                     </span>
-                    <span className="px-3 py-1 rounded bg-rose-600 text-white text-[9px] font-black uppercase tracking-wider shadow-sm">
+                    <span className="px-3 py-1 rounded bg-[#002855] text-white text-[9px] font-black uppercase tracking-wider shadow-sm">
                       {topics[activeTopic].sdg}
                     </span>
                   </div>
@@ -402,14 +390,14 @@ export default function TapakLiman() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
                     <div className="p-5 bg-slate-50 rounded-xl border border-slate-100">
-                      <span className="text-[9px] font-black text-rose-600 uppercase tracking-widest block mb-2">Aktivitas Lapangan</span>
+                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-2">Aktivitas Lapangan</span>
                       <p className="text-xs font-bold text-slate-600 leading-relaxed">
                         {topics[activeTopic].acts}
                       </p>
                     </div>
 
                     <div className="p-5 bg-slate-50 rounded-xl border border-slate-100">
-                      <span className="text-[9px] font-black text-amber-600 uppercase tracking-widest block mb-2">Komponen Rencana Anggaran</span>
+                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-2">Komponen Rencana Anggaran</span>
                       <p className="text-xs font-bold text-slate-600 leading-relaxed">
                         {topics[activeTopic].cost}
                       </p>
@@ -417,8 +405,8 @@ export default function TapakLiman() {
                   </div>
                 </div>
 
-                <div className="p-4 bg-amber-500/[0.06] border border-amber-500/10 rounded-xl">
-                  <p className="text-[10px] sm:text-[11px] font-bold text-amber-800 leading-snug">
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                  <p className="text-[10px] sm:text-[11px] font-bold text-slate-700 leading-snug">
                     📌 <strong>Informasi Proposal:</strong> Rincian Anggaran Biaya (RAB) dan perizinan lurah sasaran akan dibahas bersama Dosen Pancasila pada asistensi proposal Minggu ke-10.
                   </p>
                 </div>
@@ -429,7 +417,7 @@ export default function TapakLiman() {
           {/* ================= TIMELINE SECTION ================= */}
           <div className="mb-24">
             <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#002855]/10 border border-[#002855]/20 text-[#002855] text-[9px] font-extrabold uppercase tracking-widest mb-3">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-100 border border-slate-200 text-slate-800 text-[9px] font-extrabold uppercase tracking-widest mb-3">
                 LINI MASA AKSI KELOMPOK
               </div>
               <h3 className="text-2xl sm:text-3xl font-black text-slate-900">Roadmap Pelaksanaan Proyek</h3>
@@ -440,13 +428,11 @@ export default function TapakLiman() {
               {timeline.map((step) => (
                 <div key={step.week} className="relative">
                   {/* Timeline node */}
-                  <div className="absolute -left-[31px] sm:-left-[39px] top-1 w-4 h-4 rounded-full bg-white border-2 border-[#002855] flex items-center justify-center shadow-sm">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#002855]" />
+                  <div className="absolute -left-[31px] sm:-left-[39px] top-1 w-4 h-4 rounded-full bg-white border-2 border-slate-800 flex items-center justify-center shadow-sm">
+                    <div className="w-1.5 h-1.5 rounded-full bg-slate-800" />
                   </div>
                   
-                  <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-md shadow-slate-100/50 hover:border-[#002855]/30 transition-all group relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#002855] to-amber-500 opacity-20 group-hover:opacity-100" />
-                    
+                  <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:border-slate-300 transition-all group relative overflow-hidden">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="px-2.5 py-0.5 rounded bg-slate-900 text-white text-[9px] font-black uppercase">
                         {step.week}
@@ -468,7 +454,7 @@ export default function TapakLiman() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-24 text-left">
             
             {/* Sistematika Laporan */}
-            <div className="bg-white rounded-[2rem] p-8 sm:p-10 border border-slate-100 shadow-xl shadow-slate-100/50">
+            <div className="bg-white rounded-[2rem] p-8 sm:p-10 border border-slate-200/70 shadow-sm">
               <div className="mb-6">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-900 text-white text-[9px] font-extrabold uppercase tracking-widest mb-3">
                   SISTEMATIKA AKADEMIS
@@ -486,7 +472,7 @@ export default function TapakLiman() {
                       <button
                         onClick={() => setExpandedBab(isOpen ? null : bab.id)}
                         className={`w-full p-4 text-left font-black text-xs uppercase tracking-wider flex items-center justify-between transition-colors ${
-                          isOpen ? 'bg-[#002855]/5 text-[#002855]' : 'hover:bg-slate-50 text-slate-600'
+                          isOpen ? 'bg-slate-100 text-slate-900' : 'hover:bg-slate-50 text-slate-600'
                         }`}
                       >
                         <div>
@@ -517,10 +503,10 @@ export default function TapakLiman() {
             </div>
 
             {/* Kriteria Penilaian */}
-            <div className="bg-white rounded-[2rem] p-8 sm:p-10 border border-slate-100 shadow-xl shadow-slate-100/50 flex flex-col justify-between">
+            <div className="bg-white rounded-[2rem] p-8 sm:p-10 border border-slate-200/70 shadow-sm flex flex-col justify-between">
               <div>
                 <div className="mb-6">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-amber-500/10 border border-amber-500/20 text-amber-600 text-[9px] font-extrabold uppercase tracking-widest mb-3">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-100 border border-slate-200 text-slate-800 text-[9px] font-extrabold uppercase tracking-widest mb-3">
                     STANDAR EVALUASI NILAI
                   </div>
                   <h3 className="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
@@ -553,38 +539,35 @@ export default function TapakLiman() {
 
               <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
                 <span className="text-[9px] font-black uppercase tracking-wider text-slate-400">Akumulasi Nilai Akhir</span>
-                <span className="px-3.5 py-1.5 rounded-xl bg-slate-900 text-white font-black text-xs">
+                <span className="px-3.5 py-1.5 rounded-xl bg-slate-950 text-white font-black text-xs">
                   100% MAKSIMAL
                 </span>
               </div>
             </div>
           </div>
 
-          {/* ================= LIGHT ACTION BANNER ================= */}
+          {/* ================= LUXURY WHITE CALLOUT ACTION ================= */}
           <motion.div
             initial={{ scale: 0.98, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true }}
-            className="bg-[#002855] rounded-[2rem] p-10 sm:p-16 text-center text-white shadow-xl relative overflow-hidden"
+            className="bg-white rounded-[2rem] p-10 sm:p-16 text-center border border-slate-200/80 shadow-md shadow-slate-100/50"
           >
-            <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(white_1px,transparent_1px),linear-gradient(90deg,white_1px,transparent_1px)] bg-[size:30px_30px] pointer-events-none" />
-            <div className="absolute -top-24 -left-24 w-48 h-48 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-
-            <h3 className="text-2xl sm:text-4xl font-black mb-4 text-white tracking-tight">Mari Mulai Aksi Nyata Anda!</h3>
-            <p className="text-slate-300 font-bold text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed mb-8">
-              Pancasila bukanlah butir ingatan tertulis biasa, melainkan wujud kepedulian yang kita salurkan langsung ke masyarakat pelosok demi Indonesia Maju.
+            <h3 className="text-2xl sm:text-4xl font-black mb-4 text-slate-900 tracking-tight">Mari Mulai Aksi Nyata Anda!</h3>
+            <p className="text-slate-500 font-bold text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed mb-8">
+              Pancasila bukanlah sekadar materi teoritis tertulis biasa, melainkan wujud rasa persaudaraan dan gotong royong yang kita salurkan langsung demi kesejahteraan masyarakat Indonesia.
             </p>
 
-            <div className="flex flex-wrap justify-center gap-4 relative z-10">
+            <div className="flex flex-wrap justify-center gap-4">
               <a 
                 href="/portal"
-                className="px-8 py-4 bg-white text-[#002855] hover:bg-slate-50 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-[0.98]"
+                className="px-8 py-4 bg-slate-900 text-white hover:bg-slate-800 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-[0.98] shadow-sm"
               >
                 Mulai Belajar Pancasila
               </a>
               <a 
                 href="/leaderboard"
-                className="px-8 py-4 bg-white/10 hover:bg-white/15 border border-white/10 rounded-xl text-xs font-black uppercase tracking-widest text-white transition-all active:scale-[0.98]"
+                className="px-8 py-4 bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-[0.98]"
               >
                 Papan Peringkat Belajar
               </a>
