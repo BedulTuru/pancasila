@@ -113,8 +113,10 @@ function AppContent() {
     refetchInterval: 60000
   })
 
-  // Lockdown Protocol
-  if (systemConfig?.maintenanceMode && (!user || user.role !== 'ADMIN')) {
+  // Lockdown Protocol - Allow access to '/login' so admins can authenticate and disable maintenance mode!
+  const isLoginPage = location.pathname === '/login'
+  
+  if (systemConfig?.maintenanceMode && (!user || user.role !== 'ADMIN') && !isLoginPage) {
     return <MaintenancePage message={systemConfig.maintenanceMsg} />
   }
   
