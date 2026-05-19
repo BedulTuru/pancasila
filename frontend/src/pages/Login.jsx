@@ -15,7 +15,10 @@ export default function Login() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const from = location.state?.from?.pathname || '/dashboard'
+  let from = location.state?.from?.pathname || '/dashboard'
+  if (from === '/login') {
+    from = '/dashboard'
+  }
 
   // Auto-redirect if user is already logged in
   useEffect(() => {
