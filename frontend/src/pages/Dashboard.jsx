@@ -13,6 +13,27 @@ const ADMIN_PATH = import.meta.env.VITE_ADMIN_PATH || '/admin'
 
 export default function Dashboard() {
   const { user } = useAuth()
+  const isAdmin = user?.role === 'ADMIN';
+
+  const { data: adminAnalytics } = useQuery({
+    queryKey: ['admin-analytics'],
+    queryFn: async () => {
+      const res = await api.get('/admin/analytics')
+      return res.data
+    },
+    enabled: isAdmin,
+    refetchInterval: 30000
+  })
+
+  const { data: adminMetrics } = useQuery({
+    queryKey: ['admin-metrics'],
+    queryFn: async () => {
+      const res = await api.get('/admin/metrics')
+      return res.data
+    },
+    enabled: isAdmin,
+    refetchInterval: 10000
+  })
   const { data: progressRes, isLoading: loadingProgress } = useQuery({
     queryKey: ['user-progress'],
     queryFn: async () => {
@@ -82,6 +103,301 @@ export default function Dashboard() {
   const levelData = getLevelData(currentLevel);
   const xpProgress = getXPProgressInLevel(user?.xp || 0) || 0;
   const nextLevelXP = getXPForNextLevel(currentLevel) || 100;
+
+  if (isAdmin) {
+    const totals = adminAnalytics?.totals || { users: 0, materials: 0, quizzes: 0, attempts: 0 };
+    const metrics = adminMetrics || {
+      dbStatus: 'CONNECTED',
+      latency: 15,
+      activeSessions: 1,
+      lockdownMode: false,
+      cpuLoad: 0.1,
+      freeMem: 1024,
+      totalMem: 2048,
+      uptime: 3600,
+      nodeVersion: 'v18.0.0',
+      osType: 'darwin',
+      architecture: 'x64'
+    };
+
+    // Format Memory
+    const totalMemGB = (metrics.totalMem / (1024 * 1024 * 1024)).toFixed(1);
+    const freeMemGB = (metrics.freeMem / (1024 * 1024 * 1024)).toFixed(1);
+    const usedMemGB = (totalMemGB - freeMemGB).toFixed(1);
+    const memoryPercent = Math.round((usedMemGB / totalMemGB) * 100) || 0;
+
+    // Format Uptime
+    const formatUptime = (seconds) => {
+      const d = Math.floor(seconds / (3600*24));
+      const h = Math.floor((seconds % (3600*24)) / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      return `${d}d ${h}h ${m}m`;
+    };
+
+    return (
+      <div className="min-h-screen pt-20 pb-16" style={{ background: 'var(--edu-cream)' }}>
+        <div className="max-w-6xl mx-auto px-5 sm:px-8">
+          
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="pt-4 pb-8 flex flex-col md:flex-row md:items-center justify-between gap-6"
+          >
+            <div>
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-[10px] font-black px-2.5 py-0.5 rounded bg-red-600 text-white uppercase tracking-widest">
+                  SISTEM KENDALI UTAMA
+                </span>
+                <span className="text-[10px] font-black px-2.5 py-0.5 rounded bg-amber-100 text-amber-800 uppercase tracking-widest">
+                  PORTAL ADMINISTRATOR
+                </span>
+              </div>
+              <h1 className="text-3xl md:text-5xl font-black mb-2 tracking-tight" style={{ color: 'var(--edu-navy)' }}>
+                Halo, <span className="text-red-600">{user?.name || 'Administrator'}</span>
+              </h1>
+              <p className="text-slate-500 font-bold text-sm max-w-xl">
+                Kelola kurikulum, atur kuis, monitor lalu lintas keamanan, serta kendalikan status pemeliharaan sistem Pancasila Edu di satu konsol utama.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Quick Metrics Bento Grid */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+          >
+            {[
+              { label: 'Total Siswa Terdaftar', value: totals.users, icon: Users, accent: '#1E40AF', bg: 'rgba(30,64,175,0.06)' },
+              { label: 'Modul Materi Aktif', value: totals.materials, icon: FileText, accent: '#D97706', bg: 'rgba(217,119,6,0.06)' },
+              { label: 'Bank Kuis Tersedia', value: totals.quizzes, icon: Brain, accent: '#7E22CE', bg: 'rgba(126,34,206,0.06)' },
+              { label: 'Uptime Server', value: formatUptime(metrics.uptime), icon: Activity, accent: '#059669', bg: 'rgba(5,150,105,0.06)' }
+            ].map((stat, idx) => (
+              <div
+                key={idx}
+                className="bg-white rounded-3xl p-6 border transition-all"
+                style={{ borderColor: 'var(--edu-border)', boxShadow: 'var(--shadow-sm)' }}
+              >
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4" style={{ background: stat.bg }}>
+                  <stat.icon size={22} style={{ color: stat.accent }} />
+                </div>
+                <div className="text-2xl md:text-3xl font-black mb-0.5 text-slate-800">
+                  {stat.value}
+                </div>
+                <div className="text-xs font-bold text-slate-400">{stat.label}</div>
+              </div>
+            ))}
+          </motion.div>
+
+          {/* Main Action Blocks Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            {/* Left/Middle: 2 Cols for Master Administrative Control Grid */}
+            <div className="lg:col-span-2 space-y-6">
+              
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-white rounded-[2.5rem] p-8 border"
+                style={{ borderColor: 'var(--edu-border)', boxShadow: 'var(--shadow-sm)' }}
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h2 className="text-xl font-black text-slate-900 tracking-tight">Menu Pengendalian Sistem</h2>
+                    <p className="text-xs font-bold text-slate-400">Pilih modul administrasi yang ingin Anda kelola</p>
+                  </div>
+                  <span className="text-[10px] font-black text-slate-400 bg-slate-50 border border-slate-100 px-3 py-1 rounded-full uppercase tracking-wider">
+                    Console V2
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {[
+                    { to: `${ADMIN_PATH}/materials`, label: 'Modul & Materi', desc: 'Unggah, edit, & hapus modul materi', icon: BookOpen, accent: 'text-amber-600 bg-amber-50 border-amber-100' },
+                    { to: `${ADMIN_PATH}/quizzes`, label: 'Bank Soal Kuis', desc: 'Atur butir pertanyaan & durasi kuis', icon: Brain, accent: 'text-purple-600 bg-purple-50 border-purple-100' },
+                    { to: `${ADMIN_PATH}/categories`, label: 'Topik & Kategori', desc: 'Kelola kategori & jenjang materi', icon: Layers, accent: 'text-indigo-600 bg-indigo-50 border-indigo-100' },
+                    { to: `${ADMIN_PATH}/users`, label: 'Manajemen Pengguna', desc: 'Kelola peran pengguna & evict sesi', icon: Users, accent: 'text-blue-600 bg-blue-50 border-blue-100' },
+                    { to: `${ADMIN_PATH}/maintenance`, label: 'Sistem & Pengaduan', desc: 'Setelan pemeliharaan & kotak pesan', icon: Wrench, accent: 'text-orange-600 bg-orange-50 border-orange-100' },
+                    { to: `${ADMIN_PATH}/logs`, label: 'Log Audit Keamanan', desc: 'Lacak riwayat IP & aktivitas sistem', icon: ShieldCheck, accent: 'text-red-600 bg-red-50 border-red-100' },
+                    { to: `${ADMIN_PATH}/analytics`, label: 'Statistik & Analitik', desc: 'Laporan aktivitas kuis & materi terpopuler', icon: TrendingUp, accent: 'text-violet-600 bg-violet-50 border-violet-100' },
+                  ].map((item, idx) => (
+                    <Link
+                      key={idx}
+                      to={item.to}
+                      className="group flex items-start gap-4 p-5 bg-white border border-slate-100 rounded-3xl transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/30 hover:border-slate-300 text-left relative overflow-hidden"
+                    >
+                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 border ${item.accent} transition-transform group-hover:scale-105`}>
+                        <item.icon size={22} />
+                      </div>
+                      <div className="min-w-0 pr-4">
+                        <div className="font-bold text-slate-800 text-sm mb-1 group-hover:text-red-600 transition-colors">{item.label}</div>
+                        <div className="text-[11px] font-bold text-slate-400 leading-normal">{item.desc}</div>
+                      </div>
+                      <div className="absolute top-5 right-5 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-0 translate-x-1">
+                        <ArrowRight size={14} className="text-slate-400" />
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Security Alerts / Quick Actions */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="bg-white rounded-[2.5rem] p-8 border"
+                style={{ borderColor: 'var(--edu-border)', boxShadow: 'var(--shadow-sm)' }}
+              >
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
+                    <Download size={20} />
+                  </div>
+                  <div>
+                    <h2 className="text-base font-black text-slate-900 leading-none">Laporan & Utilitas Data</h2>
+                    <p className="text-[11px] font-bold text-slate-400 mt-1">Unduh backup database atau ekspor laporan terstruktur</p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button
+                    onClick={async () => {
+                      try {
+                        const res = await api.get('/admin/export/users', { responseType: 'blob' });
+                        const url = window.URL.createObjectURL(new Blob([res.data]));
+                        const link = document.createElement('a'); link.href = url;
+                        link.setAttribute('download', 'users.csv'); document.body.appendChild(link);
+                        link.click();
+                        toast.success('Laporan Siswa Berhasil Diunduh! 📊');
+                      } catch { toast.error('Gagal mengekspor laporan') }
+                    }}
+                    className="flex-1 py-4 px-6 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2 shadow-lg shadow-slate-900/10"
+                  >
+                    <Download size={14} />
+                    <span>Ekspor Data Pengguna (CSV)</span>
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right: 1 Col for Real-time Server & Telemetry Status */}
+            <div className="space-y-6">
+              
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="bg-slate-950 text-white rounded-[2.5rem] p-8 border border-slate-900 shadow-2xl relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-[80px] rounded-full pointer-events-none" />
+                
+                <div className="flex items-center justify-between mb-6 border-b border-slate-900 pb-4">
+                  <div className="flex items-center gap-2.5">
+                    <Activity size={18} className="text-emerald-400 animate-pulse" />
+                    <span className="text-xs font-black uppercase tracking-widest text-slate-200">Live Telemetri Server</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-800 text-[9px] font-black text-emerald-400 tracking-wider">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                    <span>ONLINE</span>
+                  </div>
+                </div>
+
+                <div className="space-y-5 font-mono text-[11px] text-slate-400">
+                  
+                  {/* Database */}
+                  <div className="flex items-center justify-between bg-slate-900/40 p-3 rounded-2xl border border-slate-900">
+                    <div className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="font-bold text-slate-300">Prisma & Neon DB</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-emerald-400 uppercase bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-900/30">
+                      {metrics.dbStatus || 'CONNECTED'}
+                    </span>
+                  </div>
+
+                  {/* Latency */}
+                  <div className="flex items-center justify-between bg-slate-900/40 p-3 rounded-2xl border border-slate-900">
+                    <span className="font-bold text-slate-300">Latensi API</span>
+                    <span className="text-[10px] font-bold text-emerald-400">{metrics.latency}ms (Sangat Cepat)</span>
+                  </div>
+
+                  {/* Active Sessions */}
+                  <div className="flex items-center justify-between bg-slate-900/40 p-3 rounded-2xl border border-slate-900">
+                    <span className="font-bold text-slate-300">Sesi Aktif</span>
+                    <span className="text-[10px] font-bold text-blue-400">{metrics.activeSessions} pengguna</span>
+                  </div>
+
+                  {/* CPU Load */}
+                  <div>
+                    <div className="flex justify-between font-bold mb-1 text-slate-300">
+                      <span>Beban Kerja CPU</span>
+                      <span className="text-slate-400">{(metrics.cpuLoad * 100).toFixed(1)}%</span>
+                    </div>
+                    <div className="h-2 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                      <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${Math.min(100, metrics.cpuLoad * 100)}%` }} />
+                    </div>
+                  </div>
+
+                  {/* Memory Usage */}
+                  <div>
+                    <div className="flex justify-between font-bold mb-1 text-slate-300">
+                      <span>Penggunaan RAM</span>
+                      <span className="text-slate-400">{usedMemGB} / {totalMemGB} GB ({memoryPercent}%)</span>
+                    </div>
+                    <div className="h-2 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                      <div className="h-full bg-blue-500 rounded-full" style={{ width: `${memoryPercent}%` }} />
+                    </div>
+                  </div>
+
+                  {/* Hardware details */}
+                  <div className="pt-4 border-t border-slate-900 space-y-2 text-[10px] text-slate-500 leading-relaxed">
+                    <div className="flex justify-between">
+                      <span>Node Version</span>
+                      <span className="text-slate-400">{metrics.nodeVersion}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>OS Platform</span>
+                      <span className="text-slate-400 uppercase">{metrics.osType} ({metrics.architecture})</span>
+                    </div>
+                  </div>
+
+                </div>
+              </motion.div>
+
+              {/* Maintenance quick info card */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="bg-white rounded-[2.5rem] p-8 border"
+                style={{ borderColor: 'var(--edu-border)', boxShadow: 'var(--shadow-sm)' }}
+              >
+                <div className="flex items-start gap-4 text-left">
+                  <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center flex-shrink-0 text-amber-600">
+                    <Wrench size={22} />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-800 text-sm mb-1">Status Pemeliharaan</h3>
+                    <p className="text-[11px] font-bold text-slate-400 leading-relaxed mb-3">
+                      Gunakan tab Sistem & Pengaduan untuk menyalakan mode pemeliharaan agar siswa terhenti sementara.
+                    </p>
+                    <Link to={`${ADMIN_PATH}/maintenance`} className="inline-flex items-center gap-1.5 text-xs font-black text-red-600 hover:text-red-700 uppercase tracking-wider">
+                      <span>Pergi Ke Setelan</span>
+                      <ArrowRight size={12} />
+                    </Link>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-20 pb-16" style={{ background: 'var(--edu-cream)' }}>
