@@ -1,367 +1,343 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { Award, Calendar, BookOpen, Layers, ShieldCheck, CheckCircle2, ChevronRight, FileText, BarChart2, Lightbulb, Compass, Users, Coins, HelpCircle, ArrowRight, ArrowDown } from 'lucide-react'
+import { Award, Calendar, BookOpen, Layers, ShieldCheck, CheckCircle2, ChevronRight, FileText, BarChart2, Lightbulb, Compass, Users, Coins, Heart, BookMarked, HelpCircle, ArrowRight } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
 import { useState } from 'react'
 
 export default function TapakLiman() {
-  const [hoveredLetter, setHoveredLetter] = useState(null)
   const [activeTopic, setActiveTopic] = useState(0)
   const [expandedBab, setExpandedBab] = useState(null)
 
   const stats = [
-    { label: 'Pilihan Topik SDGs', value: '10', desc: 'UMKM hingga Lingkungan' },
-    { label: 'Minggu Pelaksanaan', value: '8', desc: 'Minggu 9 s.d. 16' },
-    { label: 'Luaran Utama Wajib', value: '3', desc: 'Laporan, Poster, Video' },
+    { label: 'PILIHAN TOPIK SDGs', value: '10', desc: 'Rekomendasi Aksi Resmi' },
+    { label: 'DURASI PELAKSANAAN', value: '8 MINGGU', desc: 'Minggu 9 s.d. 16' },
+    { label: 'LUARAN WAJIB KELOMPOK', value: '3 KARYA', desc: 'Laporan, Poster, Video' },
   ]
 
   const acronym = [
-    { char: 'T', word: 'Tanggap', desc: 'Peka & sigap merespons isu sosial di lapangan.', color: 'from-rose-500 to-red-600', shadow: 'rgba(239, 68, 68, 0.2)' },
-    { char: 'A', word: 'Adaptif', desc: 'Lincah menyesuaikan diri dengan dinamika warga.', color: 'from-orange-500 to-amber-600', shadow: 'rgba(245, 158, 11, 0.2)' },
-    { char: 'P', word: 'Partisipatif', desc: 'Merangkul peran serta aktif masyarakat sasaran.', color: 'from-amber-500 to-yellow-600', shadow: 'rgba(234, 179, 8, 0.2)' },
-    { char: 'A', word: 'Aksi', desc: 'Menghadirkan aksi nyata konkret, bukan wacana.', color: 'from-emerald-500 to-teal-600', shadow: 'rgba(16, 185, 129, 0.2)' },
-    { char: 'K', word: 'Kolaboratif', desc: 'Sinergi harmonis mahasiswa lintas program studi.', color: 'from-blue-500 to-indigo-600', shadow: 'rgba(59, 130, 246, 0.2)' },
-    { char: 'L', word: 'Lintas Ilmu', desc: 'Melebur saintek, desain, & seni dalam pengabdian.', color: 'from-violet-500 to-purple-600', shadow: 'rgba(139, 92, 246, 0.2)' },
-    { char: 'I', word: 'Mandiri', desc: 'Inisiatif kelompok yang tangguh & kreatif.', color: 'from-fuchsia-500 to-pink-600', shadow: 'rgba(217, 70, 239, 0.2)' },
-    { char: 'N', word: 'Nasionalis', desc: 'Dijiwai kecintaan mendalam pada NKRI & Pancasila.', color: 'from-rose-500 to-red-600', shadow: 'rgba(244, 63, 94, 0.2)' },
+    { char: 'T', word: 'Tanggap', desc: 'Peka dan sigap merespons isu sosial nyata di lingkungan masyarakat sasaran.' },
+    { char: 'A', word: 'Adaptif', desc: 'Lincah menyesuaikan diri dengan dinamika sosial dan kearifan lokal warga desa.' },
+    { char: 'P', word: 'Partisipatif', desc: 'Merangkul peran serta aktif dan kolaboratif dari masyarakat setempat.' },
+    { char: 'A', word: 'Aksi Nyata', desc: 'Menghadirkan kontribusi fisik maupun edukatif yang berdaya guna secara langsung.' },
+    { char: 'K', word: 'Kolaboratif', desc: 'Membangun sinergi kelompok lintas ilmu antar mahasiswa secara harmonis.' },
+    { char: 'L', word: 'Lintas Ilmu', desc: 'Meleburkan saintek, sosial-humaniora, dan seni rupa desain dalam pemecahan masalah.' },
+    { char: 'I', word: 'Inisiatif', desc: 'Mendorong daya cipta mandiri yang kreatif, solutif, dan efisien.' },
+    { char: 'M', word: 'Nasionalis', desc: 'Dijiwai kecintaan mendalam pada tanah air berlandaskan ideologi Pancasila.' },
   ]
 
   const topics = [
     {
       no: 1,
       title: 'Pengembangan Ekonomi Desa (UMKM)',
-      icon: <Coins className="text-amber-500" size={28} />,
-      desc: 'Mahasiswa membantu masyarakat desa dalam mengembangkan usaha mikro, kecil, dan menengah (UMKM) melalui pelatihan pemasaran digital, manajemen keuangan, dan inovasi produk.',
-      acts: 'Pelatihan pemasaran online, workshop keuangan, & pendampingan inovasi kemasan.',
-      cost: 'Bahan baku demo produk, modul cetak, alat peraga presentasi, & biaya transportasi.',
+      icon: <Coins className="text-amber-600" size={24} />,
+      desc: 'Mahasiswa membantu masyarakat desa dalam mengembangkan usaha mikro, kecil, dan menengah (UMKM) melalui digital marketing, manajemen pembukuan modern, dan inovasi branding produk.',
+      acts: 'Pelatihan e-commerce, digital branding, dan pembuatan katalog produk warga.',
+      cost: 'Bahan baku demonstrasi produk, modul cetak panduan, & spanduk sosialisasi.',
       sdg: 'SDG 1: Tanpa Kemiskinan',
-      theme: 'border-amber-100 bg-amber-50/20 text-amber-800'
     },
     {
       no: 2,
       title: 'Literasi Digital Masyarakat Desa',
-      icon: <Lightbulb className="text-blue-500" size={28} />,
-      desc: 'Mengajarkan keterampilan dasar teknologi informasi kepada warga desa, termasuk penggunaan komputer, internet secara produktif, dan media sosial secara bijak.',
-      acts: 'Pelatihan komputer dasar, perintisan email warga, & edukasi keamanan digital.',
-      cost: 'Modul digital cetak, sewa proyektor, kabel jaringan peraga, & transportasi.',
+      icon: <Lightbulb className="text-blue-600" size={24} />,
+      desc: 'Mengajarkan kecakapan dasar teknologi informasi kepada perangkat dan warga desa, termasuk keamanan berselancar digital, e-government, serta penggunaan internet sehat.',
+      acts: 'Pelatihan dasar komputer, edukasi deteksi hoax, dan pembentukan website desa.',
+      cost: 'Modul materi digital cetak, konsumsi warga peserta, & transportasi tim.',
       sdg: 'SDG 4: Pendidikan Berkualitas',
-      theme: 'border-blue-100 bg-blue-50/20 text-blue-800'
     },
     {
       no: 3,
       title: 'Pendidikan & Literasi Anak Desa',
-      icon: <BookOpen className="text-emerald-500" size={28} />,
-      desc: 'Mahasiswa mengadakan program bimbingan belajar kreatif serta kegiatan peningkatan literasi baca-tulis untuk anak-anak sekolah dasar di desa.',
-      acts: 'Eksperimen sains menyenangkan, mendongeng nusantara, & perintisan pojok baca.',
-      cost: 'Penyediaan buku bacaan anak, alat tulis tulis, papan tulis portabel, & hadiah lomba.',
+      icon: <BookOpen className="text-emerald-600" size={24} />,
+      desc: 'Mengadakan program bimbingan belajar interaktif, perintisan pojok baca/perpustakaan mini, serta metode eksperimen sains kreatif untuk menumbuhkan minat belajar anak.',
+      acts: 'Eksperimen sains sederhana, kelas mendongeng karakter Pancasila, & donasi buku.',
+      cost: 'Pembelian buku bacaan anak berkualitas, alat peraga sains, & rak buku portabel.',
       sdg: 'SDG 4: Pendidikan Berkualitas',
-      theme: 'border-emerald-100 bg-emerald-50/20 text-emerald-800'
     },
     {
       no: 4,
-      title: 'Kesehatan Masyarakat Desa',
-      icon: <CheckCircle2 className="text-red-500" size={28} />,
-      desc: 'Menyelenggarakan kegiatan penyuluhan kesehatan dasar serta kebersihan lingkungan untuk meningkatkan kualitas hidup sehat warga.',
-      acts: 'Penyuluhan gizi keluarga, pembersihan fasilitas MCK desa, & sanitasi lingkungan.',
+      title: 'Kesehatan & Higienitas Masyarakat',
+      icon: <CheckCircle2 className="text-rose-600" size={24} />,
+      desc: 'Menyelenggarakan penyuluhan gizi seimbang, sanitasi dasar, serta pemeriksaan kesehatan umum guna meningkatkan taraf hidup bersih warga pedesaan.',
+      acts: 'Penyuluhan stunting keluarga, gotong royong perbaikan sanitasi umum, & penyediaan tong sampah.',
       cost: 'Alat sanitasi peraga, bahan penyuluhan cetak, & sabun/alat kebersihan warga.',
       sdg: 'SDG 3: Kehidupan Sehat',
-      theme: 'border-red-100 bg-red-50/20 text-red-800'
     },
     {
       no: 5,
-      title: 'Penghijauan & Pelestarian Alam',
-      icon: <Compass className="text-green-600" size={28} />,
-      desc: 'Kegiatan pembibitan, penanaman pohon produktif, serta edukasi ekologis guna menjaga ketahanan lahan dan mengurangi dampak perubahan iklim global.',
-      acts: 'Penanaman puluhan bibit pohon buah, perintisan apotek hidup, & edukasi kompos.',
-      cost: 'Pembelian bibit pohon unggul, pupuk organik, sekop, alat siram, & spanduk ekologis.',
+      title: 'Penghijauan & Pelestarian Lingkungan',
+      icon: <Compass className="text-green-600" size={24} />,
+      desc: 'Melakukan penanaman bibit pohon produktif, edukasi pengolahan pupuk kompos mandiri, serta perintisan apotek hidup guna mereduksi degradasi lahan desa.',
+      acts: 'Penanaman pohon produktif, workshop pengomposan mandiri, & plang edukasi lingkungan.',
+      cost: 'Pembelian bibit pohon unggulan, pupuk organik, sekop mini, & biaya transportasi.',
       sdg: 'SDG 15: Ekosistem Daratan',
-      theme: 'border-green-100 bg-green-50/20 text-green-800'
     },
     {
       no: 6,
       title: 'Pemberdayaan Perempuan Desa',
-      icon: <Users className="text-purple-500" size={28} />,
-      desc: 'Memberikan pelatihan keterampilan produktif serta dasar-dasar manajemen kewirausahaan untuk meningkatkan kemandirian finansial kaum perempuan desa.',
-      acts: 'Pelatihan kerajinan rajut/jahit, manajemen pembukuan sederhana, & branding produk.',
+      icon: <Users className="text-indigo-600" size={24} />,
+      desc: 'Memberikan pelatihan keterampilan produktif bernilai ekonomi kreatif untuk kelompok ibu-ibu PKK guna mendukung kemandirian finansial keluarga.',
+      acts: 'Workshop kerajinan tangan daur ulang sampah, pelatihan manajemen usaha mikro, & branding.',
       cost: 'Bahan baku praktek menjahit/kerajinan, konsumsi warga, & transportasi tim.',
       sdg: 'SDG 5: Kesetaraan Gender',
-      theme: 'border-purple-100 bg-purple-50/20 text-purple-800'
     },
     {
       no: 7,
-      title: 'Seni dan Budaya Desa',
-      icon: <Award className="text-rose-500" size={28} />,
-      desc: 'Menghidupkan kembali kesenian daerah dan kerajinan tradisional guna melestarikan identitas kebudayaan lokal di tengah gempuran modernisasi.',
-      acts: 'Pelatihan musik/tarian tradisional anak desa, pementasan mini, & video dokumentasi.',
-      cost: 'Sewa baju adat pentas, perbaikan alat musik tradisional, & konsumsi kegiatan.',
-      sdg: 'SDG 11: Kota & Komunitas Berkelanjutan',
-      theme: 'border-rose-100 bg-rose-50/20 text-rose-800'
+      title: 'Revitalisasi Seni dan Budaya Lokal',
+      icon: <Award className="text-orange-600" size={24} />,
+      desc: 'Mendokumentasikan dan mempublikasikan warisan kesenian daerah serta kerajinan tradisional untuk menjaga identitas kearifan lokal tetap hidup berkelanjutan.',
+      acts: 'Pelatihan instrumen musik tradisional bagi anak, pembuatan film dokumentasi seni desa.',
+      cost: 'Sewa perlengkapan pementasan mini, dokumentasi profesional, & konsumsi kegiatan.',
+      sdg: 'SDG 11: Komunitas Berkelanjutan',
     },
     {
       no: 8,
-      title: 'Penyuluhan Hukum & Kewarganegaraan',
-      icon: <FileText className="text-indigo-500" size={28} />,
-      desc: 'Edukasi kesadaran hukum dasar, hak asasi manusia, serta pemahaman kewarganegaraan yang demokratis berlandaskan nilai-nilai Pancasila.',
-      acts: 'Penyuluhan kesadaran hukum rumah tangga, musyawarah sengketa warga, & poster hukum.',
-      cost: 'Cetak brosur hukum warga, konsumsi peserta, & transportasi pembicara.',
+      title: 'Penyuluhan Kesadaran Hukum Warga',
+      icon: <FileText className="text-violet-600" size={24} />,
+      desc: 'Edukasi pemahaman hukum keluarga dasar, hak warga negara, serta toleransi kerukunan umat beragama berdasarkan asas kebhinekaan Pancasila.',
+      acts: 'Penyuluhan sadar hukum sengketa tanah/keluarga, pembuatan infografis hukum sipil.',
+      cost: 'Cetak pamflet panduan hukum warga, konsumsi peserta, & transportasi pembicara.',
       sdg: 'SDG 16: Perdamaian & Keadilan',
-      theme: 'border-indigo-100 bg-indigo-50/20 text-indigo-800'
     },
     {
       no: 9,
-      title: 'Peningkatan Infrastruktur Desa',
-      icon: <Layers className="text-slate-600" size={28} />,
-      desc: 'Membantu merancang dan bergotong-royong memperbaiki fasilitas umum yang mendesak demi kenyamanan serta keselamatan aktivitas warga desa.',
-      acts: 'Pengecoran jalan berlubang, pembuatan pos ronda baru, & pengecatan lapangan olahraga.',
-      cost: 'Pembelian semen, pasir, cat kayu/besi, alat tukang, & konsumsi gotong-royong.',
+      title: 'Peningkatan Sarana Prasarana Fisik',
+      icon: <Layers className="text-slate-600" size={24} />,
+      desc: 'Gotong royong bersama warga merancang dan membenahi fasilitas umum berskala mikro yang mendesak demi kenyamanan dan keselamatan warga desa.',
+      acts: 'Pembuatan rambu keselamatan jalan, perbaikan sarana pos ronda, & pengecatan fasilitas PAUD.',
+      cost: 'Semen, pasir, cat kayu/besi tahan air, papan kayu petunjuk, & konsumsi kerja bakti.',
       sdg: 'SDG 9: Industri & Infrastruktur',
-      theme: 'border-slate-200 bg-slate-50/50 text-slate-800'
     },
     {
       no: 10,
-      title: 'Kebersihan & Pengelolaan Sampah',
-      icon: <ShieldCheck className="text-teal-600" size={28} />,
-      desc: 'Membangun kesadaran sanitasi serta merintis sistem tata kelola sampah terpadu yang ramah lingkungan di pemukiman warga sekitar kampus.',
-      acts: 'Penyuluhan pilah sampah organik, pembentukan bank sampah, & aksi bersih selokan.',
-      cost: 'Pembelian tong sampah pilah besar, gerobak dorong, masker pelindung, & stiker edukasi.',
+      title: 'Manajemen Sampah & Bank Sampah',
+      icon: <ShieldCheck className="text-teal-600" size={24} />,
+      desc: 'Membangun kesadaran pemilihan sampah rumah tangga secara mandiri serta menginisiasi perintisan sistem bank sampah bernilai guna.',
+      acts: 'Penyuluhan klasifikasi sampah, peragaan pembuatan ecobrick, & penyediaan tong sampah pilah.',
+      cost: 'Tong sampah besar pilah 3 warna, masker sarung tangan pelindung, & stiker panduan.',
       sdg: 'SDG 12: Konsumsi & Produksi Bertanggung Jawab',
-      theme: 'border-teal-100 bg-teal-50/20 text-teal-800'
     }
   ]
 
   const timeline = [
-    { week: 'Minggu 9', task: 'Penentuan Tema & Judul', desc: 'Pembagian kelompok kelas (maks 10 orang) dan pengajuan ide judul aksi berbasis SDGs.' },
-    { week: 'Minggu 10', task: 'Penyusunan Proposal', desc: 'Menyusun proposal lengkap dengan rancangan anggaran biaya (RAB) dan road map kegiatan.' },
-    { week: 'Minggu 11', task: 'Presentasi Proposal', desc: 'Asistensi & pertanggungjawaban rancangan program di hadapan Dosen Pancasila.' },
-    { week: 'Minggu 12-13', task: 'Implementasi Program', desc: 'Meluncur ke lapangan (dalam/luar kampus) untuk aksi sosial nyata bersama masyarakat.' },
-    { week: 'Minggu 14', task: 'Penyusunan Luaran', desc: 'Menulis draf laporan, merancang poster ilmiah, & mengedit video kompilasi perjalanan.' },
-    { week: 'Minggu 15', task: 'Presentasi & Edunex', desc: 'Mengunggah file laporan akhir ke portal Edunex ITB dan melaksanakan presentasi kelompok.' },
-    { week: 'Minggu 16', task: 'Evaluasi & Nilai', desc: 'Rekapitulasi nilai kelompok, penilaian video/poster, serta pengisian lembar peer assessment.' }
+    { week: 'Minggu 9', task: 'Rembuk Ide & Pembagian Kelompok', desc: 'Pembentukan tim kelas (maksimal 10 mahasiswa) dan pengajuan gagasan ide aksi berbasis pilar SDGs.' },
+    { week: 'Minggu 10', task: 'Penyusunan Proposal Kerja', desc: 'Penyusunan draf proposal resmi lengkap dengan Rancangan Anggaran Biaya (RAB) dan lini masa kerja.' },
+    { week: 'Minggu 11', task: 'Kolokium Asistensi Proposal', desc: 'Presentasi dan pertanggungjawaban rancangan program kelompok di hadapan Dosen Pembina Pancasila.' },
+    { week: 'Minggu 12-13', task: 'Eksekusi Aksi Nyata Lapangan', desc: 'Turun ke lapangan (mitra sasaran luar/dalam kampus) untuk implementasi program sosial secara intensif.' },
+    { week: 'Minggu 14', task: 'Penyusunan Laporan & Output', desc: 'Tahap finalisasi penyusunan laporan akademis komprehensif, desain poster ilmiah, serta penyuntingan video dokumenter.' },
+    { week: 'Minggu 15', task: 'Presentasi Hasil & Unggah Edunex', desc: 'Unggah seluruh berkas luaran wajib ke sistem akademik Edunex ITB dan melaksanakan sidang evaluasi kelompok.' },
+    { week: 'Minggu 16', task: 'Penilaian Akhir & Peer Review', desc: 'Evaluasi total efektivitas tim, penilaian orisinalitas luaran, serta pengisian evaluasi kinerja rekan sejawat (peer assessment).' }
   ]
 
   const babs = [
     { 
       id: 'bab1', 
       title: 'BAB I. PENDAHULUAN', 
-      sub: 'A. Latar Belakang Masalah, B. Rumusan Masalah', 
-      detail: 'Menyajikan secara tajam latar belakang fenomena sosial di lapangan, analisis urgensi mengapa masalah tersebut harus segera dipecahkan kelompok Anda, serta rumusan pertanyaan masalah yang sistematis.' 
+      sub: 'Latar Belakang Urgensi Masalah, Rumusan Pertanyaan, & Tujuan Aksi', 
+      detail: 'Menyajikan urgensi fenomena sosial di lapangan secara analitis, alasan mendasar pemilihan target sasaran pengabdian, serta merumuskan pertanyaan aksi yang solutif.' 
     },
     { 
       id: 'bab2', 
       title: 'BAB II. TINJAUAN PUSTAKA', 
-      sub: 'Kajian Teori Ilmiah & Studi Terdahulu', 
-      detail: 'Berisi landasan teori ilmiah, konsep pengabdian sosial, serta korelasi butir-butir Pancasila dengan topik SDGs. Rujukan wajib mengikuti format penulisan standar akademik Harvard.' 
+      sub: 'Landasan Teori Akademik, Korelasi SDGs, & Nilai Pancasila', 
+      detail: 'Menguraikan kajian ilmiah pendukung pengabdian, memetakan keterkaitan program dengan 10 pilar SDGs, serta menganalisis korelasi langsung butir-butir Pancasila yang diaktualisasikan.' 
     },
     { 
       id: 'bab3', 
-      title: 'BAB III. METODOLOGI & PERENCANAAN', 
-      sub: 'Metodologi, Persiapan, Pengumpulan Data, & Implementasi', 
-      detail: 'A. Deskripsi metode pendekatan masyarakat. B. Rencana aksi konkret yang meliputi tahap persiapan administratif, teknik pengumpulan data lapangan, hingga lini masa implementasi program.' 
+      title: 'BAB III. METODE & PERENCANAAN', 
+      sub: 'Metode Pendekatan, Persiapan Logistik, & Timeline Kerja', 
+      detail: 'Deskripsi langkah pendekatan masyarakat, persiapan teknis/pembagian tugas internal tim, pengumpulan data awal, serta penyusunan timeline pelaksanaan lapangan secara mendetail.' 
     },
     { 
       id: 'bab4', 
-      title: 'BAB IV. HASIL & PEMBAHASAN', 
-      sub: 'A. Hasil Program Aksi Nyata, B. Analisis Pembahasan', 
-      detail: 'Mendokumentasikan seluruh luaran nyata program, membandingkan kondisi sebelum vs sesudah intervensi kelompok, serta mengevaluasi tingkat partisipasi dan kepuasan warga sasaran.' 
+      title: 'BAB IV. ANALISIS HASIL & PEMBAHASAN', 
+      sub: 'Luaran Nyata, Evaluasi Dampak Sosial, & Kendala Lapangan', 
+      detail: 'Menjabarkan hasil konkret yang dicapai, membandingkan efisiensi program sebelum vs sesudah aksi kelompok, mengevaluasi keberhasilan, serta menyajikan analisis kendala tak terduga.' 
     },
     { 
       id: 'bab5', 
-      title: 'BAB V. SIMPULAN & SARAN', 
-      sub: 'A. Simpulan Utama, B. Saran Keberlanjutan', 
-      detail: 'Simpulan menyeluruh atas rumusan masalah yang terjawab, serta melampirkan saran konkret yang realistis bagi kelompok mahasiswa selanjutnya atau pihak perangkat desa setempat.' 
+      title: 'BAB V. PENUTUP & REKOMENDASI', 
+      sub: 'Simpulan Utama Aksi & Rekomendasi Keberlanjutan Program', 
+      detail: 'Kesimpulan final yang menjawab rumusan pertanyaan bab I, serta merumuskan saran realistis bagi perangkat desa setempat maupun pengembangan kelompok mahasiswa di masa depan.' 
     }
   ]
 
   const grading = [
-    { name: 'Kreativitas & Gagasan', weight: 25, color: 'from-red-500 to-rose-600', desc: 'Inovasi, ketajaman rumusan masalah, & ketepatan sasaran masyarakat.' },
-    { name: 'Kesesuaian Metode', weight: 20, color: 'from-orange-500 to-amber-600', desc: 'Kesesuaian serta kepraktisan metodologi dalam memecahkan masalah.' },
-    { name: 'Manfaat & Keberlanjutan', weight: 15, color: 'from-amber-500 to-yellow-600', desc: 'Kontribusi riil bagi warga serta potensi program dilanjutkan mandiri.' },
-    { name: 'Luaran (Poster & Video)', weight: 20, color: 'from-emerald-500 to-teal-600', desc: 'Estetika poster ilmiah & kualitas video dokumentasi implementasi.' },
-    { name: 'Jadwal & Anggaran', weight: 10, color: 'from-blue-500 to-indigo-600', desc: 'Kewajaran, kerincian rencana anggaran biaya (RAB), & efisiensi waktu.' },
-    { name: 'Peer Assessment', weight: 10, color: 'from-purple-500 to-pink-600', desc: 'Penilaian keaktifan bekerja sama dari rekan satu kelompok Anda.' }
+    { name: 'Ketajaman Gagasan & Urgensi Masalah', weight: 25, desc: 'Orisinalitas ide, kedalaman analisis masalah, serta ketepatan penentuan sasaran warga.' },
+    { name: 'Kesesuaian & Struktur Metodologi', weight: 20, desc: 'Kelayakan, efisiensi langkah, serta keselarasan metode dengan kendala yang dipecahkan.' },
+    { name: 'Kualitas Luaran Wajib (Poster & Video)', weight: 20, desc: 'Estetika desain poster ilmiah, kejelasan narasi, dan kedalaman dokumenter video pengabdian.' },
+    { name: 'Dampak Kemanfaatan & Keberlanjutan', weight: 15, desc: 'Dampak positif nyata bagi warga setempat serta kesiapan sistem dilanjutkan mandiri.' },
+    { name: 'Manajemen Anggaran (RAB) & Jadwal', weight: 10, desc: 'Kewajaran perincian dana, efisiensi belanja, serta kedisiplinan pemenuhan timeline.' },
+    { name: 'Evaluasi Rekan Sejawat (Peer Assessment)', weight: 10, desc: 'Tingkat kontribusi, keaktifan kolaborasi, dan tanggung jawab individu di dalam kelompok.' }
   ]
 
   return (
     <>
       <Helmet>
-        <title>Panduan Tapak Liman WI1101 ITB - Buku Pedoman Resmi</title>
-        <meta name="description" content="Pedoman resmi Proyek Tapak Liman ITB mata kuliah Pancasila WI1101. Cari tahu 10 pilihan topik, timeline, sistematika laporan, & kriteria penilaian." />
+        <title>Panduan Resmi Proyek Tapak Liman WI1101 ITB</title>
+        <meta name="description" content="Pedoman resmi pelaksanaan proyek pengabdian masyarakat Tapak Liman mata kuliah Pancasila WI1101 Institut Teknologi Bandung." />
       </Helmet>
 
-      <div className="min-h-screen pt-28 pb-20 relative overflow-hidden" style={{ background: 'var(--edu-cream)' }}>
+      <div className="min-h-screen pt-28 pb-20 relative overflow-hidden bg-[#fafafa]">
         
-        {/* Abstract shapes & micro-grids for stunning UI/UX depth */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[linear-gradient(var(--edu-navy)_1.5px,transparent_1.5px),linear-gradient(90deg,var(--edu-navy)_1.5px,transparent_1.5px)] bg-[size:50px_50px]" />
-        <div className="absolute top-0 -left-60 w-[45rem] h-[45rem] bg-gradient-to-tr from-red-200/10 to-rose-200/20 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute top-1/3 -right-60 w-[40rem] h-[40rem] bg-gradient-to-bl from-amber-200/20 to-orange-100/10 rounded-full blur-[140px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[45rem] h-[45rem] bg-gradient-to-tr from-emerald-200/10 to-teal-200/20 rounded-full blur-[130px] pointer-events-none" />
+        {/* Soft elegant academic grid patterns */}
+        <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[linear-gradient(#002855_1.5px,transparent_1.5px),linear-gradient(90deg,#002855_1.5px,transparent_1.5px)] bg-[size:40px_40px]" />
+        <div className="absolute top-0 right-0 w-[45rem] h-[45rem] bg-[#002855]/[0.015] rounded-full blur-[130px] pointer-events-none" />
+        <div className="absolute bottom-1/4 -left-60 w-[40rem] h-[40rem] bg-amber-500/[0.015] rounded-full blur-[140px] pointer-events-none" />
 
         <div className="max-w-6xl mx-auto px-6 relative z-10">
           
-          {/* ================= HERO AREA ================= */}
+          {/* ================= ACADEMIC HERO SECTION ================= */}
           <div className="text-center mb-24 relative">
             <motion.div 
-              initial={{ scale: 0.85, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white border border-slate-100 text-slate-800 text-[10px] font-black uppercase tracking-widest mb-8 shadow-md"
+              initial={{ y: -15, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white border border-slate-200/60 text-slate-800 text-[10px] font-extrabold uppercase tracking-widest mb-8 shadow-sm"
             >
-              {/* ITB Miniature Emblem */}
-              <img src="/itb.png" alt="ITB Logo" className="h-5 w-auto" />
-              <div className="w-px h-3 bg-slate-200" />
-              <span className="text-red-600">WI1101 MATA KULIAH PANCASILA</span>
+              <img src="/itb.png" alt="ITB Logo" className="h-5 w-auto object-contain" />
+              <div className="w-px h-3.5 bg-slate-200" />
+              <span className="text-[#002855]">INSTITUT TEKNOLOGI BANDUNG</span>
             </motion.div>
             
             <motion.h1 
-              initial={{ y: 30, opacity: 0 }}
+              initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="text-5xl sm:text-8xl font-black tracking-tight leading-none mb-6 text-slate-900"
+              className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.1] mb-6 text-slate-900"
             >
-              Pedoman Proyek <br />
-              <span className="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 bg-clip-text text-transparent">"TAPAK LIMAN"</span>
+              Pedoman Proyek Aktualisasi <br />
+              <span className="bg-gradient-to-r from-[#002855] via-slate-800 to-amber-700 bg-clip-text text-transparent">"TAPAK LIMAN"</span>
             </motion.h1>
             
             <motion.p 
-              initial={{ y: 30, opacity: 0 }}
+              initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="text-slate-500 font-bold text-sm sm:text-lg max-w-3xl mx-auto leading-relaxed mb-12"
+              transition={{ delay: 0.05 }}
+              className="text-slate-500 font-medium text-xs sm:text-base max-w-3xl mx-auto leading-relaxed mb-12"
             >
-              Buku pedoman resmi aktualisasi nilai-nilai luhur Pancasila dalam aksi nyata pengabdian masyarakat oleh Tim Dosen Pancasila Institut Teknologi Bandung.
+              Buku Pedoman Resmi Pengabdian Masyarakat Terintegrasi SDGs mata kuliah wajib Pancasila WI1101. Dirancang untuk menumbuhkan kepemimpinan sosial yang berbasis sains dan humaniora.
             </motion.p>
 
-            {/* Premium Stat Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
+            {/* Premium Editorial Stat Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
               {stats.map((s, idx) => (
                 <motion.div
                   key={s.label}
-                  initial={{ y: 20, opacity: 0 }}
+                  initial={{ y: 25, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: idx * 0.1 + 0.2 }}
-                  className="bg-white/80 backdrop-blur-md rounded-3xl border border-white/50 p-6 shadow-xl flex flex-col justify-between text-center relative overflow-hidden"
+                  transition={{ delay: idx * 0.05 + 0.1 }}
+                  className="bg-white rounded-2xl border border-slate-200/50 p-6 shadow-sm flex flex-col justify-between text-center relative overflow-hidden"
                 >
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-600 to-rose-600" />
-                  <span className="text-3xl sm:text-4xl font-black text-slate-800 mb-1">{s.value}</span>
-                  <span className="text-[10px] font-black text-slate-900 uppercase tracking-wider mb-0.5">{s.label}</span>
-                  <span className="text-[9px] font-bold text-slate-400">{s.desc}</span>
+                  <div className="absolute top-0 left-0 w-full h-1 bg-[#002855]" />
+                  <span className="text-2xl sm:text-3xl font-extrabold text-[#002855] mb-1">{s.value}</span>
+                  <span className="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest mb-0.5">{s.label}</span>
+                  <span className="text-[10px] font-bold text-slate-500">{s.desc}</span>
                 </motion.div>
               ))}
             </div>
           </div>
 
-          {/* ================= THE PHILOSOPHY ================= */}
+          {/* ================= THE PHILOSOPHY SECTION ================= */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-24">
             
-            {/* Left large description */}
+            {/* Left Column: Macro Philosophy */}
             <motion.div 
               initial={{ y: 30, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
-              className="lg:col-span-2 bg-white rounded-[3rem] p-10 sm:p-12 border border-slate-100 shadow-2xl text-left flex flex-col justify-between"
+              className="lg:col-span-2 bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/50 shadow-sm text-left flex flex-col justify-between"
             >
               <div>
-                <span className="text-[10px] font-black text-red-600 uppercase tracking-widest block mb-1">ASPEK HISTORIS & MAKNA</span>
-                <h3 className="text-3xl font-black text-slate-950 mb-6">
-                  Filosofi Daun & Ganesha ITB
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#002855]/5 text-[#002855] text-[9px] font-extrabold uppercase tracking-widest mb-4">
+                  ASPEK HISTORIS & FILOSOFIS
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-5">
+                  Filosofi Flora & Ganesha ITB
                 </h3>
                 <p className="text-slate-500 font-medium text-xs sm:text-sm leading-relaxed mb-8">
-                  Nama **TAPAK LIMAN** (*Elephantopus scaber*) diambil dari nama sejenis tumbuhan obat tropis tangguh berkhasiat tinggi yang kokoh hidup di bumi nusantara. Pemilihan nama ini memadukan dua landasan nilai luhur:
+                  Nama **TAPAK LIMAN** (*Elephantopus scaber*) diambil dari nama sejenis daun tanaman tropis yang kokoh tumbuh subur di Nusantara. Dalam kurikulum Pancasila ITB, pemilihan nama ini merepresentasikan keselarasan ilmu pengetahuan dengan kepedulian sosial:
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100">
-                  <span className="text-2xl mb-3 block">👣</span>
-                  <h4 className="font-black text-slate-800 text-sm mb-1.5">TAPAK (Jejak Aksi)</h4>
-                  <p className="text-[11px] font-medium text-slate-400 leading-relaxed">
-                    Mewakili jejak aksi pengabdian nyata, langkah kaki konkret, serta warisan nilai kebaikan yang ditinggalkan kelompok mahasiswa bagi kesejahteraan warga desa sasaran.
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100/60">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center font-extrabold text-sm mb-4">
+                    👣
+                  </div>
+                  <h4 className="font-extrabold text-slate-900 text-sm mb-1.5">TAPAK (Jejak Pengabdian)</h4>
+                  <p className="text-[11px] font-medium text-slate-500 leading-relaxed">
+                    Mewakili jejak aksi pengabdian nyata, kontribusi ilmiah, serta integritas moral yang ditinggalkan kelompok mahasiswa bagi masyarakat penerima manfaat.
                   </p>
                 </div>
-                <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100">
-                  <span className="text-2xl mb-3 block">🐘</span>
-                  <h4 className="font-black text-slate-800 text-sm mb-1.5">LIMAN (Ganesha ITB)</h4>
-                  <p className="text-[11px] font-medium text-slate-400 leading-relaxed">
-                    Berarti Gajah, merepresentasikan figur Dewa Ganesha lambang Institut Teknologi Bandung selaku dinamisator ilmu sains, teknologi, dan seni yang berguna bagi bangsa.
+                
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100/60">
+                  <div className="w-10 h-10 rounded-xl bg-[#002855]/10 text-[#002855] flex items-center justify-center font-extrabold text-sm mb-4">
+                    🐘
+                  </div>
+                  <h4 className="font-extrabold text-slate-900 text-sm mb-1.5">LIMAN (Ganesha ITB)</h4>
+                  <p className="text-[11px] font-medium text-slate-500 leading-relaxed">
+                    Berarti Gajah, mewakili figur Ganesha lambang ITB selaku wadah pengembangan sains, teknologi, dan seni untuk memajukan kesejahteraan bangsa.
                   </p>
                 </div>
               </div>
             </motion.div>
 
-            {/* Right Interactive Tile Accordion */}
+            {/* Right Column: Acronym Presentation */}
             <motion.div 
               initial={{ y: 30, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
-              className="bg-slate-900 rounded-[3rem] p-10 text-white shadow-2xl text-left flex flex-col justify-between relative overflow-hidden"
+              className="bg-white rounded-3xl p-8 border border-slate-200/50 shadow-sm text-left flex flex-col justify-between relative overflow-hidden"
             >
-              <div className="absolute inset-0 opacity-5 bg-[linear-gradient(rgba(255,255,255,0.05)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(255,255,255,0.05)_1.5px,transparent_1.5px)] bg-[size:40px_40px] pointer-events-none" />
-              
               <div>
-                <span className="text-[10px] font-black text-red-400 uppercase tracking-widest block mb-1">ACRONYM SYLLABUS</span>
-                <h3 className="text-2xl font-black mb-2">Kirata Delapan Aksi</h3>
-                <p className="text-slate-400 font-medium text-xs leading-relaxed mb-6">
-                  Dekati salah satu ubin huruf di bawah untuk membaca wujud nilai kepemimpinan pengabdian kelompok Anda:
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/5 text-amber-700 text-[9px] font-extrabold uppercase tracking-widest mb-4">
+                  PANDUAN NILAI ASERSIF
+                </div>
+                <h3 className="text-xl font-extrabold text-slate-900 mb-3">8 Karakter Tapak Liman</h3>
+                <p className="text-slate-500 font-medium text-xs leading-relaxed mb-6">
+                  Tim mahasiswa wajib menerapkan delapan pilar nilai dasar berikut selama berada di lingkungan masyarakat mitra:
                 </p>
               </div>
 
-              {/* Acronym Grid */}
-              <div className="grid grid-cols-4 gap-2.5 relative z-10">
-                {acronym.map((item, idx) => (
-                  <div
-                    key={item.char}
-                    onMouseEnter={() => setHoveredLetter(idx)}
-                    onMouseLeave={() => setHoveredLetter(null)}
-                    className="p-3.5 bg-white/10 rounded-2xl text-center cursor-pointer transition-all hover:bg-red-600 hover:scale-105 active:scale-95 border border-white/5 relative group"
-                  >
-                    <span className="font-black text-lg text-red-400 block group-hover:text-white transition-colors">{item.char}</span>
-                    <span className="text-[8px] font-black uppercase text-slate-400 block truncate group-hover:text-white transition-colors">{item.word}</span>
+              {/* Acronym List */}
+              <div className="space-y-4 overflow-y-auto max-h-[18rem] pr-1 custom-scrollbar">
+                {acronym.map((item) => (
+                  <div key={item.char} className="flex gap-4 items-start border-b border-slate-100 pb-3 last:border-b-0 last:pb-0">
+                    <span className="w-8 h-8 rounded-lg bg-[#002855]/5 border border-[#002855]/10 text-[#002855] font-extrabold text-sm flex items-center justify-center flex-shrink-0">
+                      {item.char}
+                    </span>
+                    <div>
+                      <h5 className="font-extrabold text-slate-950 text-xs mb-0.5">{item.word}</h5>
+                      <p className="text-[10px] font-medium text-slate-500 leading-snug">{item.desc}</p>
+                    </div>
                   </div>
                 ))}
-              </div>
-
-              {/* Dynamic Description Box */}
-              <div className="mt-8 p-5 bg-white/5 rounded-2xl border border-white/5 h-24 flex items-center justify-center text-center">
-                <AnimatePresence mode="wait">
-                  <motion.p 
-                    key={hoveredLetter}
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -5 }}
-                    className="text-[11px] font-medium text-slate-300 leading-relaxed"
-                  >
-                    {hoveredLetter !== null 
-                      ? acronym[hoveredLetter].desc 
-                      : 'Arahkan kursor atau ketuk salah satu kotak huruf di atas untuk membaca maknanya.'
-                    }
-                  </motion.p>
-                </AnimatePresence>
               </div>
             </motion.div>
           </div>
 
-          {/* ================= 10 TOPIK UTAMA ================= */}
+          {/* ================= 10 TOPIK UTAMA SECTION ================= */}
           <div className="mb-24">
             <div className="text-center mb-12">
-              <span className="text-[10px] font-black text-red-600 uppercase tracking-widest block mb-1">SDGs & PANCASILA PILAR</span>
-              <h3 className="text-3xl sm:text-4xl font-black text-slate-800 tracking-tight">10 Pilihan Rencana Topik</h3>
-              <p className="text-slate-400 font-bold text-xs uppercase tracking-widest mt-1">
-                Navigasi pilihan program resmi tim dosen Pancasila ITB
-              </p>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-950 text-white text-[9px] font-extrabold uppercase tracking-widest mb-3">
+                INTEGRASI SDGs & PANCASILA
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">10 Topik Pengabdian Resmi</h3>
+              <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-1.5">Silakan pilih salah satu opsi topik di bawah:</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Left Selector Sidebar */}
-              <div className="lg:col-span-1 flex flex-col gap-2 max-h-[36rem] overflow-y-auto pr-2 custom-scrollbar">
+              {/* Left Column: Selector Sidebar */}
+              <div className="lg:col-span-1 flex flex-col gap-2 max-h-[34rem] overflow-y-auto pr-2 custom-scrollbar">
                 {topics.map((t, idx) => (
                   <button
                     key={t.no}
                     onClick={() => setActiveTopic(idx)}
-                    className={`p-4 text-left rounded-2xl font-black text-[11px] uppercase tracking-wider transition-all border flex items-center gap-4 ${
+                    className={`p-4 text-left rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all border flex items-center gap-4 ${
                       activeTopic === idx 
-                        ? 'bg-red-600 border-red-600 text-white shadow-xl shadow-red-200/50 scale-[1.01]' 
-                        : 'bg-white border-slate-100 text-slate-500 hover:bg-slate-50 hover:text-slate-800'
+                        ? 'bg-[#002855] border-[#002855] text-white shadow-md' 
+                        : 'bg-white border-slate-200/50 text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`}
                   >
-                    <span className={`w-6 h-6 rounded-lg flex items-center justify-center font-black ${
-                      activeTopic === idx ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                    <span className={`w-6 h-6 rounded flex items-center justify-center font-extrabold ${
+                      activeTopic === idx ? 'bg-white/10 text-white' : 'bg-slate-100 text-slate-500'
                     }`}>
                       {t.no}
                     </span>
@@ -370,23 +346,23 @@ export default function TapakLiman() {
                 ))}
               </div>
 
-              {/* Right Visual Details Display */}
-              <div className="lg:col-span-2 bg-white rounded-[3rem] p-8 sm:p-12 border border-slate-100 shadow-2xl text-left flex flex-col justify-between relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-bl-[3rem] flex items-center justify-center pointer-events-none">
+              {/* Right Column: Dynamic Visual Showcase */}
+              <div className="lg:col-span-2 bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/50 shadow-sm text-left flex flex-col justify-between relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-28 h-28 bg-slate-50 rounded-bl-3xl flex items-center justify-center pointer-events-none">
                   {topics[activeTopic].icon}
                 </div>
 
                 <div>
-                  <div className="flex items-center gap-2 mb-6">
-                    <span className="px-3 py-1 rounded-full bg-red-50 border border-red-100 text-red-700 text-[9px] font-black uppercase tracking-wider">
-                      TOPIK {topics[activeTopic].no}
+                  <div className="flex flex-wrap items-center gap-2 mb-6">
+                    <span className="px-3 py-1 rounded bg-[#002855]/5 border border-[#002855]/10 text-[#002855] text-[9px] font-extrabold uppercase tracking-wider">
+                      TOPIK AKSI {topics[activeTopic].no}
                     </span>
-                    <span className="px-3 py-1 rounded-full bg-slate-900 text-white text-[9px] font-black uppercase tracking-wider">
+                    <span className="px-3 py-1 rounded bg-slate-900 text-white text-[9px] font-extrabold uppercase tracking-wider">
                       {topics[activeTopic].sdg}
                     </span>
                   </div>
 
-                  <h4 className="text-2xl sm:text-3xl font-black text-slate-800 leading-tight mb-4 pr-16">
+                  <h4 className="text-2xl font-extrabold text-slate-900 mb-4 pr-16 leading-tight">
                     {topics[activeTopic].title}
                   </h4>
 
@@ -395,15 +371,15 @@ export default function TapakLiman() {
                   </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-                    <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                      <span className="text-[9px] font-black text-red-600 uppercase tracking-widest block mb-2">Aktivitas Utama Kelompok</span>
+                    <div className="p-5 bg-slate-50 rounded-xl border border-slate-100">
+                      <span className="text-[9px] font-extrabold text-[#002855] uppercase tracking-widest block mb-2">Aktivitas Nyata</span>
                       <p className="text-xs font-bold text-slate-600 leading-relaxed">
                         {topics[activeTopic].acts}
                       </p>
                     </div>
 
-                    <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                      <span className="text-[9px] font-black text-amber-600 uppercase tracking-widest block mb-2">Komponen Rencana Anggaran</span>
+                    <div className="p-5 bg-slate-50 rounded-xl border border-slate-100">
+                      <span className="text-[9px] font-extrabold text-amber-700 uppercase tracking-widest block mb-2">Rencana Anggaran Kerja</span>
                       <p className="text-xs font-bold text-slate-600 leading-relaxed">
                         {topics[activeTopic].cost}
                       </p>
@@ -411,41 +387,43 @@ export default function TapakLiman() {
                   </div>
                 </div>
 
-                <div className="p-5 bg-red-50/50 border border-red-100/50 rounded-2xl text-center sm:text-left">
-                  <p className="text-[11px] font-bold text-red-700 leading-snug">
-                    📌 <strong>Langkah Selanjutnya:</strong> Rumuskan proposal dan tentukan roadmap aksi Anda bersama asisten kelas Pancasila Anda pada Minggu ke-10.
+                <div className="p-4 bg-amber-500/[0.06] border border-amber-500/10 rounded-xl">
+                  <p className="text-[11px] font-bold text-amber-800 leading-snug">
+                    📌 <strong>Informasi Asistensi:</strong> Bahas rancangan anggaran biaya (RAB) dan perizinan kelurahan dengan Dosen Pancasila kelas Anda pada kolokium Minggu ke-10.
                   </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* ================= TIMELINE STAGE ================= */}
+          {/* ================= TIMELINE SECTION ================= */}
           <div className="mb-24">
             <div className="text-center mb-12">
-              <span className="text-[10px] font-black text-red-600 uppercase tracking-widest block mb-1">PROGRES PERKULIAHAN</span>
-              <h3 className="text-3xl font-black text-slate-800 tracking-tight">Garis Waktu Tahapan Proyek</h3>
-              <p className="text-slate-400 font-bold text-xs uppercase tracking-widest mt-1">Timeline mingguan pelaksanaan Tapak Liman</p>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#002855]/5 text-[#002855] text-[9px] font-extrabold uppercase tracking-widest mb-3">
+                ROADMAP AKSI KELOMPOK
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Timeline Tahapan Proyek</h3>
+              <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-1.5">Urutan alur kerja mingguan proyek</p>
             </div>
 
-            <div className="relative pl-6 sm:pl-8 border-l-2 border-red-100 space-y-10 text-left">
-              {timeline.map((step, idx) => (
+            <div className="relative pl-6 sm:pl-8 border-l-2 border-slate-200 space-y-10 text-left max-w-4xl mx-auto">
+              {timeline.map((step) => (
                 <div key={step.week} className="relative">
-                  {/* Outer circle dot */}
-                  <div className="absolute -left-[35px] sm:-left-[43px] top-1.5 w-6 h-6 rounded-full bg-white border-2 border-red-600 flex items-center justify-center shadow-md">
-                    <div className="w-2 h-2 rounded-full bg-red-600" />
+                  {/* Timeline circle node */}
+                  <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-white border-2 border-[#002855] flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#002855]" />
                   </div>
                   
-                  <div className="bg-white rounded-[2rem] border border-slate-100 p-6 sm:p-8 shadow-xl max-w-4xl hover:border-red-200 transition-all group">
-                    <div className="flex items-center gap-3 mb-2.5">
-                      <span className="px-3 py-1 rounded-full bg-slate-900 text-white text-[9px] font-black uppercase">
+                  <div className="bg-white rounded-2xl border border-slate-200/50 p-6 shadow-sm hover:border-[#002855]/30 transition-all group">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="px-2.5 py-0.5 rounded bg-slate-900 text-white text-[9px] font-extrabold uppercase">
                         {step.week}
                       </span>
                     </div>
-                    <h4 className="text-lg font-black text-slate-800 mb-1 group-hover:text-red-700 transition-colors">
+                    <h4 className="text-base font-extrabold text-slate-900 mb-1 group-hover:text-[#002855] transition-colors">
                       {step.task}
                     </h4>
-                    <p className="text-xs font-medium text-slate-400 leading-relaxed">
+                    <p className="text-[11px] sm:text-xs font-medium text-slate-500 leading-relaxed">
                       {step.desc}
                     </p>
                   </div>
@@ -454,35 +432,36 @@ export default function TapakLiman() {
             </div>
           </div>
 
-          {/* ================= MATRIKS PENILAIAN & SISTEMATIKA ================= */}
+          {/* ================= ASSESSMENT & REPORT FORMAT ================= */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-24 text-left">
             
-            {/* Sistematika Laporan Accordion */}
-            <div className="bg-white rounded-[3rem] p-8 sm:p-10 border border-slate-100 shadow-2xl">
-              <div>
-                <span className="text-[10px] font-black text-red-600 uppercase tracking-widest block mb-1">FORMAT AKADEMIK</span>
-                <h3 className="text-2xl font-black text-slate-800 mb-6 flex items-center gap-2">
-                  <FileText className="text-red-600" /> Sistematika Laporan Proyek
+            {/* Left: Report Format (Sistematika Laporan) */}
+            <div className="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/50 shadow-sm">
+              <div className="mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-950 text-white text-[9px] font-extrabold uppercase tracking-widest mb-3">
+                  FORMAT LAPORAN AKHIR
+                </div>
+                <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+                  <FileText className="text-[#002855]" size={22} /> Sistematika Laporan Proyek
                 </h3>
-                <p className="text-slate-400 font-bold text-xs uppercase tracking-widest mb-6">Ketuk nama bab untuk membaca penjelasan isi:</p>
               </div>
 
               <div className="space-y-3">
                 {babs.map((bab) => {
                   const isOpen = expandedBab === bab.id
                   return (
-                    <div key={bab.id} className="border border-slate-100 rounded-2xl overflow-hidden transition-all">
+                    <div key={bab.id} className="border border-slate-100 rounded-xl overflow-hidden transition-all">
                       <button
                         onClick={() => setExpandedBab(isOpen ? null : bab.id)}
-                        className={`w-full p-5 text-left font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-between transition-colors ${
-                          isOpen ? 'bg-red-50 text-red-700' : 'bg-slate-50/50 hover:bg-slate-50 text-slate-700'
+                        className={`w-full p-4 text-left font-extrabold text-xs uppercase tracking-wider flex items-center justify-between transition-colors ${
+                          isOpen ? 'bg-[#002855]/5 text-[#002855]' : 'bg-slate-50/50 hover:bg-slate-50 text-slate-700'
                         }`}
                       >
                         <div>
                           <span>{bab.title}</span>
                           <span className="block text-[9px] font-bold text-slate-400 normal-case mt-0.5">{bab.sub}</span>
                         </div>
-                        <ChevronRight size={16} className={`transition-transform duration-300 ${isOpen ? 'rotate-90 text-red-600' : 'text-slate-400'}`} />
+                        <ChevronRight size={14} className={`transition-transform duration-300 ${isOpen ? 'rotate-90 text-[#002855]' : 'text-slate-400'}`} />
                       </button>
                       
                       <AnimatePresence initial={false}>
@@ -491,7 +470,7 @@ export default function TapakLiman() {
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: 'auto', opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
-                            className="bg-white border-t border-slate-50 p-5"
+                            className="bg-white border-t border-slate-100 p-4"
                           >
                             <p className="text-[11px] sm:text-xs font-medium text-slate-500 leading-relaxed">
                               {bab.detail}
@@ -505,32 +484,33 @@ export default function TapakLiman() {
               </div>
             </div>
 
-            {/* Matriks Penilaian Rings */}
-            <div className="bg-slate-900 text-white rounded-[3rem] p-8 sm:p-10 shadow-2xl flex flex-col justify-between relative overflow-hidden">
-              <div className="absolute inset-0 opacity-5 bg-[linear-gradient(white_1.5px,transparent_1.5px),linear-gradient(90deg,white_1.5px,transparent_1.5px)] bg-[size:30px_30px] pointer-events-none" />
-              
+            {/* Right: Grading Rubric (Kriteria Penilaian) */}
+            <div className="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/50 shadow-sm flex flex-col justify-between">
               <div>
-                <span className="text-[10px] font-black text-red-400 uppercase tracking-widest block mb-1">EVALUASI AKADEMIK</span>
-                <h3 className="text-2xl font-black mb-6 flex items-center gap-2">
-                  <BarChart2 className="text-red-400" /> Kriteria Evaluasi Nilai Proyek
-                </h3>
+                <div className="mb-6">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/5 text-amber-700 text-[9px] font-extrabold uppercase tracking-widest mb-3">
+                    STANDAR EVALUASI NILAI
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+                    <BarChart2 className="text-[#002855]" size={22} /> Kriteria Penilaian Proyek
+                  </h3>
+                </div>
 
                 <div className="space-y-4">
                   {grading.map((g) => (
-                    <div key={g.name} className="space-y-1.5">
-                      <div className="flex items-center justify-between text-xs font-black">
-                        <span className="text-slate-300">{g.name}</span>
-                        <span className="text-red-400">{g.weight}%</span>
+                    <div key={g.name} className="space-y-1">
+                      <div className="flex items-center justify-between text-xs font-extrabold">
+                        <span className="text-slate-700">{g.name}</span>
+                        <span className="text-[#002855]">{g.weight}%</span>
                       </div>
                       
-                      {/* Bar indicator */}
-                      <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                         <div 
-                          className={`h-full rounded-full bg-gradient-to-r ${g.color}`} 
-                          style={{ width: `${g.weight * 4}%` }} 
+                          className="h-full rounded-full bg-[#002855]" 
+                          style={{ width: `${g.weight}%` }} 
                         />
                       </div>
-                      <p className="text-[9px] font-medium text-slate-500 leading-snug">
+                      <p className="text-[10px] font-bold text-slate-400">
                         {g.desc}
                       </p>
                     </div>
@@ -538,43 +518,41 @@ export default function TapakLiman() {
                 </div>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
-                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Akumulasi Nilai</span>
-                <span className="px-3.5 py-1.5 rounded-xl bg-red-600/20 border border-red-500/30 text-red-400 font-black text-xs">
+              <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400">Akumulasi Nilai Akhir</span>
+                <span className="px-3 py-1 rounded bg-[#002855]/5 border border-[#002855]/10 text-[#002855] font-extrabold text-xs">
                   100% MAKSIMAL
                 </span>
               </div>
             </div>
           </div>
 
-          {/* ================= GABUNG SEKARANG CALLOUT ================= */}
+          {/* ================= ACADEMIC CALLOUT ACTION ================= */}
           <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
+            initial={{ scale: 0.98, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true }}
-            className="bg-gradient-to-br from-red-600 to-rose-700 rounded-[3rem] p-10 sm:p-16 text-center text-white shadow-2xl relative overflow-hidden"
+            className="bg-[#002855] rounded-3xl p-8 sm:p-12 text-center text-white shadow-md relative overflow-hidden"
           >
-            <div className="absolute inset-0 opacity-10 bg-[linear-gradient(rgba(255,255,255,0.15)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(255,255,255,0.15)_1.5px,transparent_1.5px)] bg-[size:40px_40px] pointer-events-none" />
-            <div className="absolute -top-24 -left-24 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-            <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-black/20 rounded-full blur-2xl pointer-events-none" />
-
-            <h3 className="text-3xl sm:text-4xl font-black mb-4">Mari Eksekusi Aksi Nyata Anda!</h3>
-            <p className="text-slate-100 font-bold text-xs sm:text-sm max-w-xl mx-auto leading-relaxed mb-8">
-              Pancasila bukan sekadar butir ingatan tertulis, melainkan wujud rasa persaudaraan dan keadilan yang kita salurkan langsung ke masyarakat pelosok.
+            <div className="absolute inset-0 opacity-5 bg-[linear-gradient(white_1.5px,transparent_1.5px),linear-gradient(90deg,white_1.5px,transparent_1.5px)] bg-[size:30px_30px] pointer-events-none" />
+            
+            <h3 className="text-2xl sm:text-3xl font-extrabold mb-3">Siap Mengabdi untuk Indonesia?</h3>
+            <p className="text-slate-300 font-bold text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed mb-8">
+              Aktualisasikan butir-butir luhur Pancasila dalam wujud aksi nyata ilmiah yang bermanfaat langsung bagi kemakmuran dan masa depan masyarakat Indonesia.
             </p>
 
-            <div className="inline-flex flex-wrap justify-center gap-4">
+            <div className="flex flex-wrap justify-center gap-4">
               <a 
                 href="/portal"
-                className="px-8 py-4 bg-white text-red-700 hover:bg-slate-50 hover:shadow-xl rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-[0.98]"
+                className="px-6 py-3.5 bg-white text-[#002855] hover:bg-slate-50 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all active:scale-[0.98]"
               >
                 Mulai Belajar Pancasila
               </a>
               <a 
                 href="/leaderboard"
-                className="px-8 py-4 bg-black/30 hover:bg-black/45 border border-white/20 rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-[0.98]"
+                className="px-6 py-3.5 bg-white/10 hover:bg-white/15 border border-white/10 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all active:scale-[0.98]"
               >
-                Papan Peringkat Belajar
+                Peringkat Mahasiswa
               </a>
             </div>
           </motion.div>
