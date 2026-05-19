@@ -11,7 +11,7 @@ export default function Persyaratan() {
       title: 'Persyaratan untuk Siswa Belajar',
       subtitle: 'Semua pelajar tingkat SMP/Sederajat di Indonesia berhak mendapatkan akses penuh gratis.',
       icon: BookOpen,
-      color: 'bg-blue-50 text-blue-600 border-blue-100',
+      color: 'bg-red-50 text-red-600 border-red-100',
       items: [
         'Sedang menempuh pendidikan tingkat SMP/MTs/Sederajat (Kelas 7, 8, atau 9).',
         'Memiliki perangkat belajar pendukung (HP Android/iOS atau Laptop).',
@@ -37,7 +37,7 @@ export default function Persyaratan() {
       title: 'Persyaratan Relawan Pengembang',
       subtitle: 'Software Engineer, UI/UX Designer, dan pegiat IT yang ingin memperkuat infrastruktur portal.',
       icon: Sparkles,
-      color: 'bg-emerald-50 text-emerald-600 border-emerald-100',
+      color: 'bg-slate-50 text-slate-700 border-slate-200',
       items: [
         'Mempunyai keterampilan teknis di bidang Web Development (React, Node.js, Prisma, Tailwind).',
         'Memahami dasar-dasar UI/UX Design modern dan performa aplikasi web.',

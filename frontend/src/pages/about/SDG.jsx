@@ -25,17 +25,17 @@ export default function SDG() {
     {
       title: '100% Bebas Biaya',
       desc: 'Menghapus penghalang finansial pendidikan dengan menjamin akses gratis selamanya tanpa biaya pendaftaran tersembunyi.',
-      icon: <Scale className="text-pink-500" size={20} />
+      icon: <Scale className="text-red-500" size={20} />
     },
     {
       title: 'Teknologi Ramah Kuota',
       desc: 'Situs web dirancang super ringan dan hemat kuota agar dapat diakses lancar menggunakan HP berspesifikasi rendah di daerah terpencil.',
-      icon: <Compass className="text-pink-500" size={20} />
+      icon: <Compass className="text-red-500" size={20} />
     },
     {
       title: 'Pemerataan Daerah 3T',
       desc: 'Fokus mendistribusikan ilmu pengetahuan ke kawasan Tertinggal, Terdepan, dan Terluar untuk memperkecil ketimpangan pendidikan.',
-      icon: <Heart className="text-pink-500" size={20} />
+      icon: <Heart className="text-red-500" size={20} />
     }
   ]
 
@@ -148,10 +148,10 @@ export default function SDG() {
             initial={{ y: 40, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
             viewport={{ once: true }}
-            className="bg-white rounded-[3rem] border border-slate-100 p-8 sm:p-14 shadow-2xl mb-16 text-left relative overflow-hidden group hover:border-pink-200 transition-all duration-300"
+            className="bg-white rounded-[3rem] border border-slate-100 p-8 sm:p-14 shadow-2xl mb-16 text-left relative overflow-hidden group hover:border-red-200 transition-all duration-300"
           >
             {/* Corner Decorative Gradient Ring */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-pink-500/5 rounded-bl-[3rem] pointer-events-none" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-bl-[3rem] pointer-events-none" />
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
               
@@ -160,12 +160,12 @@ export default function SDG() {
                 <motion.div 
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: 'spring', stiffness: 300 }}
-                  className="w-48 h-48 sm:w-56 sm:h-56 bg-white rounded-[2.5rem] border border-pink-100 shadow-2xl p-4 flex items-center justify-center relative overflow-hidden mb-6"
+                  className="w-48 h-48 sm:w-56 sm:h-56 bg-white rounded-[2.5rem] border border-red-100 shadow-2xl p-4 flex items-center justify-center relative overflow-hidden mb-6"
                 >
                   <img src="/sdg10.png" alt="SDG 10 Logo" className="w-full h-full object-contain rounded-[1.8rem]" />
                 </motion.div>
                 
-                <span className="px-4 py-1.5 rounded-full bg-pink-50 border border-pink-100 text-pink-700 text-[10px] font-black uppercase tracking-wider mb-2">
+                <span className="px-4 py-1.5 rounded-full bg-red-50 border border-red-100 text-red-700 text-[10px] font-black uppercase tracking-wider mb-2">
                   TARGET NO. 10
                 </span>
                 <h4 className="text-xl font-black text-slate-800">Berkurangnya Kesenjangan</h4>
@@ -173,7 +173,7 @@ export default function SDG() {
 
               {/* Right Column: Detailed High-Fidelity Information */}
               <div className="lg:col-span-8">
-                <span className="text-[10px] font-black text-pink-600 uppercase tracking-widest block mb-2">PEMERATAAN HAK BELAJAR</span>
+                <span className="text-[10px] font-black text-red-600 uppercase tracking-widest block mb-2">PEMERATAAN HAK BELAJAR</span>
                 <h3 className="text-3xl font-black text-slate-900 mb-6 leading-tight">
                   Demokratisasi Ilmu untuk Pelajar Indonesia
                 </h3>
@@ -185,7 +185,7 @@ export default function SDG() {
                 {/* Sub Highlights Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
                   {sdg10Highlights.map((hl) => (
-                    <div key={hl.title} className="p-5 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-pink-50/20 hover:border-pink-100 transition-colors">
+                    <div key={hl.title} className="p-5 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-red-50/20 hover:border-red-100 transition-colors">
                       <div className="mb-3">{hl.icon}</div>
                       <h5 className="font-black text-slate-800 text-xs mb-1.5">{hl.title}</h5>
                       <p className="text-[10px] font-medium text-slate-400 leading-relaxed">{hl.desc}</p>
@@ -195,7 +195,7 @@ export default function SDG() {
 
                 {/* pancasila correlation badge */}
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-wider">
-                  <Check size={12} className="text-pink-500" /> Keselarasan: Sila ke-3 (Persatuan Indonesia)
+                  <Check size={12} className="text-red-500" /> Keselarasan: Sila ke-3 (Persatuan Indonesia)
                 </div>
               </div>
 

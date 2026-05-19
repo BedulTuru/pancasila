@@ -42,12 +42,6 @@ export default function Home() {
       >
         {/* Interactive Mesh Background - Hidden on Mobile for Performance */}
         <div className="interactive-mesh hidden md:block" />
-        
-        {/* Subtle grid overlay - Hidden on Mobile for Performance */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none hidden md:block" style={{
-          backgroundImage: 'linear-gradient(var(--edu-navy) 1px, transparent 1px), linear-gradient(90deg, var(--edu-navy) 1px, transparent 1px)',
-          backgroundSize: '100px 100px',
-        }} />
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <motion.div

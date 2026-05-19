@@ -14,143 +14,143 @@ export default function TapakLiman() {
   const [showTopicModal, setShowTopicModal] = useState(false)
 
   const stats = [
-    { label: 'PILIHAN SDGs', value: '10 TOPIK', desc: 'Pedoman Aksi Resmi', icon: <Target className="text-red-500" size={20} />, color: 'border-t-4 border-red-500' },
-    { label: 'LINI MASA AKSI', value: '8 MINGGU', desc: 'Minggu 9 s.d. 16', icon: <Calendar className="text-amber-500" size={20} />, color: 'border-t-4 border-amber-500' },
-    { label: 'LUARAN WAJIB', value: '3 KARYA', desc: 'Laporan, Poster, Video', icon: <Award className="text-emerald-500" size={20} />, color: 'border-t-4 border-emerald-500' },
+    { label: 'PILIHAN SDGs', value: '10 TOPIK', desc: 'Pedoman Aksi Resmi', icon: <Target className="text-red-600" size={20} />, color: 'border-t-4 border-red-600' },
+    { label: 'LINI MASA AKSI', value: '8 MINGGU', desc: 'Minggu 9 s.d. 16', icon: <Calendar className="text-slate-600" size={20} />, color: 'border-t-4 border-slate-600' },
+    { label: 'LUARAN WAJIB', value: '3 KARYA', desc: 'Laporan, Poster, Video', icon: <Award className="text-red-600" size={20} />, color: 'border-t-4 border-red-600' },
   ]
 
   const acronym = [
-    { char: 'T', word: 'Tanggap', desc: 'Peka dan sigap dalam merespons isu kemanusiaan serta dinamika sosial di lapangan.', icon: '👣', bg: 'from-rose-50 to-white border-rose-100 text-rose-600' },
-    { char: 'A', word: 'Adaptif', desc: 'Lincah menyesuaikan diri dengan kultur dan kearifan lokal warga desa mitra.', icon: '🦎', bg: 'from-amber-50 to-white border-amber-100 text-amber-600' },
-    { char: 'P', word: 'Partisipatif', desc: 'Merangkul peran serta aktif dan kolaboratif dari seluruh lapisan masyarakat.', icon: '🤝', bg: 'from-yellow-50 to-white border-yellow-100 text-yellow-600' },
-    { char: 'A', word: 'Aksi Nyata', desc: 'Menghadirkan solusi konkret yang berdaya guna secara fisik maupun edukatif.', icon: '⚡', bg: 'from-emerald-50 to-white border-emerald-100 text-emerald-600' },
-    { char: 'K', word: 'Kolaboratif', desc: 'Membangun sinergi kelompok lintas program studi secara harmonis.', icon: '💎', bg: 'from-blue-50 to-white border-blue-100 text-blue-600' },
-    { char: 'L', word: 'Lintas Ilmu', desc: 'Meleburkan sains, seni rupa desain, dan sosial-humaniora dalam pemecahan masalah.', icon: '🧩', bg: 'from-violet-50 to-white border-violet-100 text-violet-600' },
-    { char: 'I', word: 'Inisiatif', desc: 'Mendorong daya cipta mandiri yang kreatif, solutif, dan efisien.', icon: '💡', bg: 'from-fuchsia-50 to-white border-fuchsia-100 text-fuchsia-600' },
-    { char: 'M', word: 'Nasionalis', desc: 'Dijiwai kecintaan mendalam pada tanah air berlandaskan ideologi Pancasila.', icon: '🇲🇨', bg: 'from-red-50 to-white border-red-100 text-red-600' },
+    { char: 'T', word: 'Tanggap', desc: 'Peka dan sigap dalam merespons isu kemানুsaan serta dinamika sosial di lapangan.', icon: '👣', bg: 'from-red-50 to-white border-red-100 text-red-600' },
+    { char: 'A', word: 'Adaptif', desc: 'Lincah menyesuaikan diri dengan kultur dan kearifan lokal warga desa mitra.', icon: '🦎', bg: 'from-slate-50 to-white border-slate-200 text-slate-700' },
+    { char: 'P', word: 'Partisipatif', desc: 'Merangkul peran serta aktif dan kolaboratif dari seluruh lapisan masyarakat.', icon: '🤝', bg: 'from-red-50 to-white border-red-100 text-red-600' },
+    { char: 'A', word: 'Aksi Nyata', desc: 'Menghadirkan solusi konkret yang berdaya guna secara fisik maupun edukatif.', icon: '⚡', bg: 'from-slate-50 to-white border-slate-200 text-slate-700' },
+    { char: 'K', word: 'Kolaboratif', desc: 'Membangun sinergi kelompok lintas program studi secara harmonis.', icon: '💎', bg: 'from-red-50 to-white border-red-100 text-red-600' },
+    { char: 'L', word: 'Lintas Ilmu', desc: 'Meleburkan sains, seni rupa desain, dan sosial-humaniora dalam pemecahan masalah.', icon: '🧩', bg: 'from-slate-50 to-white border-slate-200 text-slate-700' },
+    { char: 'I', word: 'Inisiatif', desc: 'Mendorong daya cipta mandiri yang kreatif, solutif, dan efisien.', icon: '💡', bg: 'from-red-50 to-white border-red-100 text-red-600' },
+    { char: 'M', word: 'Nasionalis', desc: 'Dijiwai kecintaan mendalam pada tanah air berlandaskan ideologi Pancasila.', icon: '🇲🇨', bg: 'from-slate-50 to-white border-slate-200 text-slate-700' },
   ]
 
   const topics = [
     {
       no: 1,
       title: 'Pengembangan Ekonomi Desa (UMKM)',
-      icon: <Coins className="text-amber-600" size={24} />,
+      icon: <Coins className="text-red-600" size={24} />,
       desc: 'Membantu pelaku usaha mikro pedesaan dalam ekspansi pasar digital, penataan pembukuan kas modern, serta inovasi identitas kemasan produk agar berdaya saing tinggi.',
       acts: 'Pelatihan e-commerce, digital branding, dan pembuatan katalog produk warga.',
       cost: 'Bahan baku demonstrasi produk, cetak panduan bisnis, & spanduk sosialisasi.',
       sdg: 'SDG 1: Tanpa Kemiskinan',
-      color: 'amber',
-      theme: 'border-l-4 border-amber-500 bg-amber-50/10'
+      color: 'red',
+      theme: 'border-l-4 border-red-600 bg-red-50/5'
     },
     {
       no: 2,
       title: 'Literasi Digital Masyarakat Desa',
-      icon: <Lightbulb className="text-cyan-600" size={24} />,
+      icon: <Lightbulb className="text-slate-600" size={24} />,
       desc: 'Mengajarkan kecakapan dasar teknologi informasi kepada warga desa, termasuk keamanan berselancar digital, e-government, serta penggunaan internet sehat.',
       acts: 'Pelatihan dasar komputer, edukasi deteksi hoax, dan pembentukan website desa.',
       cost: 'Modul materi digital cetak, konsumsi warga peserta, & transportasi tim.',
       sdg: 'SDG 4: Pendidikan Berkualitas',
-      color: 'cyan',
-      theme: 'border-l-4 border-cyan-500 bg-cyan-50/10'
+      color: 'slate',
+      theme: 'border-l-4 border-slate-500 bg-slate-50/20'
     },
     {
       no: 3,
       title: 'Pendidikan & Literasi Anak Desa',
-      icon: <BookOpen className="text-emerald-600" size={24} />,
+      icon: <BookOpen className="text-red-600" size={24} />,
       desc: 'Mengadakan program belajar sains kreatif yang aplikatif, perintisan pojok baca/perpustakaan mini, serta metode mendongeng budi pekerti nusantara.',
       acts: 'Eksperimen sains sederhana, kelas mendongeng karakter Pancasila, & donasi buku.',
       cost: 'Pembelian buku bacaan berkualitas, alat peraga sains, & rak buku portabel.',
       sdg: 'SDG 4: Pendidikan Berkualitas',
-      color: 'emerald',
-      theme: 'border-l-4 border-emerald-500 bg-emerald-50/10'
+      color: 'red',
+      theme: 'border-l-4 border-red-600 bg-red-50/5'
     },
     {
       no: 4,
       title: 'Kesehatan & Higienitas Masyarakat',
-      icon: <Heart className="text-rose-600" size={24} />,
+      icon: <Heart className="text-slate-600" size={24} />,
       desc: 'Menyelenggarakan penyuluhan gizi seimbang pencegahan stunting, pembenahan sanitasi dasar, serta pemeriksaan kesehatan umum warga secara gratis.',
       acts: 'Penyuluhan stunting keluarga, gotong royong perbaikan sanitasi umum, & penyediaan tong sampah.',
       cost: 'Alat sanitasi peraga, bahan penyuluhan cetak, & sabun/alat kebersihan warga.',
       sdg: 'SDG 3: Kehidupan Sehat',
-      color: 'rose',
-      theme: 'border-l-4 border-rose-500 bg-rose-50/10'
+      color: 'slate',
+      theme: 'border-l-4 border-slate-500 bg-slate-50/20'
     },
     {
       no: 5,
       title: 'Penghijauan & Pelestarian Lingkungan',
-      icon: <Compass className="text-green-600" size={24} />,
+      icon: <Compass className="text-red-600" size={24} />,
       desc: 'Melakukan penanaman bibit pohon produktif unggulan, pelatihan pembuatan pupuk kompos mandiri, serta pembuatan apotek hidup guna mereduksi degradasi lahan.',
       acts: 'Penanaman pohon produktif, workshop pengomposan mandiri, & plang edukasi lingkungan.',
       cost: 'Pembelian bibit pohon unggulan, pupuk organik, sekop mini, & biaya transportasi.',
       sdg: 'SDG 15: Ekosistem Daratan',
-      color: 'green',
-      theme: 'border-l-4 border-green-500 bg-green-50/10'
+      color: 'red',
+      theme: 'border-l-4 border-red-600 bg-red-50/5'
     },
     {
       no: 6,
       title: 'Pemberdayaan Perempuan Desa',
-      icon: <Users className="text-violet-600" size={24} />,
+      icon: <Users className="text-slate-600" size={24} />,
       desc: 'Memberikan pelatihan keterampilan kreatif (kerajinan rajut/daur ulang) dan pembukuan sederhana guna memacu kemandirian ekonomi kaum ibu PKK.',
       acts: 'Workshop kerajinan tangan daur ulang sampah, pelatihan manajemen usaha mikro, & branding.',
       cost: 'Bahan baku praktek menjahit/kerajinan, konsumsi warga, & transportasi tim.',
       sdg: 'SDG 5: Kesetaraan Gender',
-      color: 'violet',
-      theme: 'border-l-4 border-violet-500 bg-violet-50/10'
+      color: 'slate',
+      theme: 'border-l-4 border-slate-500 bg-slate-50/20'
     },
     {
       no: 7,
       title: 'Revitalisasi Seni dan Budaya Lokal',
-      icon: <Award className="text-orange-600" size={24} />,
+      icon: <Award className="text-red-600" size={24} />,
       desc: 'Mendokumentasikan seni musik dan tari tradisional daerah melalui pembuatan konten kreatif agar warisan budaya nusantara terus berkembang dinamis.',
       acts: 'Pelatihan instrumen musik tradisional bagi anak, pembuatan film dokumentasi seni desa.',
       cost: 'Sewa perlengkapan pementasan mini, dokumentasi profesional, & konsumsi kegiatan.',
       sdg: 'SDG 11: Komunitas Berkelanjutan',
-      color: 'orange',
-      theme: 'border-l-4 border-orange-500 bg-orange-50/10'
+      color: 'red',
+      theme: 'border-l-4 border-red-600 bg-red-50/5'
     },
     {
       no: 8,
       title: 'Penyuluhan Kesadaran Hukum Warga',
-      icon: <FileText className="text-blue-600" size={24} />,
+      icon: <FileText className="text-slate-600" size={24} />,
       desc: 'Edukasi pemahaman hukum keluarga, hak warga negara, kesadaran berkendara, serta persatuan kebhinekaan sosial berlandaskan Pancasila.',
       acts: 'Penyuluhan sadar hukum sengketa tanah/keluarga, pembuatan infografis hukum sipil.',
       cost: 'Cetak pamflet panduan hukum warga, konsumsi peserta, & transportasi pembicara.',
       sdg: 'SDG 16: Perdamaian & Keadilan',
-      color: 'blue',
-      theme: 'border-l-4 border-blue-500 bg-blue-50/10'
+      color: 'slate',
+      theme: 'border-l-4 border-slate-500 bg-slate-50/20'
     },
     {
       no: 9,
       title: 'Peningkatan Sarana Prasarana Fisik',
-      icon: <Layers className="text-slate-600" size={24} />,
+      icon: <Layers className="text-red-600" size={24} />,
       desc: 'Gotong royong merancang dan membenahi fasilitas umum desa berskala mikro (seperti pos ronda, plang arah, atau halte) demi keselamatan warga.',
       acts: 'Pembuatan rambu keselamatan jalan, perbaikan sarana pos ronda, & pengecatan fasilitas PAUD.',
       cost: 'Semen, pasir, cat kayu/besi tahan air, papan kayu petunjuk, & konsumsi kerja bakti.',
       sdg: 'SDG 9: Industri & Infrastruktur',
-      color: 'slate',
-      theme: 'border-l-4 border-slate-500 bg-slate-50/10'
+      color: 'red',
+      theme: 'border-l-4 border-red-600 bg-red-50/5'
     },
     {
       no: 10,
       title: 'Manajemen Sampah & Bank Sampah',
-      icon: <ShieldCheck className="text-teal-600" size={24} />,
+      icon: <ShieldCheck className="text-slate-600" size={24} />,
       desc: 'Mengedukasi pemilihan sampah organik/anorganik secara mandiri serta menginisiasi perintisan sistem bank sampah bernilai guna ekonomis.',
       acts: 'Penyuluhan klasifikasi sampah, peragaan pembuatan ecobrick, & penyediaan tong sampah pilah.',
       cost: 'Tong sampah besar pilah 3 warna, masker sarung tangan pelindung, & stiker panduan.',
       sdg: 'SDG 12: Konsumsi & Produksi Bertanggung Jawab',
-      color: 'teal',
-      theme: 'border-l-4 border-teal-500 bg-teal-50/10'
+      color: 'slate',
+      theme: 'border-l-4 border-slate-500 bg-slate-50/20'
     }
   ]
 
   const timeline = [
-    { week: 'Minggu 9', task: 'Rembuk Gagasan Awal', desc: 'Pembentukan tim kolaborasi kelas (maks 10 orang) dan perumusan rancangan ide proyek berbasis SDGs.', border: 'border-l-4 border-red-500' },
-    { week: 'Minggu 10', task: 'Penyusunan Proposal & RAB', desc: 'Merumuskan draf proposal komprehensif, rincian anggaran biaya logistik, serta linimasa eksekusi.', border: 'border-l-4 border-amber-500' },
-    { week: 'Minggu 11', task: 'Sidang Asistensi Kelompok', desc: 'Presentasi dan pertanggungjawaban rancangan proposal program di hadapan Dosen Pembimbing Pancasila.', border: 'border-l-4 border-yellow-500' },
-    { week: 'Minggu 12-13', task: 'Implementasi Aksi Lapangan', desc: 'Turun langsung ke masyarakat desa sasaran guna merealisasikan pilar program pengabdian secara intensif.', border: 'border-l-4 border-emerald-500' },
-    { week: 'Minggu 14', task: 'Penyusunan Karya Luaran', desc: 'Finalisasi pembuatan laporan akademis, rancangan poster ilmiah infografis, dan editing video dokumentasi.', border: 'border-l-4 border-cyan-500' },
-    { week: 'Minggu 15', task: 'Sidang Hasil & Unggah Edunex', desc: 'Mengunggah seluruh luaran wajib kelompok ke portal akademik Edunex ITB dan melaksanakan presentasi akhir.', border: 'border-l-4 border-violet-500' },
-    { week: 'Minggu 16', task: 'Peer Review & Rekap Nilai', desc: 'Pengisian peer assessment keaktifan anggota tim serta rekapitulasi penilaian total dosen.', border: 'border-l-4 border-fuchsia-500' }
+    { week: 'Minggu 9', task: 'Rembuk Gagasan Awal', desc: 'Pembentukan tim kolaborasi kelas (maks 10 orang) dan perumusan rancangan ide proyek berbasis SDGs.', border: 'border-l-4 border-red-600' },
+    { week: 'Minggu 10', task: 'Penyusunan Proposal & RAB', desc: 'Merumuskan draf proposal komprehensif, rincian anggaran biaya logistik, serta linimasa eksekusi.', border: 'border-l-4 border-slate-400' },
+    { week: 'Minggu 11', task: 'Sidang Asistensi Kelompok', desc: 'Presentasi dan pertanggungjawaban rancangan proposal program di hadapan Dosen Pembimbing Pancasila.', border: 'border-l-4 border-red-600' },
+    { week: 'Minggu 12-13', task: 'Implementasi Aksi Lapangan', desc: 'Turun langsung ke masyarakat desa sasaran guna merealisasikan pilar program pengabdian secara intensif.', border: 'border-l-4 border-slate-400' },
+    { week: 'Minggu 14', task: 'Penyusunan Karya Luaran', desc: 'Finalisasi pembuatan laporan akademis, rancangan poster ilmiah infografis, dan editing video dokumentasi.', border: 'border-l-4 border-red-600' },
+    { week: 'Minggu 15', task: 'Sidang Hasil & Unggah Edunex', desc: 'Mengunggah seluruh luaran wajib kelompok ke portal akademik Edunex ITB dan melaksanakan presentasi akhir.', border: 'border-l-4 border-slate-400' },
+    { week: 'Minggu 16', task: 'Peer Review & Rekap Nilai', desc: 'Pengisian peer assessment keaktifan anggota tim serta rekapitulasi penilaian total dosen.', border: 'border-l-4 border-red-600' }
   ]
 
   const babs = [

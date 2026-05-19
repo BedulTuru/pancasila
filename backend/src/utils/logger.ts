@@ -10,6 +10,11 @@ export const logActivity = async (
   req?: Request
 ) => {
   try {
+    let ip = req?.ip;
+    if (ip && ip.startsWith('::ffff:')) {
+      ip = ip.substring(7);
+    }
+
     await prisma.activityLog.create({
       data: {
         userId,
@@ -17,8 +22,8 @@ export const logActivity = async (
         entityType,
         entityId,
         details,
-        ipAddress: req?.ip,
-        userAgent: req?.headers['user-agent'],
+        ipAddress: ip,
+        userAgent: req?.headers['user-agent'] as string | undefined,
       },
     });
   } catch (error) {
