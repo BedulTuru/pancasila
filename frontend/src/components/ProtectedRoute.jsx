@@ -5,11 +5,12 @@ import toast from 'react-hot-toast'
 export default function ProtectedRoute({ children, roles }) {
   const { user, loading, isLoggingOut } = useAuth()
   const location = useLocation()
+  const token = localStorage.getItem('token')
 
-  if (loading) {
+  if (loading || (token && !user)) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--edu-cream)' }}>
+        <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--edu-navy)' }}></div>
       </div>
     )
   }
