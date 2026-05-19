@@ -1,9 +1,40 @@
-import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import { Wrench, LogIn, ArrowRight, Clock } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
+import { motion, AnimatePresence } from 'framer-motion'
+import toast from 'react-hot-toast'
 
 export default function MaintenancePage({ message }) {
+  const [showAdminButton, setShowAdminButton] = useState(false)
+  const [logoClicks, setLogoClicks] = useState(0)
+
+  // Listen for Ctrl+Shift+A secret key combination
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Trigger on Ctrl + Shift + A OR Cmd + Shift + A
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'a') {
+        e.preventDefault()
+        setShowAdminButton(prev => {
+          if (!prev) toast.success('Gerbang Administrator Terbuka 🗝️', { id: 'admin-gate' })
+          return !prev
+        })
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
+  const handleLogoClick = () => {
+    const nextClicks = logoClicks + 1
+    setLogoClicks(nextClicks)
+    
+    if (nextClicks >= 5) {
+      setShowAdminButton(true)
+      toast.success('Gerbang Administrator Terbuka 🗝️', { id: 'admin-gate' })
+      setLogoClicks(0)
+    }
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden font-sans" style={{ background: 'var(--edu-cream)' }}>
       <Helmet>
@@ -33,9 +64,13 @@ export default function MaintenancePage({ message }) {
             boxShadow: '0 20px 50px rgba(30, 41, 59, 0.04)' 
           }}
         >
-          {/* Logo Branding */}
-          <div className="flex items-center gap-3 justify-center mb-8">
-            <img src="/garuda.svg" alt="Garuda Logo" className="h-9 w-auto" />
+          {/* Logo Branding - Clickable Secret Gate */}
+          <div 
+            onClick={handleLogoClick}
+            className="flex items-center gap-3 justify-center mb-8 cursor-pointer select-none active:scale-[0.98] transition-transform"
+            title="Pancasila Portal Edukasi"
+          >
+            <img src="/garuda.svg" alt="Garuda Logo" className="h-9 w-auto" style={{ pointerEvents: 'none' }} />
             <div className="flex flex-col text-left">
               <span className="font-black text-base tracking-tight uppercase" style={{ color: 'var(--edu-navy)' }}>Pancasila</span>
               <span className="text-[9px] font-bold tracking-widest opacity-60 uppercase" style={{ color: 'var(--edu-red)' }}>PORTAL EDUKASI</span>
@@ -76,30 +111,39 @@ export default function MaintenancePage({ message }) {
           )}
 
           {/* Info Badge */}
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-50 border border-slate-100 text-[11px] font-bold text-slate-500 mb-2">
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-50 border border-slate-100 text-[11px] font-bold text-slate-500">
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>Koneksi Database & Keamanan Aktif</span>
           </div>
         </div>
 
-        {/* Escape Hatch: Admin Access Link */}
-        <div className="mt-8 text-center">
-          <button 
-            onClick={() => {
-              localStorage.removeItem('token');
-              localStorage.removeItem('admin_token');
-              window.location.href = '/login';
-            }}
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all duration-200 active:scale-[0.98] shadow-md shadow-slate-900/10"
-          >
-            <LogIn size={13} />
-            <span>Masuk Sebagai Admin</span>
-            <ArrowRight size={13} />
-          </button>
-          <p className="text-[10px] text-slate-400 font-medium mt-3">
-            Khusus guru, tutor, dan administrator Pancasila Edu
-          </p>
-        </div>
+        {/* Secret Gate Area: Fades in beautifully */}
+        <AnimatePresence>
+          {showAdminButton && (
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="mt-8 text-center"
+            >
+              <button 
+                onClick={() => {
+                  localStorage.removeItem('token');
+                  localStorage.removeItem('admin_token');
+                  window.location.href = '/login';
+                }}
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all duration-200 active:scale-[0.98] shadow-md shadow-slate-900/10"
+              >
+                <LogIn size={13} />
+                <span>Masuk Sebagai Admin</span>
+                <ArrowRight size={13} />
+              </button>
+              <p className="text-[10px] text-slate-400 font-medium mt-3">
+                Gerbang Terbuka • Khusus guru, tutor, dan administrator Pancasila Edu
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </div>
   )
