@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { BookOpen, Brain, Trophy, Flame, TrendingUp, ArrowRight, Users, FileText, Award, ShieldCheck, Activity, Star, Zap, Download, Layers, Bell, CheckCircle, Wrench } from 'lucide-react'
+import { BookOpen, Brain, Trophy, Flame, TrendingUp, ArrowRight, Users, FileText, Award, ShieldCheck, Activity, Star, Zap, Download, Layers, Bell, CheckCircle, Wrench, Lightbulb, Bug, MessageSquare, Send, Loader2 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useQuery } from '@tanstack/react-query'
 import api from '../utils/api'
@@ -37,6 +37,7 @@ export default function Dashboard() {
 
   const [feedbackText, setFeedbackText] = useState('')
   const [sendingFeedback, setSendingFeedback] = useState(false)
+  const [feedbackCategory, setFeedbackCategory] = useState('SUGGESTION')
 
   const { data: announcements, isLoading: loadingAnnouncementsList } = useQuery({
     queryKey: ['announcements'],
@@ -509,51 +510,132 @@ export default function Dashboard() {
               </motion.div>
             )}
 
-            {/* User Feedback Card — Stable Version (No Framer Motion for stability) */}
+            {/* User Feedback Card — Premium Futuristic Version */}
             {user?.role !== 'ADMIN' && user?.role !== 'TUTOR' && (
-              <div className="feedback-card">
-                {/* Dekorasi - Hidden from pointer to prevent flicker */}
-                <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none">
-                  <Activity size={90} />
-                </div>
+              <div 
+                className="relative rounded-[2.5rem] p-8 overflow-hidden border transition-all duration-500"
+                style={{
+                  background: 'linear-gradient(135deg, #0b0f19 0%, #111827 100%)',
+                  borderColor: 
+                    feedbackCategory === 'SUGGESTION' ? 'rgba(245, 158, 11, 0.2)' :
+                    feedbackCategory === 'BUG' ? 'rgba(239, 68, 68, 0.2)' :
+                    'rgba(59, 130, 246, 0.2)',
+                  boxShadow: 
+                    feedbackCategory === 'SUGGESTION' ? '0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05), 0 0 40px rgba(245, 158, 11, 0.05)' :
+                    feedbackCategory === 'BUG' ? '0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05), 0 0 40px rgba(239, 68, 68, 0.05)' :
+                    '0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05), 0 0 40px rgba(59, 130, 246, 0.05)'
+                }}
+              >
+                {/* Ambient Glow Background Effect */}
+                <div 
+                  className={`absolute -right-24 -top-24 w-60 h-60 rounded-full blur-[100px] opacity-20 pointer-events-none transition-colors duration-500 ${
+                    feedbackCategory === 'SUGGESTION' ? 'bg-amber-500' :
+                    feedbackCategory === 'BUG' ? 'bg-red-500' :
+                    'bg-blue-500'
+                  }`}
+                />
 
-                <h3 className="text-xl font-bold mb-2">Punya saran untuk kami?</h3>
-                <p className="text-blue-100/60 text-sm mb-6 leading-relaxed">
-                  Portal ini dibangun untukmu. Ceritakan saran atau laporkan bug agar kami bisa memperbaikinya.
-                </p>
+                <div className="relative z-10">
+                  <h3 className="text-xl font-black text-white italic tracking-tight mb-2 uppercase leading-none">
+                    Punya <span className={
+                      feedbackCategory === 'SUGGESTION' ? 'text-amber-400' :
+                      feedbackCategory === 'BUG' ? 'text-red-400' :
+                      'text-blue-400'
+                    }>saran atau keluhan</span>?
+                  </h3>
+                  <p className="text-slate-400 text-[10px] font-black uppercase tracking-wider mb-6">
+                    Bantu kami meningkatkan kualitas portal pembelajaran Pancasila Edu.
+                  </p>
 
-                <div className="space-y-4">
-                  <textarea
-                    value={feedbackText}
-                    onChange={(e) => setFeedbackText(e.target.value)}
-                    placeholder="Tulis pesanmu di sini..."
-                    className="feedback-textarea"
-                    rows={4}
-                  />
-                  <button
-                    disabled={sendingFeedback}
-                    onClick={async () => {
-                      if (!feedbackText.trim()) return toast.error('Pesan tidak boleh kosong');
-                      setSendingFeedback(true);
-                      try {
-                        await api.post('/discussion/feedback', { content: feedbackText, category: 'SUGGESTION' });
-                        toast.success('Terima kasih atas saran Anda! 🎉');
-                        setFeedbackText('');
-                      } catch {
-                        toast.error('Gagal mengirim pesan, coba lagi.');
-                      } finally {
-                        setSendingFeedback(false);
+                  {/* Dynamic Interactive Tabs */}
+                  <div className="flex gap-2 mb-6">
+                    <button
+                      type="button"
+                      onClick={() => setFeedbackCategory('SUGGESTION')}
+                      className={`flex-1 py-3.5 px-2 rounded-2xl border font-black text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
+                        feedbackCategory === 'SUGGESTION'
+                          ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.15)]'
+                          : 'bg-white/[0.02] border-white/5 text-slate-500 hover:bg-white/[0.05] hover:text-slate-300'
+                      }`}
+                    >
+                      <Lightbulb size={12} className={feedbackCategory === 'SUGGESTION' ? 'animate-pulse' : ''} />
+                      Saran
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFeedbackCategory('BUG')}
+                      className={`flex-1 py-3.5 px-2 rounded-2xl border font-black text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
+                        feedbackCategory === 'BUG'
+                          ? 'bg-red-500/10 border-red-500/30 text-red-400 shadow-[0_0_20px_rgba(239,68,68,0.15)]'
+                          : 'bg-white/[0.02] border-white/5 text-slate-500 hover:bg-white/[0.05] hover:text-slate-300'
+                      }`}
+                    >
+                      <Bug size={12} className={feedbackCategory === 'BUG' ? 'animate-bounce' : ''} />
+                      Bug / Error
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFeedbackCategory('MESSAGE')}
+                      className={`flex-1 py-3.5 px-2 rounded-2xl border font-black text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
+                        feedbackCategory === 'MESSAGE'
+                          ? 'bg-blue-500/10 border-blue-500/30 text-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.15)]'
+                          : 'bg-white/[0.02] border-white/5 text-slate-500 hover:bg-white/[0.05] hover:text-slate-300'
+                      }`}
+                    >
+                      <MessageSquare size={12} />
+                      Lainnya
+                    </button>
+                  </div>
+
+                  {/* Form fields */}
+                  <div className="space-y-4">
+                    <textarea
+                      value={feedbackText}
+                      onChange={(e) => setFeedbackText(e.target.value)}
+                      placeholder={
+                        feedbackCategory === 'SUGGESTION' ? 'Tulis saran, ide kreatif, atau fitur baru yang ingin kamu kembangkan...' :
+                        feedbackCategory === 'BUG' ? 'Jelaskan bug atau kendala teknis yang kamu temukan, misal kuis lemot atau gambar tidak muncul...' :
+                        'Tulis pesan atau pertanyaan umum yang ingin kamu tanyakan ke Admin...'
                       }
-                    }}
-                    className="w-full py-4 rounded-2xl font-bold text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 btn-feedback"
-                  >
-                    <span className="w-5 flex justify-center flex-shrink-0 pointer-events-none text-lg">
-                      {sendingFeedback ? '⏳' : '✉️'}
-                    </span>
-                    <span className="pointer-events-none">
-                      {sendingFeedback ? 'Sedang Mengirim...' : 'Kirim Pesan Ke Admin'}
-                    </span>
-                  </button>
+                      className={`w-full p-4 rounded-2xl border bg-black/40 focus:bg-black/60 outline-none text-xs font-bold leading-relaxed text-white placeholder:text-slate-600 transition-all ${
+                        feedbackCategory === 'SUGGESTION' ? 'border-white/5 focus:border-amber-400 focus:shadow-[0_0_20px_rgba(245,158,11,0.05)]' :
+                        feedbackCategory === 'BUG' ? 'border-white/5 focus:border-red-400 focus:shadow-[0_0_20px_rgba(239,68,68,0.05)]' :
+                        'border-white/5 focus:border-blue-400 focus:shadow-[0_0_20px_rgba(59,130,246,0.05)]'
+                      }`}
+                      rows={4}
+                    />
+                    
+                    <button
+                      disabled={sendingFeedback}
+                      onClick={async () => {
+                        if (!feedbackText.trim()) return toast.error('Pesan tidak boleh kosong');
+                        setSendingFeedback(true);
+                        try {
+                          await api.post('/discussion/feedback', { content: feedbackText, category: feedbackCategory });
+                          toast.success('Terima kasih atas saran Anda! 🎉');
+                          setFeedbackText('');
+                        } catch {
+                          toast.error('Gagal mengirim pesan, coba lagi.');
+                        } finally {
+                          setSendingFeedback(false);
+                        }
+                      }}
+                      className={`w-full py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 relative overflow-hidden group/btn text-white ${
+                        feedbackCategory === 'SUGGESTION' ? 'bg-amber-600 hover:bg-amber-500 shadow-lg shadow-amber-500/20 active:scale-[0.98]' :
+                        feedbackCategory === 'BUG' ? 'bg-red-600 hover:bg-red-500 shadow-lg shadow-red-500/20 active:scale-[0.98]' :
+                        'bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-500/20 active:scale-[0.98]'
+                      }`}
+                    >
+                      {sendingFeedback ? (
+                        <Loader2 size={14} className="animate-spin" />
+                      ) : (
+                        <Send size={14} className="transition-transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1" />
+                      )}
+                      <span>
+                        {sendingFeedback ? 'Sedang Mengirim...' : 'Kirim Pesan Ke Admin'}
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
