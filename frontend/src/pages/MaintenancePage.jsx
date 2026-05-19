@@ -110,10 +110,9 @@ export default function MaintenancePage({ message }) {
             </div>
           )}
 
-          {/* Info Badge */}
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-50 border border-slate-100 text-[11px] font-bold text-slate-500">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Koneksi Database & Keamanan Aktif</span>
+          {/* Friendly Status Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-50 border border-amber-100/50 text-[11px] font-bold text-amber-800">
+            <span>Terima kasih atas kesabaranmu, Sobat Pancasila! 🇮🇩</span>
           </div>
         </div>
       </motion.div>
