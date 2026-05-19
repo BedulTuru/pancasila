@@ -84,14 +84,18 @@ export default function MaintenancePage({ message }) {
 
         {/* Escape Hatch: Admin Access Link */}
         <div className="mt-8 text-center">
-          <Link 
-            to="/login"
+          <button 
+            onClick={() => {
+              localStorage.removeItem('token');
+              localStorage.removeItem('admin_token');
+              window.location.href = '/login';
+            }}
             className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all duration-200 active:scale-[0.98] shadow-md shadow-slate-900/10"
           >
             <LogIn size={13} />
             <span>Masuk Sebagai Admin</span>
             <ArrowRight size={13} />
-          </Link>
+          </button>
           <p className="text-[10px] text-slate-400 font-medium mt-3">
             Khusus guru, tutor, dan administrator Pancasila Edu
           </p>
