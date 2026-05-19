@@ -1,23 +1,25 @@
 import { useState, useEffect } from 'react'
-import { Wrench, LogIn, ArrowRight, Clock } from 'lucide-react'
+import { Wrench, Clock } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
-import { motion, AnimatePresence } from 'framer-motion'
-import toast from 'react-hot-toast'
+import { motion } from 'framer-motion'
 
 export default function MaintenancePage({ message }) {
-  const [showAdminButton, setShowAdminButton] = useState(false)
   const [logoClicks, setLogoClicks] = useState(0)
 
-  // Listen for Ctrl+Shift+A secret key combination
+  const handleAdminBypass = () => {
+    // Clear student token and session so they can clean log in as Admin!
+    localStorage.removeItem('token');
+    localStorage.removeItem('admin_token');
+    window.location.href = '/login';
+  };
+
+  // Listen for Ctrl+Shift+A secret key combination to bypass directly to login
   useEffect(() => {
     const handleKeyDown = (e) => {
       // Trigger on Ctrl + Shift + A OR Cmd + Shift + A
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'a') {
         e.preventDefault()
-        setShowAdminButton(prev => {
-          if (!prev) toast.success('Gerbang Administrator Terbuka 🗝️', { id: 'admin-gate' })
-          return !prev
-        })
+        handleAdminBypass()
       }
     }
     window.addEventListener('keydown', handleKeyDown)
@@ -29,9 +31,7 @@ export default function MaintenancePage({ message }) {
     setLogoClicks(nextClicks)
     
     if (nextClicks >= 5) {
-      setShowAdminButton(true)
-      toast.success('Gerbang Administrator Terbuka 🗝️', { id: 'admin-gate' })
-      setLogoClicks(0)
+      handleAdminBypass()
     }
   }
 
@@ -116,34 +116,6 @@ export default function MaintenancePage({ message }) {
             <span>Koneksi Database & Keamanan Aktif</span>
           </div>
         </div>
-
-        {/* Secret Gate Area: Fades in beautifully */}
-        <AnimatePresence>
-          {showAdminButton && (
-            <motion.div 
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="mt-8 text-center"
-            >
-              <button 
-                onClick={() => {
-                  localStorage.removeItem('token');
-                  localStorage.removeItem('admin_token');
-                  window.location.href = '/login';
-                }}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all duration-200 active:scale-[0.98] shadow-md shadow-slate-900/10"
-              >
-                <LogIn size={13} />
-                <span>Masuk Sebagai Admin</span>
-                <ArrowRight size={13} />
-              </button>
-              <p className="text-[10px] text-slate-400 font-medium mt-3">
-                Gerbang Terbuka • Khusus guru, tutor, dan administrator Pancasila Edu
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </motion.div>
     </div>
   )
