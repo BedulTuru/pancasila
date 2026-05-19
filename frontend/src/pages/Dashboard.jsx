@@ -367,30 +367,7 @@ export default function Dashboard() {
                 </div>
               </motion.div>
 
-              {/* Maintenance quick info card */}
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="bg-white rounded-[2.5rem] p-8 border"
-                style={{ borderColor: 'var(--edu-border)', boxShadow: 'var(--shadow-sm)' }}
-              >
-                <div className="flex items-start gap-4 text-left">
-                  <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center flex-shrink-0 text-amber-600">
-                    <Wrench size={22} />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-slate-800 text-sm mb-1">Status Pemeliharaan</h3>
-                    <p className="text-[11px] font-bold text-slate-400 leading-relaxed mb-3">
-                      Gunakan tab Sistem & Pengaduan untuk menyalakan mode pemeliharaan agar siswa terhenti sementara.
-                    </p>
-                    <Link to={`${ADMIN_PATH}/maintenance`} className="inline-flex items-center gap-1.5 text-xs font-black text-red-600 hover:text-red-700 uppercase tracking-wider">
-                      <span>Pergi Ke Setelan</span>
-                      <ArrowRight size={12} />
-                    </Link>
-                  </div>
-                </div>
-              </motion.div>
+
             </div>
             
           </div>
