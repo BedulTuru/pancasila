@@ -1,7 +1,31 @@
 set timeout -1
-spawn ssh -o StrictHostKeyChecking=no ubuntu@43.153.224.121
+
+# Load sensitive variables from local environment to prevent leaks
+if {[info exists env(VPS_IP)]} {
+    set vps_ip $env(VPS_IP)
+} else {
+    puts "Error: VPS_IP environment variable is not set."
+    exit 1
+}
+
+if {[info exists env(VPS_PASSWORD)]} {
+    set vps_password $env(VPS_PASSWORD)
+} else {
+    puts "Error: VPS_PASSWORD environment variable is not set."
+    exit 1
+}
+
+if {[info exists env(NEON_DATABASE_URL)]} {
+    set database_url $env(NEON_DATABASE_URL)
+} else {
+    puts "Error: NEON_DATABASE_URL environment variable is not set."
+    exit 1
+}
+
+# Spawn SSH connection
+spawn ssh -o StrictHostKeyChecking=no ubuntu@$vps_ip
 expect "password:"
-send "Abdul1211.\r"
+send "$vps_password\r"
 expect "$ "
 
 send "echo '--- MEMULAI SETUP BACKEND ---'\r"
@@ -29,7 +53,7 @@ send "cd pancasila/backend\r"
 expect "$ "
 
 send "cat << 'EOF' > .env\n"
-send "DATABASE_URL=\"postgresql://neondb_owner:npg_2BQaDTUIdeY1@ep-lingering-unit-aow030t6.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require\"\n"
+send "DATABASE_URL=\"$database_url\"\n"
 send "JWT_SECRET=\"pancasila-edu-secret-key-2024-minimum-32-chars\"\n"
 send "JWT_EXPIRES_IN=\"7d\"\n"
 send "PORT=4000\n"
