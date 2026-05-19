@@ -58,8 +58,6 @@ export default function Persyaratan() {
       </Helmet>
 
       <div className="min-h-screen pt-28 pb-20 relative overflow-hidden" style={{ background: 'var(--edu-cream)' }}>
-        {/* Decorative Grid */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[linear-gradient(var(--edu-navy)_1px,transparent_1px),linear-gradient(90deg,var(--edu-navy)_1px,transparent_1px)] bg-[size:50px_50px]" />
         <div className="absolute top-20 -left-40 w-96 h-96 bg-red-200/20 rounded-full blur-3xl" />
         <div className="absolute bottom-20 -right-40 w-96 h-96 bg-amber-200/20 rounded-full blur-3xl" />
 

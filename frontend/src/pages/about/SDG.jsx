@@ -48,9 +48,6 @@ export default function SDG() {
 
       <div className="min-h-screen pt-28 pb-20 relative overflow-hidden" style={{ background: 'var(--edu-cream)' }}>
         
-        {/* Abstract micro-grid pattern for deep high-fidelity aesthetics */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[linear-gradient(var(--edu-navy)_1.5px,transparent_1.5px),linear-gradient(90deg,var(--edu-navy)_1.5px,transparent_1.5px)] bg-[size:45px_45px]" />
-        
         {/* Soft floating background light blobs */}
         <div className="absolute top-10 -right-60 w-[45rem] h-[45rem] bg-gradient-to-tr from-red-200/10 to-rose-200/20 rounded-full blur-[130px] pointer-events-none" />
         <div className="absolute bottom-10 -left-60 w-[40rem] h-[40rem] bg-gradient-to-bl from-pink-200/10 to-orange-100/15 rounded-full blur-[140px] pointer-events-none" />
@@ -210,22 +207,21 @@ export default function SDG() {
             initial={{ scale: 0.95, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true }}
-            className="bg-slate-900 rounded-[3rem] p-10 sm:p-16 text-center text-white shadow-2xl relative overflow-hidden"
+            className="bg-white rounded-[3rem] p-10 sm:p-16 text-center border border-slate-200/80 shadow-md shadow-slate-100/50 relative overflow-hidden"
           >
-            <div className="absolute inset-0 opacity-10 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
-            <div className="absolute -top-24 -left-24 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+            <div className="absolute -top-24 -left-24 w-48 h-48 bg-slate-50 rounded-full blur-2xl pointer-events-none" />
             
-            <h3 className="text-3xl font-black mb-3">Membangun Jembatan Akses Pendidikan</h3>
-            <p className="text-slate-300 font-bold text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed mb-8">
+            <h3 className="text-3xl font-black mb-3 text-slate-900">Membangun Jembatan Akses Pendidikan</h3>
+            <p className="text-slate-500 font-bold text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed mb-8">
               Portal Pancasila Edu mewadahi sinergi keilmuan akademisi ITB langsung ke genggaman para siswa SMP di seluruh penjuru pelosok Nusantara secara cuma-cuma demi Indonesia Maju yang adil sejahtera.
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-[10px] font-black uppercase tracking-wider">
-              <div className="px-6 py-3.5 rounded-xl bg-white/10 border border-white/10 text-slate-300">
+              <div className="px-6 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700">
                 Pendidikan Inklusif
               </div>
-              <ArrowRight className="hidden sm:block text-emerald-400" />
-              <div className="px-6 py-3.5 rounded-xl bg-emerald-600 text-white shadow-lg shadow-emerald-500/20">
+              <ArrowRight className="hidden sm:block text-slate-400" />
+              <div className="px-6 py-3.5 rounded-xl bg-slate-900 text-white shadow-sm">
                 SDG 2030 Indonesia Terwujud
               </div>
             </div>
