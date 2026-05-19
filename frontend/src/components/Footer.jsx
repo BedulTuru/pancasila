@@ -69,19 +69,19 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3">
               {[
-                { label: 'Tapak Liman ITB', href: '#' },
-                { label: 'Nilai Pancasila', href: '#' },
-                { label: 'SDG 4 & 10', href: '#' },
-                { label: 'Persyaratan', href: '#' },
+                { label: 'Tapak Liman ITB', to: '/about/tapak-liman' },
+                { label: 'Nilai Pancasila', to: '/about/nilai-pancasila' },
+                { label: 'SDG 4 & 10', to: '/about/sdg' },
+                { label: 'Persyaratan', to: '/about/persyaratan' },
               ].map(link => (
                 <li key={link.label}>
-                  <a 
-                    href={link.href} 
+                  <Link 
+                    to={link.to} 
                     className="text-sm transition-colors duration-200 hover:text-white"
                     style={{ color: 'rgba(255,255,255,0.5)' }}
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
