@@ -6,15 +6,19 @@ export default function PDFViewer({ url, title, onClose }) {
 
   // Handle Google Drive and direct PDF links for better embedding
   const getEmbedUrl = (link) => {
-    if (link.includes('drive.google.com')) {
-      return link.replace('/view', '/preview').replace('/edit', '/preview');
+    if (!link) return '';
+
+    // Force HTTPS to prevent browser Mixed Content (HTTP inside HTTPS page) blocks
+    let secureLink = link;
+    if (link.startsWith('http://')) {
+      secureLink = link.replace('http://', 'https://');
     }
-    // For direct PDF links (like Cloudinary), proxy it through Google Docs Viewer 
-    // to bypass CORS and Content-Disposition: attachment headers
-    if (link.toLowerCase().includes('.pdf')) {
-      return `https://docs.google.com/viewer?url=${encodeURIComponent(link)}&embedded=true`;
+
+    if (secureLink.includes('drive.google.com')) {
+      return secureLink.replace('/view', '/preview').replace('/edit', '/preview');
     }
-    return link;
+
+    return secureLink;
   };
 
   const embedUrl = getEmbedUrl(url);
