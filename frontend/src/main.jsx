@@ -49,7 +49,7 @@ import { useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { sound } from './utils/audio'
-import { Check, AlertCircle } from 'lucide-react'
+import { Check, AlertCircle, AlertTriangle } from 'lucide-react'
 import { useToasterStore } from 'react-hot-toast'
 
 function SoundWatcher() {
