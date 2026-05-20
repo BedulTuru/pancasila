@@ -346,7 +346,7 @@ export default function AdminMaterials() {
                       {form.type === 'BOOK' && (
                         <div className="space-y-5">
                           <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2">Unggah File PDF Buku (Maksimal 4MB)</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-2">Unggah File PDF Buku (Maksimal 50MB)</label>
                             <FileUpload
                               value={form.fileUrl}
                               onChange={url => setForm({ ...form, fileUrl: url })}
@@ -355,7 +355,7 @@ export default function AdminMaterials() {
                           </div>
 
                           <div className="relative">
-                            <label className="block text-sm font-bold text-slate-700 mb-2">Atau Tautan Google Drive (Untuk Berkas Besar &gt; 4MB / 100MB)</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-2">Atau Tautan Google Drive (Untuk Berkas Besar &gt; 50MB / 100MB)</label>
                             <input
                               type="url"
                               value={form.driveUrl}
@@ -364,7 +364,7 @@ export default function AdminMaterials() {
                               placeholder="Contoh: https://drive.google.com/file/d/.../view?usp=sharing"
                             />
                             <p className="text-[10px] text-slate-400 mt-2 font-medium leading-relaxed">
-                              *Unggah berkas PDF tebal (di atas 4MB atau 100MB) ke Google Drive Anda, pastikan akses berbagi diaktifkan ke <strong>"Siapa saja yang memiliki link"</strong>, lalu tempel tautannya di atas.
+                              *Unggah berkas PDF tebal (di atas 50MB atau 100MB) ke Google Drive Anda, pastikan akses berbagi diaktifkan ke <strong>"Siapa saja yang memiliki link"</strong>, lalu tempel tautannya di atas.
                             </p>
                           </div>
                         </div>

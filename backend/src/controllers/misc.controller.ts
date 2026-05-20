@@ -54,6 +54,11 @@ export class MiscController {
     });
   }
 
+  static async getUploadSignature(req: Request, res: Response) {
+    const signatureData = StorageService.getUploadSignature();
+    res.json(signatureData);
+  }
+
   static async healthCheck(req: Request, res: Response) {
     try {
       // Quick database query to wake up/keep Neon database warm

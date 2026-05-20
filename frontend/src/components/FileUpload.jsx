@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { UploadCloud, FileText, Check, X, AlertCircle, Loader2, ExternalLink } from 'lucide-react'
+import axios from 'axios'
 import api from '../utils/api'
 import toast from 'react-hot-toast'
 
@@ -8,7 +9,7 @@ export default function FileUpload({
   value, 
   onChange, 
   allowedTypes = ['application/pdf'], 
-  maxSize = 4 * 1024 * 1024, // 4MB (Vercel Serverless Gateway Limit)
+  maxSize = 50 * 1024 * 1024, // 50MB (Batas Cloudinary Direct Signed Upload)
   placeholder = 'Seret & letakkan file PDF di sini, atau klik untuk memilih'
 }) {
   const [isDragging, setIsDragging] = useState(false)
@@ -66,32 +67,50 @@ export default function FileUpload({
 
     // Validate file size
     if (file.size > maxSize) {
-      const err = `Ukuran berkas terlalu besar. Maksimal ${formatBytes(maxSize)} (Batas Platform Vercel). Harap kompres PDF Anda atau gunakan Google Drive untuk berkas besar.`
+      const err = `Ukuran berkas terlalu besar. Maksimal ${formatBytes(maxSize)} (Batas Upload Cloudinary). Harap gunakan Google Drive untuk berkas yang lebih besar.`
       setError(err)
       toast.error(err)
       return
     }
 
     setIsUploading(true)
-    const toastId = toast.loading('Sedang mengunggah berkas ke Cloudinary...')
+    const toastId = toast.loading('Sedang menyiapkan unggahan aman...')
 
     try {
+      // 1. Ambil signature aman dari backend (melewati limit Vercel karena payload sangat kecil)
+      toast.loading('Menghubungkan ke server unggah...', { id: toastId })
+      const signatureResponse = await api.get('/upload/signature')
+      const { signature, timestamp, cloudName, apiKey, folder } = signatureResponse.data
+
+      // 2. Siapkan FormData untuk direct upload langsung dari browser ke Cloudinary
+      toast.loading('Sedang mengunggah berkas langsung ke Cloud Storage...', { id: toastId })
       const formData = new FormData()
       formData.append('file', file)
+      formData.append('api_key', apiKey)
+      formData.append('timestamp', timestamp)
+      formData.append('signature', signature)
+      formData.append('folder', folder)
 
-      const response = await api.post('/upload', formData)
+      // 3. Upload langsung (CORS aman, melewati Vercel Gateway 4.5MB)
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
+        formData
+      )
 
-      if (response.data && response.data.url) {
-        onChange(response.data.url)
-        toast.success('Berkas berhasil diunggah permanen!', { id: toastId })
+      if (response.data && response.data.secure_url) {
+        onChange(response.data.secure_url)
+        toast.success('Berkas berhasil diunggah langsung ke Cloud Storage!', { id: toastId })
       } else {
-        throw new Error('Respons backend tidak valid')
+        throw new Error('Respons Cloudinary tidak valid')
       }
     } catch (err) {
-      console.error('❌ Upload error:', err)
-      const errorMsg = err.response?.data?.error || err.message || 'Gagal mengunggah berkas'
+      console.error('❌ Direct Upload error:', err)
+      const errorMsg = err.response?.data?.error?.message || 
+                       err.response?.data?.error || 
+                       err.message || 
+                       'Gagal mengunggah berkas langsung'
       setError(errorMsg)
-      toast.error(errorMsg, { id: toastId })
+      toast.error(`Unggah gagal: ${errorMsg}`, { id: toastId })
     } finally {
       setIsUploading(false)
     }

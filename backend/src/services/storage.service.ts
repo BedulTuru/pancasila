@@ -22,6 +22,34 @@ if (isCloudinaryConfigured) {
 
 export class StorageService {
   /**
+   * Generates a secure upload signature for direct client-side uploads.
+   * 
+   * @param folder Target folder in Cloudinary
+   */
+  static getUploadSignature(folder: string = 'pancasila-edu') {
+    if (!isCloudinaryConfigured) {
+      throw new Error('Cloud Storage: Credentials missing or Cloudinary not configured');
+    }
+
+    const timestamp = Math.round(new Date().getTime() / 1000);
+    const paramsToSign = {
+      timestamp,
+      folder,
+    };
+
+    // Calculate secure SHA-1 signature
+    const signature = cloudinary.utils.api_sign_request(paramsToSign, config.CLOUDINARY_API_SECRET!);
+
+    return {
+      signature,
+      timestamp,
+      cloudName: config.CLOUDINARY_CLOUD_NAME!,
+      apiKey: config.CLOUDINARY_API_KEY!,
+      folder,
+    };
+  }
+
+  /**
    * Uploads a file either to Cloudinary or falls back to local storage depending on configuration.
    * Automatically handles temp file deletion upon successful Cloudinary upload.
    * 

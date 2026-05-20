@@ -41,6 +41,7 @@ router.get('/announcements', MiscController.getAnnouncements);
 router.post('/announcements', authenticate, requireRole('ADMIN'), adminSecretCheck, MiscController.createAnnouncement);
 
 router.get('/files', authenticate, requireRole('ADMIN', 'TUTOR'), MiscController.getFiles);
+router.get('/upload/signature', authenticate, requireRole('ADMIN', 'TUTOR'), MiscController.getUploadSignature as any);
 router.post('/upload', authenticate, requireRole('ADMIN', 'TUTOR'), upload.single('file'), MiscController.handleUpload as any);
 
 export default router;
