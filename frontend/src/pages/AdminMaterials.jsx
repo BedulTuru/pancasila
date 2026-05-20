@@ -344,13 +344,29 @@ export default function AdminMaterials() {
                       </div>
 
                       {form.type === 'BOOK' && (
-                        <div>
-                          <label className="block text-sm font-bold text-slate-700 mb-2">Unggah File PDF Buku</label>
-                          <FileUpload
-                            value={form.fileUrl}
-                            onChange={url => setForm({ ...form, fileUrl: url })}
-                            placeholder="Seret & letakkan file PDF Buku di sini, atau klik untuk memilih"
-                          />
+                        <div className="space-y-5">
+                          <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-2">Unggah File PDF Buku (Maksimal 4MB)</label>
+                            <FileUpload
+                              value={form.fileUrl}
+                              onChange={url => setForm({ ...form, fileUrl: url })}
+                              placeholder="Seret & letakkan file PDF Buku di sini, atau klik untuk memilih"
+                            />
+                          </div>
+
+                          <div className="relative">
+                            <label className="block text-sm font-bold text-slate-700 mb-2">Atau Tautan Google Drive (Untuk Berkas Besar &gt; 4MB / 100MB)</label>
+                            <input
+                              type="url"
+                              value={form.driveUrl}
+                              onChange={e => setForm({ ...form, driveUrl: e.target.value })}
+                              className="w-full bg-white border-2 border-slate-200 rounded-xl px-4 py-3 text-slate-900 text-sm focus:border-blue-500 outline-none transition-all placeholder:text-slate-400"
+                              placeholder="Contoh: https://drive.google.com/file/d/.../view?usp=sharing"
+                            />
+                            <p className="text-[10px] text-slate-400 mt-2 font-medium leading-relaxed">
+                              *Unggah berkas PDF tebal (di atas 4MB atau 100MB) ke Google Drive Anda, pastikan akses berbagi diaktifkan ke <strong>"Siapa saja yang memiliki link"</strong>, lalu tempel tautannya di atas.
+                            </p>
+                          </div>
                         </div>
                       )}
                       
