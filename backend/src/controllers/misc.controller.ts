@@ -4,6 +4,7 @@ import { AppError } from '../middleware/error.middleware';
 import fs from 'fs';
 import path from 'path';
 import { logActivity } from '../utils/logger';
+import { StorageService } from '../services/storage.service';
 
 const uploadsDir = process.env.VERCEL ? '/tmp/uploads' : path.join(__dirname, '../../uploads');
 
@@ -43,7 +44,7 @@ export class MiscController {
 
   static async handleUpload(req: Request, res: Response) {
     if (!req.file) throw new AppError(400, 'Tidak ada file diupload');
-    const fileUrl = `/uploads/${req.file.filename}`;
+    const fileUrl = await StorageService.uploadFile(req.file);
     await logActivity(req.user!.userId, 'UPLOAD_FILE', 'file', undefined, `Mengupload: ${req.file.originalname}`, req);
     res.json({ 
       url: fileUrl, 

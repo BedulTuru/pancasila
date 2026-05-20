@@ -13,6 +13,9 @@ const envSchema = z.object({
   BCRYPT_ROUNDS: z.string().transform(Number).default(12),
   ALLOWED_ORIGINS: z.string().default('http://localhost:5173'),
   ADMIN_SECRET_KEY: z.string().min(16, 'ADMIN_SECRET_KEY must be at least 16 characters'),
+  CLOUDINARY_CLOUD_NAME: z.string().optional(),
+  CLOUDINARY_API_KEY: z.string().optional(),
+  CLOUDINARY_API_SECRET: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);
