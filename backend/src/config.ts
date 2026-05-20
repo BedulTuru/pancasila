@@ -1,8 +1,13 @@
 import { z } from 'zod';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 
-dotenv.config({ path: path.join(__dirname, '../../.env') });
+const localEnvPath = path.join(process.cwd(), '.env');
+const compiledEnvPath = path.join(__dirname, '../../.env');
+const envPath = fs.existsSync(localEnvPath) ? localEnvPath : compiledEnvPath;
+
+dotenv.config({ path: envPath });
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
