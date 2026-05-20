@@ -1,8 +1,37 @@
-import React from 'react';
-import { X, Maximize2, Download, Printer, Loader2 } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, Maximize2, Minimize2, Download, ExternalLink, Loader2 } from 'lucide-react';
 
 export default function PDFViewer({ url, title, onClose }) {
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const containerRef = useRef(null);
+
   if (!url) return null;
+
+  // Listen to fullscreen changes to update button states correctly
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullScreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+
+  // Close the viewer on Escape key press (when not in full screen)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (!document.fullscreenElement) {
+          onClose();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
 
   // Handle Google Drive and direct PDF links for better embedding
   const getEmbedUrl = (link) => {
@@ -21,10 +50,29 @@ export default function PDFViewer({ url, title, onClose }) {
     return secureLink;
   };
 
+  const toggleFullScreen = () => {
+    if (!containerRef.current) return;
+
+    if (!document.fullscreenElement) {
+      containerRef.current.requestFullscreen().catch((err) => {
+        console.error(`Gagal mengaktifkan mode layar penuh: ${err.message}`);
+      });
+    } else {
+      document.exitFullscreen().catch((err) => {
+        console.error(`Gagal keluar dari mode layar penuh: ${err.message}`);
+      });
+    }
+  };
+
   const embedUrl = getEmbedUrl(url);
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-slate-900/95 backdrop-blur-md flex flex-col items-center justify-start pt-24 md:pt-28 pb-10 px-4 overflow-y-auto">
+    <div 
+      ref={containerRef}
+      className={`fixed inset-0 z-[9999] bg-slate-900/95 backdrop-blur-md flex flex-col items-center justify-start pb-10 px-4 overflow-y-auto ${
+        isFullScreen ? 'pt-6' : 'pt-24 md:pt-28'
+      }`}
+    >
       {/* Header Bar */}
       <div className="w-full max-w-6xl bg-white rounded-t-2xl p-4 flex items-center justify-between border-b shadow-xl">
         <div className="flex items-center gap-3">
@@ -38,13 +86,25 @@ export default function PDFViewer({ url, title, onClose }) {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* New Tab Button */}
           <button 
             onClick={() => window.open(url, '_blank')}
             className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-600 transition-colors"
             title="Buka di Tab Baru"
           >
-            <Maximize2 size={20} />
+            <ExternalLink size={20} />
           </button>
+          
+          {/* Fullscreen Button */}
+          <button 
+            onClick={toggleFullScreen}
+            className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-600 transition-colors"
+            title={isFullScreen ? "Keluar dari Layar Penuh" : "Layar Penuh"}
+          >
+            {isFullScreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
+          </button>
+
+          {/* Close Button */}
           <button 
             onClick={onClose}
             className="p-2.5 rounded-xl bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-red-600 transition-all"
