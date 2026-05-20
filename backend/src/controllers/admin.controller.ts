@@ -52,15 +52,36 @@ export class AdminController {
   }
 
   static async getSystemMetrics(req: Request, res: Response) {
-    const systemConfig = await prisma.systemConfig.findFirst();
+    const startDb = Date.now();
+    let dbStatus = 'CONNECTED';
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+    } catch (err) {
+      dbStatus = 'DISCONNECTED';
+    }
+    const dbLatency = Date.now() - startDb;
+
+    const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
+    const [activeSessions, systemConfig] = await Promise.all([
+      prisma.user.count({
+        where: {
+          OR: [
+            { lastLoginAt: { gte: fifteenMinutesAgo } },
+            { progress: { some: { lastReadAt: { gte: fifteenMinutesAgo } } } }
+          ]
+        }
+      }),
+      prisma.systemConfig.findFirst()
+    ]);
+
     const metrics = {
       cpuLoad: os.loadavg()[0],
       totalMem: os.totalmem(),
       freeMem: os.freemem(),
       uptime: os.uptime(),
-      dbStatus: 'CONNECTED',
-      latency: Math.floor(Math.random() * 50) + 10,
-      activeSessions: Math.floor(Math.random() * 100) + 5,
+      dbStatus,
+      latency: dbLatency || 10,
+      activeSessions: activeSessions || 1, // Fallback to at least 1 (active admin)
       lockdownMode: systemConfig?.lockdownMode || false,
       osType: os.type(),
       osRelease: os.release(),

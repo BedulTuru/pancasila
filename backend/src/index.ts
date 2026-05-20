@@ -49,8 +49,8 @@ app.use(helmet({
 const allowedOrigins = config.ALLOWED_ORIGINS.split(',');
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow if no origin (like mobile apps or curl) OR in whitelist OR if it's a vercel.app domain in production
-    if (!origin || allowedOrigins.includes(origin) || !IS_PROD || origin.endsWith('.vercel.app')) {
+    // Allow if no origin (like mobile apps or curl) OR in whitelist OR if not in production
+    if (!origin || allowedOrigins.includes(origin) || !IS_PROD) {
       callback(null, true);
     } else {
       console.warn(`⚠️ CORS Blocked: ${origin}`);

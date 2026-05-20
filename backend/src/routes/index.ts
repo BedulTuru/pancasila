@@ -9,13 +9,16 @@ import discussionRoutes from './discussion.routes';
 import miscRoutes from './misc.routes';
 import achievementRoutes from './achievement.routes';
 
-import { authenticate, maintenanceGuard } from '../middleware/auth.middleware';
+import { authenticate, optionalAuthenticate, maintenanceGuard } from '../middleware/auth.middleware';
 import { ipBlacklistGuard } from '../middleware/security.middleware';
 
 const router = Router();
 
 // Global Security & Blacklist Check
 router.use(ipBlacklistGuard);
+
+// Populate session information (req.user) if valid Bearer token exists
+router.use(optionalAuthenticate);
 
 // Auth routes (allow login/register)
 router.use('/auth', authRoutes);

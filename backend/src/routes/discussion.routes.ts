@@ -6,6 +6,6 @@ const router = Router();
 
 router.post('/comments', authenticate, DiscussionController.createComment);
 router.post('/feedback', authenticate, DiscussionController.submitFeedback);
-router.delete('/comments/:id', authenticate, requireRole('ADMIN', 'TUTOR'), DiscussionController.deleteComment);
+router.delete('/comments/:id', authenticate, DiscussionController.deleteComment);
 
 export default router;

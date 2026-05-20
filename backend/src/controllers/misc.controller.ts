@@ -5,7 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import { logActivity } from '../utils/logger';
 
-const uploadsDir = path.join(__dirname, '../../uploads');
+const uploadsDir = process.env.VERCEL ? '/tmp/uploads' : path.join(__dirname, '../../uploads');
 
 export class MiscController {
   static async getAnnouncements(req: Request, res: Response) {

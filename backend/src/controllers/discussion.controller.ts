@@ -53,6 +53,13 @@ export class DiscussionController {
       throw new AppError(404, 'Komentar tidak ditemukan');
     }
 
+    // 🔐 Comment Deletion Ownership & Moderation Validation
+    const isStaff = req.user!.role === 'ADMIN' || req.user!.role === 'TUTOR';
+    const isOwner = comment.userId === req.user!.userId;
+    if (!isOwner && !isStaff) {
+      throw new AppError(403, 'Akses ditolak: Anda tidak memiliki wewenang untuk menghapus komentar ini.');
+    }
+
     // Delete replies first if any (to handle foreign key constraint)
     await prisma.comment.deleteMany({
       where: { parentId: id },

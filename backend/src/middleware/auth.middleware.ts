@@ -94,7 +94,10 @@ export const requireRole = (...roles: string[]) => {
 };
 
 export const adminSecretCheck = (req: Request, res: Response, next: NextFunction) => {
-  // Rely on cryptographically secure JWT authentication (requireRole) instead of static client secret keys
+  const secretKey = req.headers['x-admin-secret-key'] || req.headers['X-Admin-Secret-Key'];
+  if (!secretKey || secretKey !== config.ADMIN_SECRET_KEY) {
+    throw new AppError(403, 'Akses ditolak: Kunci Rahasia Admin tidak valid atau tidak disertakan.');
+  }
   next();
 };
 
