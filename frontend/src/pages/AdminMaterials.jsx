@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { FileText, Plus, Edit, Trash2, Eye, ArrowLeft, BookOpen, Check, X } from 'lucide-react'
 import api from '../utils/api'
 import toast from 'react-hot-toast'
+import FileUpload from '../components/FileUpload'
 
 export default function AdminMaterials() {
   const [materials, setMaterials] = useState([])
@@ -344,13 +345,11 @@ export default function AdminMaterials() {
 
                       {form.type === 'BOOK' && (
                         <div>
-                          <label className="block text-sm font-bold text-slate-700 mb-2">URL File PDF</label>
-                          <input
-                            type="text"
+                          <label className="block text-sm font-bold text-slate-700 mb-2">Unggah File PDF Buku</label>
+                          <FileUpload
                             value={form.fileUrl}
-                            onChange={e => setForm({ ...form, fileUrl: e.target.value })}
-                            className="w-full bg-white border-2 border-slate-200 rounded-xl px-4 py-3 text-slate-900 text-sm focus:border-blue-500 outline-none transition-all"
-                            placeholder="/files/buku-pancasila.pdf"
+                            onChange={url => setForm({ ...form, fileUrl: url })}
+                            placeholder="Seret & letakkan file PDF Buku di sini, atau klik untuk memilih"
                           />
                         </div>
                       )}
