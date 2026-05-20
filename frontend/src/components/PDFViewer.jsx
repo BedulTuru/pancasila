@@ -87,13 +87,15 @@ export default function PDFViewer({ url, title, onClose }) {
 
         <div className="flex items-center gap-2">
           {/* New Tab Button */}
-          <button 
-            onClick={() => window.open(url, '_blank')}
-            className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-600 transition-colors"
+          <a 
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-600 transition-colors flex items-center justify-center"
             title="Buka di Tab Baru"
           >
             <ExternalLink size={20} />
-          </button>
+          </a>
           
           {/* Fullscreen Button */}
           <button 
