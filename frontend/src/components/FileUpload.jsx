@@ -8,7 +8,7 @@ export default function FileUpload({
   value, 
   onChange, 
   allowedTypes = ['application/pdf'], 
-  maxSize = 50 * 1024 * 1024, // 50MB
+  maxSize = 4 * 1024 * 1024, // 4MB (Vercel Serverless Gateway Limit)
   placeholder = 'Seret & letakkan file PDF di sini, atau klik untuk memilih'
 }) {
   const [isDragging, setIsDragging] = useState(false)
@@ -66,7 +66,7 @@ export default function FileUpload({
 
     // Validate file size
     if (file.size > maxSize) {
-      const err = `Ukuran berkas terlalu besar. Maksimal ${formatBytes(maxSize)}`
+      const err = `Ukuran berkas terlalu besar. Maksimal ${formatBytes(maxSize)} (Batas Platform Vercel). Harap kompres PDF Anda atau gunakan Google Drive untuk berkas besar.`
       setError(err)
       toast.error(err)
       return
@@ -79,11 +79,7 @@ export default function FileUpload({
       const formData = new FormData()
       formData.append('file', file)
 
-      const response = await api.post('/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      const response = await api.post('/upload', formData)
 
       if (response.data && response.data.url) {
         onChange(response.data.url)
