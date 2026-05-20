@@ -49,8 +49,17 @@ app.use(helmet({
 const allowedOrigins = config.ALLOWED_ORIGINS.split(',');
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow if no origin (like mobile apps or curl) OR in whitelist OR if not in production
-    if (!origin || allowedOrigins.includes(origin) || !IS_PROD) {
+    // Check if origin matches a trusted Pancasila Vercel pattern
+    const isTrustedVercel = origin && (
+      origin === 'https://pancasilaedu.vercel.app' ||
+      origin.endsWith('.pancasilaedu.vercel.app') ||
+      origin === 'https://pancasila.vercel.app' ||
+      origin.endsWith('.pancasila.vercel.app') ||
+      (origin.includes('pancasila') && origin.endsWith('.vercel.app'))
+    );
+
+    // Allow if no origin (like mobile apps or curl) OR in whitelist OR if not in production OR if it is a trusted Pancasila Vercel origin
+    if (!origin || allowedOrigins.includes(origin) || !IS_PROD || isTrustedVercel) {
       callback(null, true);
     } else {
       console.warn(`⚠️ CORS Blocked: ${origin}`);
