@@ -1,13 +1,18 @@
 import React from 'react';
-import { X, Maximize2, Download, Printer } from 'lucide-react';
+import { X, Maximize2, Download, Printer, Loader2 } from 'lucide-react';
 
 export default function PDFViewer({ url, title, onClose }) {
   if (!url) return null;
 
-  // Handle Google Drive links for better embedding
+  // Handle Google Drive and direct PDF links for better embedding
   const getEmbedUrl = (link) => {
     if (link.includes('drive.google.com')) {
       return link.replace('/view', '/preview').replace('/edit', '/preview');
+    }
+    // For direct PDF links (like Cloudinary), proxy it through Google Docs Viewer 
+    // to bypass CORS and Content-Disposition: attachment headers
+    if (link.toLowerCase().includes('.pdf')) {
+      return `https://docs.google.com/viewer?url=${encodeURIComponent(link)}&embedded=true`;
     }
     return link;
   };
@@ -47,16 +52,22 @@ export default function PDFViewer({ url, title, onClose }) {
       </div>
 
       {/* Viewer Container */}
-      <div className="w-full max-w-6xl flex-1 bg-slate-800 rounded-b-2xl overflow-hidden shadow-2xl relative group">
+      <div className="w-full max-w-6xl flex-1 bg-slate-800 rounded-b-2xl overflow-hidden shadow-2xl relative group min-h-[500px]">
+        {/* Loading Spinner behind the iframe */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-400 gap-3 pointer-events-none">
+          <Loader2 className="animate-spin text-slate-400" size={32} />
+          <span className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Memuat Dokumen...</span>
+        </div>
+
         <iframe
           src={embedUrl}
-          className="w-full h-full border-none"
+          className="w-full h-full border-none relative z-10"
           title={title}
           allow="autoplay"
         />
         
         {/* Floating Controls hint */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
           <div className="bg-slate-900/80 text-white px-4 py-2 rounded-full text-xs font-medium backdrop-blur-md">
             Gunakan kontrol di dalam viewer untuk navigasi halaman
           </div>
