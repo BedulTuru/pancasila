@@ -71,12 +71,25 @@ export default function AdminMaterials() {
     setShowModal(true)
   }
 
-  const togglePublish = async (id, current) => {
+  const togglePublish = async (mat) => {
     try {
-      await api.put(`/materials/${id}`, { isPublished: !current })
+      await api.put(`/materials/${mat.id}`, {
+        title: mat.title,
+        content: mat.content,
+        description: mat.description || '',
+        coverImage: mat.coverImage || '',
+        videoUrl: mat.videoUrl || '',
+        driveUrl: mat.driveUrl || '',
+        fileUrl: mat.fileUrl || '',
+        categoryId: mat.categoryId,
+        difficulty: mat.difficulty,
+        type: mat.type || 'ARTICLE',
+        isPublished: !mat.isPublished
+      })
       toast.success('Status diperbarui')
       fetchData()
-    } catch {
+    } catch (err) {
+      console.error('Failed to toggle publish status:', err)
       toast.error('Gagal memperbarui status')
     }
   }
@@ -214,7 +227,7 @@ export default function AdminMaterials() {
                       </div>
 
                       <button 
-                        onClick={() => togglePublish(mat.id, mat.isPublished)}
+                        onClick={() => togglePublish(mat)}
                         className={`min-w-[120px] px-4 py-2.5 rounded-xl text-xs font-bold transition-all border-2 ${
                           mat.isPublished 
                             ? 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100' 
