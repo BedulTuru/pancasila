@@ -9,7 +9,7 @@ export default function FileUpload({
   value, 
   onChange, 
   allowedTypes = ['application/pdf'], 
-  maxSize = 50 * 1024 * 1024, // 50MB (Batas Cloudinary Direct Signed Upload)
+  maxSize = 10 * 1024 * 1024, // 10MB (Batas Cloudinary Free Tier untuk berkas raw/PDF)
   placeholder = 'Seret & letakkan file PDF di sini, atau klik untuk memilih'
 }) {
   const [isDragging, setIsDragging] = useState(false)
@@ -67,7 +67,7 @@ export default function FileUpload({
 
     // Validate file size
     if (file.size > maxSize) {
-      const err = `Ukuran berkas terlalu besar. Maksimal ${formatBytes(maxSize)} (Batas Upload Cloudinary). Harap gunakan Google Drive untuk berkas yang lebih besar.`
+      const err = `Ukuran berkas terlalu besar. Maksimal ${formatBytes(maxSize)} (Batas Cloudinary Free Tier). Harap gunakan Google Drive untuk berkas yang lebih besar.`
       setError(err)
       toast.error(err)
       return
